@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>SYVT</title>
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#05100f">
+<script>
+  /* GitHub Pages cannot issue a server-side redirect, but it does serve this
+     file for any path it cannot resolve - so this doubles as the redirect
+     table. The game used to live at y7.ai under a series of names and paths,
+     and anyone carrying one of those will type it against this domain too, so
+     they all land on the game rather than on nothing.
+
+     Runs in <head>, before anything paints, so a matched path never flashes
+     this page. Keep it dependency-free and synchronous for that reason. */
+  (function () {
+    var MOVED = {
+      "/syvt": "/",           // the path it had while it lived on y7.ai
+      "/sift": "/",           // and the name before that
+      "/spelling": "/",       // and before that
+      "/spelling.html": "/"
+    };
+    var here = location.pathname;
+    var to = MOVED[here.toLowerCase().replace(/\/+$/, "")];
+    // the guard matters: without it a matched path could map to itself and
+    // spin, if this file were ever served for a path that does resolve
+    if (to && to !== here) location.replace(to + location.search + location.hash);
+  })();
+</script>
+<style>
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    background: #05100f;
+    color: #4d7c78;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    text-align: center;
+    padding: 24px;
+    box-sizing: border-box;
+  }
+  .mark { width: min(26vw, 104px); height: auto; display: block; }
+  p {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #3f6b67;
+  }
+  a {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #2dd4bf;
+    text-decoration: none;
+    transition: color 0.45s ease;
+  }
+  a:hover, a:focus-visible { color: #7df0dd; }
+  a:focus-visible { outline: 1px solid #2dd4bf; outline-offset: 6px; }
+  /* No entrance fade, deliberately. An `animation: ... both` starts at
+     opacity 0 and only becomes visible if the animation actually runs - a bad
+     bet on the page people reach when something has already gone wrong. This
+     one is visible the moment it paints. Matched paths never paint it at all;
+     they redirect from <head>. */
+</style>
+</head>
+<body>
+
+<svg class="mark" viewBox="0 0 120 120" role="img" aria-label="SYVT">
+  <title>SYVT</title>
+  <defs>
+    <clipPath id="svL"><polygon points="60,73 60,600 -940,600 -940,-441.618"/></clipPath>
+    <clipPath id="svR"><polygon points="60,73 60,600 1060,600 1060,-441.618"/></clipPath>
+  </defs>
+  <g fill="none" stroke-width="13" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M60 17 L60 73"   stroke="#e6f6f4"/>
+    <path d="M60 73 L18 103"  stroke="#fb7185" clip-path="url(#svL)"/>
+    <path d="M60 73 L102 103" stroke="#2dd4bf" clip-path="url(#svR)"/>
+  </g>
+</svg>
+
+<p>Nothing here</p>
+
+<nav><a href="/">Play SYVT</a></nav>
+
+</body>
+</html>

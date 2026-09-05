@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-8 -8 136 136" role="img" aria-label="SYVT">
+  <title>SYVT</title>
+  <!-- Same mark and the same junction construction as brand/syvt-mark.svg,
+       only inset into a plate and drawn a little heavier so it holds up at
+       16px. The bisector seams do not depend on stroke width, so the clip
+       polygons are shared verbatim with the master.
+
+       Follows the browser theme, but note how: the dark colours are ordinary
+       presentation attributes and CSS only overrides them for light. Two
+       reasons. Dark is SYVT's canonical form, and presentation attributes
+       lose to any CSS rule, so the override still wins where it applies.
+       More importantly this file is also the source for apple-touch-icon.png
+       (see make-icons.mjs) - and the rasteriser resolves neither var() nor
+       media queries, so writing the colours as CSS custom
+       properties, the way favicon.svg does, rendered a plate with no mark on
+       it at all. -->
+  <style>
+    @media (prefers-color-scheme: light) {
+      .plate { fill: #ffffff; }
+      .stem  { stroke: #0d4b46; }
+      .wrong { stroke: #e11d48; }
+      .right { stroke: #0d9488; }
+    }
+  </style>
+  <defs>
+    <clipPath id="svL"><polygon points="60,73 60,600 -940,600 -940,-441.618"/></clipPath>
+    <clipPath id="svR"><polygon points="60,73 60,600 1060,600 1060,-441.618"/></clipPath>
+  </defs>
+  <rect class="plate" x="-8" y="-8" width="136" height="136" rx="31" fill="#05100f"/>
+  <g fill="none" stroke-width="15" stroke-linecap="round" stroke-linejoin="round">
+    <path class="stem"  d="M60 17 L60 73"   stroke="#e6f6f4"/>
+    <path class="wrong" d="M60 73 L18 103"  stroke="#fb7185" clip-path="url(#svL)"/>
+    <path class="right" d="M60 73 L102 103" stroke="#2dd4bf" clip-path="url(#svR)"/>
+  </g>
+</svg>

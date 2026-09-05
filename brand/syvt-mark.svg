@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="SYVT">
+  <title>SYVT</title>
+  <!-- One word falls in; it leaves either left (wrong) or right (right).
+
+       The junction is built the way the y7 mark builds its crossings: the
+       light stroke is drawn first and left uncut - it owns the point - and
+       the others are knocked out against it with a clipPath. Each seam is
+       the angle bisector of the two strokes meeting there, so the colours
+       butt along a straight edge and none of them ever blends into a third.
+       Bisector slope 0.5146179; -441.618 = 73 - 1000 x that. The vertical
+       seam below the junction is the stem's own centreline continued.
+       The stem needs no clip: each arm's round cap fills its own sector, so
+       it overpaints every part of the stem's cap outside stem territory. -->
+  <defs>
+    <clipPath id="svL"><polygon points="60,73 60,600 -940,600 -940,-441.618"/></clipPath>
+    <clipPath id="svR"><polygon points="60,73 60,600 1060,600 1060,-441.618"/></clipPath>
+  </defs>
+  <g fill="none" stroke-width="13" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M60 17 L60 73"   stroke="#e6f6f4"/>
+    <path d="M60 73 L18 103"  stroke="#fb7185" clip-path="url(#svL)"/>
+    <path d="M60 73 L102 103" stroke="#2dd4bf" clip-path="url(#svR)"/>
+  </g>
+</svg>
