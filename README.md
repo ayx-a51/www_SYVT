@@ -77,7 +77,7 @@ Keep both pages true to what the app actually does. The claims that matter, and
 that would need editing if the app changed: no ads, no analytics, no crash
 reporting, no third-party trackers; the account is optional and holds only
 nicknames, avatars, scores and settings; Firestore is in the European
-multi-region and the callable function in Zurich; deleting a player in the app
-removes it from the account too, while deleting the whole account is an email
-request, because the app has no delete-account button yet. Add one and the
-deletion page needs rewriting.
+multi-region and the callable function in Zurich; and the app's own danger
+zone (Settings for parents, held open at the bottom) deletes the account, its
+backup and every player's statistics, with the email request kept only for
+someone who cannot open the app.
