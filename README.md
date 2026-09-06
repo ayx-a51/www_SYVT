@@ -11,6 +11,47 @@ that `y7.ai/spelling.html`. `404.html` doubles as the redirect table so every
 one of those paths still lands on the game if someone tries it against this
 domain.
 
+## The page is the app's free tier
+
+The web game started as the original; the Android app grew out of it and then
+past it. It has since been rebuilt the other way round — the page is now a
+teaser for the app, and looks and plays like its free tier, so what a visitor
+tries here is what they would install.
+
+Same numbers, taken from the Flutter source and not re-tuned: the 420 × 746.67
+design space, `kPerLevel = 30`, `fallSpeed(t) = 55 + 14t`,
+`spawnInterval(t) = max(0.95, 2.3 − 0.27t)`, a word pool of this level and the
+two below, 20 % sums from the same five generators, a 30-px swipe threshold,
+1400 px/s of fly, 1000 px/s² of gravity, half a second of resting above the
+line before the round ends. `--s` is the one factor that turns a design px
+into a screen px; the stylesheet and the physics both read it, so what is
+drawn and what is simulated cannot drift apart.
+
+Where the app would sell SYVT+, the page points at the Play Store instead:
+
+- **Level 5** is the last free level, as on Android. At score 150 the round
+  pauses and the offer comes up once; dismissing it carries on at level 5 for
+  as long as the player likes.
+- **Two worlds** are free, Day and Aquarium. The other four sit in the picker
+  with a padlock, and tapping one opens the same offer.
+
+Two deliberate reductions from the app's free tier, both because a teaser has
+nothing to protect: all three languages are open (the app keeps the first two
+a device plays in), and there are no player profiles, so no avatars, no
+statistics and no account — the best score is a `localStorage` number per
+language.
+
+`syvt.js` is the game, `scenery.js` the two worlds and the six picker
+thumbnails, `syvt.css` the whole interface as one themed stylesheet.
+`words.js` is generated:
+
+```
+python make-words.py       # ../SYVT/tool/words/*.json -> words.js, levels 1-5
+```
+
+500 words per language, each entry `[correct, ...misspellings]` — the words
+the app teaches, cut off where the free game is.
+
 ## Still to set up
 
 The repo half is done — `CNAME` pins the domain and `.nojekyll` serves files
@@ -44,9 +85,12 @@ pip install fonttools brotli   # once
 python brand/make-wordmark.py  # set WORD at the top first, then re-run make-icons.mjs
 ```
 
-`matter.min.js` is the physics engine and `manrope.woff2` the typeface; both
-are vendored so the page has no third-party origins at runtime, which is what
-lets its Content-Security-Policy stay at `default-src 'none'`.
+`matter.min.js` is the physics engine; `manrope.woff2` is the typeface the
+grown-up worlds use and `fredoka.woff2` the one the kids' worlds do, the same
+pairing as the app. All three are vendored, so the page has no third-party
+origins at runtime — which is what lets its Content-Security-Policy stay at
+`default-src 'none'`. Both fonts are SIL Open Font License; `OFL-Manrope.txt`
+and `OFL-Fredoka.txt` are the licences that requires be shipped with them.
 
 ## Legal pages
 
