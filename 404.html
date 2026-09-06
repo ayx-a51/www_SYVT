@@ -22,7 +22,13 @@
       "/syvt": "/",           // the path it had while it lived on y7.ai
       "/sift": "/",           // and the name before that
       "/spelling": "/",       // and before that
-      "/spelling.html": "/"
+      "/spelling.html": "/",
+      // the legal pages, which get typed and pasted without their extension
+      "/privacy": "/privacy.html",
+      "/privacy-policy": "/privacy.html",
+      "/data-deletion": "/data_deletion.html",
+      "/data_deletion": "/data_deletion.html",
+      "/delete": "/data_deletion.html"
     };
     var here = location.pathname;
     var to = MOVED[here.toLowerCase().replace(/\/+$/, "")];

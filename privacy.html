@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; img-src 'self'; font-src 'self'; base-uri 'none'; form-action 'none'" />
+  <meta name="referrer" content="no-referrer" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Privacy Policy &middot; SYVT</title>
+  <meta name="description" content="What SYVT stores, what never leaves the device, where it is kept, and how to delete it." />
+  <link rel="icon" href="icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <link rel="stylesheet" href="legal.css" />
+</head>
+<body>
+
+<div class="hero">
+
+  <header class="wrap top">
+    <a class="home" href="index.html" aria-label="SYVT &mdash; home">
+      <img src="brand/syvt-app-mark-192.png" alt="" width="48" height="48" />
+      <span class="name"><span class="lead">S</span><svg class="y" viewBox="12 30 96 78" aria-hidden="true" focusable="false"><g fill="none" stroke-width="16" stroke-linecap="round"><path d="M24 38 L51 76" stroke="#FB7185" /><path d="M96 38 L69 76" stroke="#2DD4BF" /></g><rect x="47" y="72" width="26" height="36" rx="11" fill="currentColor" /></svg><span class="tail">VT</span></span>
+    </a>
+    <a class="toplink" href="data_deletion.html">Data&nbsp;deletion</a>
+  </header>
+
+  <div class="wrap pagehead">
+    <p class="kicker">Legal</p>
+    <h1>Privacy Policy</h1>
+    <p class="updated">Last updated: 6 September 2026</p>
+    <p class="intro">SYVT is a spelling game for children. It plays with no
+    connection at all, and an account is optional. This page says exactly what
+    is stored, where it is kept, and how to get rid of it.</p>
+  </div>
+
+</div>
+
+<main class="wrap">
+
+  <section class="card">
+    <h2>Playing without an account</h2>
+    <p>SYVT needs no sign-in. Used that way, everything the game remembers
+    &mdash; the players on the device, their nicknames, avatars, chosen world
+    and language, best scores, rounds played, points and settings &mdash; is
+    written to the app's own storage on that device and nowhere else. We never
+    see it, and uninstalling the app deletes it.</p>
+
+    <h2>What an account stores</h2>
+    <p>An account exists so that the same players can be carried to another
+    device, and it is made by a parent in the app's parents' corner. It uses an
+    <strong>email address and a password</strong>. We receive the email
+    address. The password is handled by Google Firebase Authentication, which
+    keeps it only as a salted hash, never in readable form, together with the
+    dates the account was created and last used.</p>
+    <p>Once signed in, the game keeps <strong>one document per account</strong>
+    on our server. For each player it holds the nickname (up to eight
+    characters, freely chosen), the avatar (a short string of part numbers),
+    the chosen world, the chosen language, the best score in each language, the
+    number of rounds played, the points scored, when the player was made, and
+    the two paid settings &mdash; how much arithmetic is mixed in, and which
+    level a round starts at. Alongside those it holds the identifiers of
+    players deleted on another device, the up to two languages a free account
+    has claimed, the time of the last change and a version number.</p>
+
+    <h2>What we never collect</h2>
+    <p>No real names, no age or date of birth, no address or telephone number,
+    no photographs, no contacts, no location, and no advertising identifier.
+    Nothing a child types is collected beyond the nickname, which need not be a
+    real name. There is no chat and no messaging, and nothing a player does is
+    visible to any other user.</p>
+  </section>
+
+  <section class="card">
+    <h2>Where it is kept, and how it is protected</h2>
+    <p>Account data sits on Google's Firebase platform, in a project we run.
+    The database (Cloud Firestore) is in Google's <strong>European
+    multi-region</strong>, with the data held in Belgium and the Netherlands.
+    The one server function the app can call &mdash; redeeming a
+    friends-and-family code &mdash; runs in <strong>Zurich,
+    Switzerland</strong>; a second function, which guards the project's
+    spending, runs in Belgium. Data is encrypted in transit and at rest, and
+    the database rules let an account read and write its own document and
+    nothing else. Google acts as our processor here, on our instructions.</p>
+
+    <h2>No advertising, no analytics, no tracking</h2>
+    <p>SYVT carries no advertising, no analytics, no crash reporting and no
+    third-party tracking or marketing software. It sets no cookies and reads no
+    advertising identifier. Google Analytics is switched off in the Firebase
+    project. How a child plays never leaves the device, apart from the scores
+    described above, and only while an account is signed in.</p>
+
+    <h2>What the servers log</h2>
+    <p>As with any app built on Firebase, Google records the IP address and the
+    user agent of the requests the app makes &mdash; for sign-in security, and
+    in the log of the function that redeems codes. Those logs are kept briefly
+    and are not used to build a profile. Firebase also gives the installed app
+    a random installation identifier, which Google uses to operate the service;
+    it identifies an installation, not a person, and we do not read it. This
+    website is served by GitHub Pages, which, like any web server, logs the IP
+    address of a visit.</p>
+  </section>
+
+  <section class="card">
+    <h2>SYVT Pro and purchases</h2>
+    <p>SYVT Pro is sold as a monthly subscription or as a single payment, and
+    is handled entirely by <strong>Google Play</strong>. We never see or
+    receive your payment details &mdash; only whether the entitlement is
+    active. The app remembers that answer on the device, so a paid game still
+    works offline.</p>
+
+    <h2>Friends-and-family codes</h2>
+    <p>Redeeming a code sends the code and your account identifier to our
+    server, which records the code, the account and the moment it was used, so
+    that a code cannot be spent twice, and stores the entitlement it grants
+    &mdash; where it came from, the date, and any expiry date &mdash; against
+    the account. Nothing else is involved.</p>
+
+    <h2>Data sharing</h2>
+    <p>We do not sell data, and we share none of it with third parties for
+    their own purposes. The only companies involved are <strong>Google</strong>
+    &mdash; as the operator of Firebase, where account data is stored, and of
+    Google Play, which processes purchases &mdash; and <strong>GitHub</strong>,
+    which serves this website. They act as our processors under contract.</p>
+  </section>
+
+  <section class="card">
+    <h2>How long we keep it</h2>
+    <p>Account data is kept for as long as the account exists. Deleting a
+    player in the app (<strong>Players &rarr; Delete this player</strong>)
+    removes that player from the device and from the account, on every device
+    signed in to it. Data held only on a device goes when the app is
+    uninstalled. To remove an account and everything under it, follow the
+    <a href="data_deletion.html">Data Deletion Policy</a>.</p>
+
+    <h2>Children</h2>
+    <p>SYVT is made for children of roughly eight to twelve, and is built so
+    that a child gives nothing away in order to play. No account is needed. The
+    only thing a child enters is a nickname of up to eight characters. There is
+    no advertising, nothing links out of the game to the web, and nothing a
+    child does is shown to anyone else. Purchases and the account live in a
+    parents' corner that opens only after a long press, so that an adult sets
+    them up. If you believe a child has given us more than the above, write to
+    us and we will delete it.</p>
+
+    <h2>Your rights</h2>
+    <p>You may ask for a copy of the data held under your account, ask us to
+    correct it, or ask us to delete it &mdash; see the
+    <a href="data_deletion.html">Data Deletion Policy</a>. You may also simply
+    play without an account, in which case there is nothing on our servers to
+    ask about. Write to <a href="mailto:hi@SYVT.me">hi@SYVT.me</a> for any of
+    these.</p>
+
+    <h2>Changes to this policy</h2>
+    <p>If we change what SYVT collects, we will update this page and the date
+    at the top of it.</p>
+
+    <h2>Contact</h2>
+    <p>SYVT is made by A51. For questions or requests, email
+    <a href="mailto:hi@SYVT.me">hi@SYVT.me</a>.</p>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap frow">
+    <img src="brand/syvt-app-mark-64.png" alt="SYVT logo" width="28" height="28" />
+    <a href="index.html">Home</a>
+    <a href="data_deletion.html">Data deletion</a>
+    <a href="mailto:hi@SYVT.me">hi@SYVT.me</a>
+    <span class="copy">&copy; <a href="https://a51.io">A51</a></span>
+  </div>
+</footer>
+
+</body>
+</html>

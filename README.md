@@ -47,3 +47,37 @@ python brand/make-wordmark.py  # set WORD at the top first, then re-run make-ico
 `matter.min.js` is the physics engine and `manrope.woff2` the typeface; both
 are vendored so the page has no third-party origins at runtime, which is what
 lets its Content-Security-Policy stay at `default-src 'none'`.
+
+## Legal pages
+
+`privacy.html` and `data_deletion.html`, sharing `legal.css`. Google Play needs
+a privacy-policy URL before the Android app can be listed, and a deletion URL
+alongside it; these are the two, and the contact address on both is
+`hi@SYVT.me`. Both carry the same `default-src 'none'` policy as the game and
+load nothing from a third party — not even a font, which on a privacy page
+would hand the reader's IP address to whoever served it.
+
+They are skinned in the **app's** palette, not this page's: the deep violet
+plate, cream and the mint/coral verdict pair from `lib/ui/marks.dart` in the
+Flutter repo, because these are the pages the Play listing links to and the
+app icon is what a reader arrives from. `brand/syvt-app-mark-{192,64}.png` are
+that icon, downsampled from the app's `store/play/icon-512.png`:
+
+```
+python -c "from PIL import Image; im=Image.open('../SYVT/store/play/icon-512.png').convert('RGBA'); [im.resize((n,n), Image.LANCZOS).save(f'brand/syvt-app-mark-{n}.png') for n in (192,64)]"
+```
+
+The wordmark in the header is built in HTML rather than drawn: Manrope
+ExtraBold for S and VT with the funnel as an inline SVG in between, sized to
+Manrope's cap height (exactly `.72em`) so it stands on the baseline like a
+letter. Its two margins are measured, not derived — see the comment in
+`legal.css`.
+
+Keep both pages true to what the app actually does. The claims that matter, and
+that would need editing if the app changed: no ads, no analytics, no crash
+reporting, no third-party trackers; the account is optional and holds only
+nicknames, avatars, scores and settings; Firestore is in the European
+multi-region and the callable function in Zurich; deleting a player in the app
+removes it from the account too, while deleting the whole account is an email
+request, because the app has no delete-account button yet. Add one and the
+deletion page needs rewriting.
