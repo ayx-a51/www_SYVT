@@ -61,7 +61,13 @@
   <div id="hud">
     <div id="scoreBlock">
       <span id="scoreKicker">SCORE</span>
-      <span id="score">0</span>
+      <!-- past the free ceiling the score stops counting and the overflow
+           runs in its own counter: 150 is what compares with anyone else,
+           the +X after it is not. -->
+      <span id="scoreRow">
+        <span id="score">0</span>
+        <span id="scoreBonus" hidden>+0</span>
+      </span>
     </div>
     <button id="pauseBtn" type="button" aria-label="Pause">
       <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -97,8 +103,14 @@
 
       <h1 id="overTitle" hidden>STACK OVERFLOW</h1>
       <div id="overStats" hidden>
-        <div class="stat"><b id="statScore">0</b><i id="statScoreLbl">SCORE</i></div>
-        <div class="stat" id="bestStat"><b id="statBest">0</b><i id="statBestLbl">BEST</i></div>
+        <div class="stat">
+          <span class="val"><b id="statScore">0</b><em id="statScoreBonus" hidden>+0</em></span>
+          <i id="statScoreLbl">SCORE</i>
+        </div>
+        <div class="stat" id="bestStat">
+          <span class="val"><b id="statBest">0</b><em id="statBestBonus" hidden>+0</em></span>
+          <i id="statBestLbl">BEST</i>
+        </div>
       </div>
 
       <div id="themePicker"></div>

@@ -35,6 +35,14 @@ Where the app would sell SYVT+, the page points at the Play Store instead:
 - **Two worlds** are free, Day and Aquarium. The other four sit in the picker
   with a padlock, and tapping one opens the same offer.
 
+The score stops counting at 150, which is the same moment. Play does not stop
+— the round runs until the stack reaches the ceiling — but every point after
+that is won on level-five words, so it is not the same thing as a point won at
+level ten. The overflow therefore runs in a second counter beside the score,
+`150 | +13`, behind a hairline so the two can never be read as one number.
+The whole total is what gets stored; the split is only how it is shown, and it
+is shown the same way in the app.
+
 Two deliberate reductions from the app's free tier, both because a teaser has
 nothing to protect: all three languages are open (the app keeps the first two
 a device plays in), and there are no player profiles, so no avatars, no

@@ -15,7 +15,7 @@
 
   var gameEl = $("game");
   var field = $("field");
-  var scoreEl = $("score"), scoreKicker = $("scoreKicker");
+  var scoreEl = $("score"), scoreKicker = $("scoreKicker"), scoreBonus = $("scoreBonus");
   var levelLabel = $("levelLabel"), levelFill = $("levelFill");
   var pauseBtn = $("pauseBtn");
   var dangerEl = $("danger");
@@ -25,8 +25,9 @@
   var resumeBtn = $("resumeBtn"), quitBtn = $("quitBtn");
   var overlay = $("overlay");
   var taglineEl = $("tagline"), overTitle = $("overTitle"), overStats = $("overStats");
-  var statScore = $("statScore"), statScoreLbl = $("statScoreLbl");
+  var statScore = $("statScore"), statScoreLbl = $("statScoreLbl"), statScoreBonus = $("statScoreBonus");
   var statBest = $("statBest"), statBestLbl = $("statBestLbl"), bestStat = $("bestStat");
+  var statBestBonus = $("statBestBonus");
   var picker = $("themePicker"), langRow = $("langRow");
   var startBtn = $("startBtn"), legendText = $("legendText");
   var storeLinkLabel = $("storeLinkLabel");
@@ -117,6 +118,7 @@
   var GAMEOVER_HOLD = 0.5;
   var PER_LEVEL = 30;            // the app's kPerLevel
   var FREE_MAX_TIER = 4;         // level 5 is the last free one
+  var FREE_CAP = (FREE_MAX_TIER + 1) * PER_LEVEL;   // 150: where counting stops
   var RECENT_LIMIT = 10;
   var MATH_SHARE = 0.20;
   var BASE_W = 420;
@@ -277,8 +279,20 @@
     el.classList.add(cls);
   }
 
+  /* The score is one number up to the free ceiling and two after it. A free
+     player who keeps going past level 5 is still playing level-5 words, so
+     those points are not the same currency as someone else's: 150 is what
+     compares, and the rest is shown beside it as its own count. */
+  function showScore(valueEl, bonusEl, value) {
+    var over = value > FREE_CAP ? value - FREE_CAP : 0;
+    valueEl.textContent = value - over;
+    bonusEl.textContent = "+" + over;
+    bonusEl.hidden = over === 0;
+    return over;
+  }
+
   function updateHUD() {
-    scoreEl.textContent = score;
+    showScore(scoreEl, scoreBonus, score);
     var tr = tier();
     levelLabel.textContent = (t().level + " " + (tr + 1)).toUpperCase();
     levelFill.style.transform = "scaleX(" + ((score % PER_LEVEL) / PER_LEVEL) + ")";
@@ -525,7 +539,8 @@
           score++;
           updateHUD();
           popScore(block);
-          retrigger(scoreEl, "bump");
+          // bump whichever counter just moved
+          retrigger(score > FREE_CAP ? scoreBonus : scoreEl, "bump");
           checkCap();
         } else {
           wrongFeedback();
@@ -764,9 +779,9 @@
     overStats.hidden = !over;
     if (over) {
       overTitle.textContent = t().over;
-      statScore.textContent = score;
+      showScore(statScore, statScoreBonus, score);
       statScoreLbl.textContent = t().scoreLbl.toUpperCase();
-      statBest.textContent = best;
+      showScore(statBest, statBestBonus, best);
       statBestLbl.textContent = t().bestLbl.toUpperCase();
       bestStat.hidden = !best;
     }

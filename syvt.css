@@ -507,7 +507,25 @@ body {
   text-shadow: var(--hud-score-shadow);
   transform-origin: left center;
 }
-#score.bump { animation: bump .34s cubic-bezier(.2, .8, .3, 1); }
+#score.bump, #scoreBonus.bump { animation: bump .34s cubic-bezier(.2, .8, .3, 1); }
+
+/* The free game stops counting at 150. What comes after runs in a counter of
+   its own, hung off a hairline so the two can never be read as one number:
+   150 is what compares with another player, the +X is not. */
+#scoreRow { display: flex; align-items: baseline; gap: calc(7 * var(--s)); }
+#scoreBonus {
+  padding-left: calc(7 * var(--s));
+  border-left: 1px solid color-mix(in srgb, var(--hud-score) 30%, transparent);
+  font-size: calc(15 * var(--s));
+  line-height: .92;
+  font-weight: 800;
+  letter-spacing: calc(-.26 * var(--s));
+  font-variant-numeric: tabular-nums;
+  color: var(--hud-score);
+  text-shadow: var(--hud-score-shadow);
+  transform-origin: left center;
+}
+#scoreBonus[hidden] { display: none; }
 @keyframes bump {
   0%   { transform: scale(1); }
   35%  { transform: scale(1.26); color: var(--hud-bump); }
@@ -832,6 +850,21 @@ body {
 }
 #overStats[hidden] { display: none; }
 #overStats .stat { display: flex; flex-direction: column; align-items: center; gap: calc(6 * var(--s)); }
+/* an author display outranks the user agent's [hidden], so BEST needs its
+   own rule or a first-ever game over shows a record of 0 */
+#overStats .stat[hidden] { display: none; }
+#overStats .val { display: flex; align-items: baseline; gap: calc(7 * var(--s)); }
+#overStats em {
+  font-style: normal;
+  padding-left: calc(7 * var(--s));
+  border-left: 1px solid color-mix(in srgb, var(--hud-score) 30%, transparent);
+  font-size: calc(16 * var(--s));
+  font-weight: 800;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--hud-score);
+}
+#overStats em[hidden] { display: none; }
 #overStats b {
   font-size: calc(34 * var(--s));
   font-weight: 800;
