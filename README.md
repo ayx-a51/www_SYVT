@@ -43,6 +43,13 @@ level ten. The overflow therefore runs in a second counter beside the score,
 The whole total is what gets stored; the split is only how it is shown, and it
 is shown the same way in the app.
 
+Two smaller things follow from it. The level bar fills for the last time on
+the way to level five and then stays full, rather than sweeping every thirty
+points under a number that can never change. And the counter explains itself
+only if asked: the SYVT+ notice at 150 mentions it in passing, and a small
+"i" beside the counter on the game-over panel opens a short "Why 150?" that
+answers the question without taking the chance to sell anything.
+
 Two deliberate reductions from the app's free tier, both because a teaser has
 nothing to protect: all three languages are open (the app keeps the first two
 a device plays in), and there are no player profiles, so no avatars, no

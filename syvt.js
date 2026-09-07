@@ -33,6 +33,7 @@
   var storeLinkLabel = $("storeLinkLabel");
   var modal = $("modal"), modalTitle = $("modalTitle"), modalBody = $("modalBody");
   var modalBuy = $("modalBuy"), modalKeep = $("modalKeep");
+  var scoreInfo = $("scoreInfo");
 
   var Engine = Matter.Engine, Bodies = Matter.Bodies, Body = Matter.Body,
       Composite = Matter.Composite, Events = Matter.Events;
@@ -52,7 +53,10 @@
       store: "SYVT+ on Google Play",
       buy: "Get SYVT+", notNow: "Not now", keepPlaying: "Keep playing",
       capTitle: "Level 5 reached!",
-      capBody: "That is the last level of the free game. With SYVT+ on Android the words go on to level 10 — or keep playing here for as long as you like.",
+      capBody: "That is the last level of the free game. With SYVT+ on Android the words go on to level 10 — or keep playing here for as long as you like, with anything past {score} counted beside your score.",
+      counterTitle: "Why {score}?",
+      counterBody: "{score} is the whole free game: five levels of thirty points. Past that the words stay at level 5, so those points come easier — they are counted beside your score rather than in it, so that every {score} means the same thing.",
+      gotIt: "Got it",
       lockTitle: "A SYVT+ world",
       lockBody: "This world is part of SYVT+. Six worlds and ten levels — in the Android app."
     },
@@ -66,7 +70,10 @@
       store: "SYVT+ bei Google Play",
       buy: "SYVT+ holen", notNow: "Nicht jetzt", keepPlaying: "Weiterspielen",
       capTitle: "Level 5 geschafft!",
-      capBody: "Das ist das letzte Level der Gratis-Version. Mit SYVT+ für Android geht es weiter bis Level 10 — oder du spielst hier weiter, so lange du magst.",
+      capBody: "Das ist das letzte Level der Gratis-Version. Mit SYVT+ für Android geht es weiter bis Level 10 — oder du spielst hier weiter, so lange du magst; alles über {score} wird neben deinem Punktestand gezählt.",
+      counterTitle: "Warum {score}?",
+      counterBody: "{score} ist die ganze Gratis-Version: fünf Level à dreissig Punkte. Danach bleiben die Wörter auf Level 5, diese Punkte sind also leichter — sie werden neben deinem Punktestand gezählt und nicht darin, damit {score} überall dasselbe bedeutet.",
+      gotIt: "Alles klar",
       lockTitle: "Eine SYVT+ Welt",
       lockBody: "Diese Welt gehört zu SYVT+. Sechs Welten und zehn Level — in der Android-App."
     },
@@ -80,7 +87,10 @@
       store: "SYVT+ sur Google Play",
       buy: "Passer à SYVT+", notNow: "Pas maintenant", keepPlaying: "Continuer à jouer",
       capTitle: "Niveau 5 atteint !",
-      capBody: "C’est le dernier niveau de la version gratuite. Avec SYVT+ sur Android les mots continuent jusqu’au niveau 10 — ou reste ici aussi longtemps que tu veux.",
+      capBody: "C’est le dernier niveau de la version gratuite. Avec SYVT+ sur Android les mots continuent jusqu’au niveau 10 — ou reste ici aussi longtemps que tu veux ; tout ce qui dépasse {score} est compté à côté de ton score.",
+      counterTitle: "Pourquoi {score} ?",
+      counterBody: "{score}, c’est tout le jeu gratuit : cinq niveaux de trente points. Ensuite les mots restent au niveau 5, donc ces points-là sont plus faciles — ils sont comptés à côté de ton score et non dedans, pour que {score} veuille toujours dire la même chose.",
+      gotIt: "Compris",
       lockTitle: "Un monde SYVT+",
       lockBody: "Ce monde fait partie de SYVT+. Six mondes et dix niveaux — dans l’app Android."
     }
@@ -286,7 +296,8 @@
   function showScore(valueEl, bonusEl, value) {
     var over = value > FREE_CAP ? value - FREE_CAP : 0;
     valueEl.textContent = value - over;
-    bonusEl.textContent = "+" + over;
+    // the panel's counter wraps its digits so the "i" beside them survives
+    (bonusEl.querySelector(".n") || bonusEl).textContent = "+" + over;
     bonusEl.hidden = over === 0;
     return over;
   }
@@ -295,7 +306,10 @@
     showScore(scoreEl, scoreBonus, score);
     var tr = tier();
     levelLabel.textContent = (t().level + " " + (tr + 1)).toUpperCase();
-    levelFill.style.transform = "scaleX(" + ((score % PER_LEVEL) / PER_LEVEL) + ")";
+    // full once there is no next level to fill towards, rather than sweeping
+    // every thirty points under a level number that can never change
+    var p = tr >= FREE_MAX_TIER ? 1 : (score % PER_LEVEL) / PER_LEVEL;
+    levelFill.style.transform = "scaleX(" + p + ")";
     if (running && tr > shownTier) {
       levelUpLabel.textContent = t().level + " " + (tr + 1);
       retrigger(levelUpEl, "show");
@@ -747,12 +761,25 @@
 
   // --------------------------------------------------------- the offer
 
-  function openModal(title, body, keepLabel) {
+  function openModal(title, body, keepLabel, showBuy) {
     modalTitle.textContent = title;
     modalBody.textContent = body;
     modalBuy.textContent = t().buy.toUpperCase();
-    modalKeep.textContent = keepLabel;
+    modalBuy.hidden = showBuy === false;
+    // with nothing to buy, the way out leads the panel instead of sitting
+    // under an offer
+    modalKeep.className = "pill " + (showBuy === false ? "primary" : "secondary");
+    modalKeep.textContent = showBuy === false ? keepLabel.toUpperCase() : keepLabel;
     modal.hidden = false;
+  }
+
+  function cap(text) { return text.replace(/\{score\}/g, FREE_CAP); }
+
+  /* Behind the small "i" beside the second counter: why a free score stops
+     where it does. It explains and nothing else — the player asked a
+     question, not for an offer, and the panel they came from carries both. */
+  function openCounterInfo() {
+    openModal(cap(t().counterTitle), cap(t().counterBody), t().gotIt, false);
   }
 
   function closeModal() { modal.hidden = true; }
@@ -764,11 +791,11 @@
     if (capShown || rawTier() <= FREE_MAX_TIER) return;
     capShown = true;
     pause();
-    openModal(t().capTitle, t().capBody, t().keepPlaying);
+    openModal(t().capTitle, cap(t().capBody), t().keepPlaying, true);
   }
 
   function offerWorld() {
-    openModal(t().lockTitle, t().lockBody, t().notNow);
+    openModal(t().lockTitle, t().lockBody, t().notNow, true);
   }
 
   // ------------------------------------------------------------- chrome
@@ -857,6 +884,7 @@
     legendText.textContent = s.legend;
     storeLinkLabel.textContent = s.store;
     pauseBtn.setAttribute("aria-label", s.pauseAction);
+    scoreInfo.setAttribute("aria-label", cap(s.counterTitle));
     resumeBtn.textContent = s.resume.toUpperCase();
     quitBtn.textContent = s.quit;
     taglineEl.textContent = s.tagline;
@@ -886,6 +914,7 @@
   });
 
   modalKeep.addEventListener("click", closeModal);
+  scoreInfo.addEventListener("click", openCounterInfo);
   modal.addEventListener("pointerdown", function (e) {
     if (e.target === modal) closeModal();   // the barrier is the quiet way out
   });

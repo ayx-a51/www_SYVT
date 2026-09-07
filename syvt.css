@@ -865,6 +865,31 @@ body {
   color: var(--hud-score);
 }
 #overStats em[hidden] { display: none; }
+
+/* the "i" rides inside the counter as an inline box, so vertical-align does
+   the sum the flex baseline could not: its middle on the number's middle */
+#scoreInfo {
+  display: inline-block;
+  position: relative;
+  vertical-align: middle;
+  margin: 0 0 calc(1.5 * var(--s)) calc(5 * var(--s));
+  padding: 0;
+  width: calc(16 * var(--s));
+  height: calc(16 * var(--s));
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+/* the target a thumb needs, without a box that would move anything */
+#scoreInfo::after { content: ""; position: absolute; inset: calc(-8 * var(--s)); }
+#scoreInfo svg { display: block; width: 100%; height: 100%; }
+#scoreInfo circle, #scoreInfo path {
+  fill: none;
+  stroke: var(--legend-text);
+  stroke-width: 1.333;
+  stroke-linecap: round;
+}
+#scoreInfo .dot { fill: var(--legend-text); stroke: none; }
 #overStats b {
   font-size: calc(34 * var(--s));
   font-weight: 800;
@@ -1079,6 +1104,8 @@ body {
   color: var(--msg);
 }
 #modalCard .pill { width: 100%; }
+/* .pill carries its own display, which outranks the user agent's [hidden] */
+#modalCard .pill[hidden] { display: none; }
 
 /* -------------------------------------------------------------- motion */
 

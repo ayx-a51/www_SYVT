@@ -104,11 +104,12 @@
       <h1 id="overTitle" hidden>STACK OVERFLOW</h1>
       <div id="overStats" hidden>
         <div class="stat">
-          <span class="val"><b id="statScore">0</b><em id="statScoreBonus" hidden>+0</em></span>
+          <!-- one "i" for both columns: the same answer covers them -->
+          <span class="val"><b id="statScore">0</b><em id="statScoreBonus" hidden><span class="n">+0</span><button id="scoreInfo" type="button"><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="7.33"/><circle class="dot" cx="8" cy="4.64" r=".96"/><path d="M8 7.36V11.7"/></svg></button></em></span>
           <i id="statScoreLbl">SCORE</i>
         </div>
         <div class="stat" id="bestStat">
-          <span class="val"><b id="statBest">0</b><em id="statBestBonus" hidden>+0</em></span>
+          <span class="val"><b id="statBest">0</b><em id="statBestBonus" hidden><span class="n">+0</span></em></span>
           <i id="statBestLbl">BEST</i>
         </div>
       </div>
