@@ -6,19 +6,28 @@ Usage:  python brand/make-wordmark.py
 Needs, for rendering only and never at runtime:  pip install fonttools brotli
 (brotli is what lets fontTools open the woff2.)
 
-The lockup is the app's: the mark on the left, then S, the funnel as the Y,
-VT — on the deep violet plate the launcher icon and the legal pages use, in
-cream. It is the header of privacy.html at poster size, which is the point:
-a link preview should look like the page it opens.
+The artwork is the WORDMARK ALONE on the plate, in flat cream. Not the mark:
+the name already contains the funnel, and the first rule in
+../SYVT/assets/brand/BRAND.md is that the mark and the wordmark never appear
+together in one lockup. The only exception the spec allows is a store listing,
+where the platform lays its own icon over the graphic, and a link preview is
+not one.
 
-The letters are emitted as Manrope ExtraBold OUTLINES rather than <text>, so
-the artwork renders identically anywhere and needs no font resolved at render
-time - which is also what lets make-icons.mjs rasterise it with sharp. The
-funnel is geometry either way.
+So this follows the Play feature graphic, which is the one place the spec puts
+the name on a wide plate: Fredoka, flat cream, no gradient, on an off-centre
+variant of the plate glow. A share card and the store banner then look like
+what they are, two crops of the same picture.
+
+The letters are emitted as Fredoka OUTLINES rather than <text>, so the artwork
+renders identically anywhere and needs no font resolved at render time - which
+is also what lets make-icons.mjs rasterise it with sharp. The Y is not a glyph
+at all: it is assets/brand/syvt-glyph-y.svg, the icon's own funnel with the
+card knocked out of it, carried here verbatim and filled in the letters'
+colour.
 
 That conversion is one-way, so this script is the only way back: if the game
-is renamed, change LEAD and TAIL below and re-run, then re-run make-icons.mjs
-to refresh og.png.
+is ever renamed, change LEAD and TAIL below and re-run, then re-run
+make-icons.mjs to refresh og.png.
 """
 import io
 from fontTools.ttLib import TTFont
@@ -28,159 +37,184 @@ from fontTools.pens.svgPathPen import SVGPathPen
 from fontTools.pens.transformPen import TransformPen
 from fontTools.misc.transform import Transform
 
-# The name, either side of the funnel. The funnel IS the Y; it is not a
-# glyph and never comes from the font.
+# The name, either side of the funnel. The funnel IS the Y; it is not a glyph
+# and never comes from the font.
 LEAD, TAIL = "S", "VT"
-FONT = "manrope.woff2"
+FONT = "fredoka.woff2"
+GLYPH_Y = "../SYVT/assets/brand/syvt-glyph-y.svg"
 OUT = "brand/syvt-og.svg"
 
 W, H = 1200, 630
 
-# The app's palette, from lib/ui/marks.dart by way of legal.css.
-PLATE_TOP, PLATE_MID, PLATE_BOT = "#5F36D0", "#4A27AE", "#37198A"
-CREAM, WRONG, RIGHT = "#FFF7E6", "#FB7185", "#2DD4BF"
-SUN, INK, WHITE = "#FFD54A", "#1E2646", "#FFFFFF"
+# BRAND.md section 1. The plate's three stops, and the flat cream the store
+# media set the name in.
+PLATE_CORE, PLATE_MID, PLATE_RIM = "#6E42EE", "#2A1B84", "#08102C"
+CREAM = "#FFF7E6"
 
-WEIGHT = 800           # Manrope's wght axis, same as #brand
-TRACKING = 0.22        # em, same as #brand's letter-spacing
-CAP_PX = 116           # cap height of the wordmark on the 1200x630 canvas
-MARK_PX = 300          # the mark's drawn height
-GAP = 78               # space between mark and wordmark
+# BRAND.md section 2, "the Play feature graphic ... deliberately off-centre".
+# A Flutter RadialGradient with center Alignment(-.28, -.1) and radius .95,
+# and Flutter resolves that radius against the SHORTEST side. Alignment -1 is
+# the near edge and +1 the far one, so the centre in fractions of the box is
+# (a + 1) / 2: 36% across and 45% down.
+GLOW_X, GLOW_Y = 0.36, 0.45
+GLOW_R = 0.95                    # of the shortest side
 
-# The funnel glyph, in its own 96x82 box: the narrow rim, no ball. Its paths
-# are copied from ../SYVT/assets/brand/syvt-glyph-y.svg, whose viewBox starts
-# at (12, 28) rather than the origin, so that corner is carried here too.
-#
-# The ink spans 2 units below the box top to 2 above its foot - the round caps
-# reach 8 above the rim's centre line and the spout ends 2 short of the bottom
-# - so 78 of the 82 units are ink, and it is the INK that is set at cap
-# height, standing on the baseline. Same as SyvtYPainter in the app.
-Y_BOX_X, Y_BOX_Y = 12.0, 28.0
-Y_BOX_W, Y_BOX_H = 96.0, 82.0
-Y_INK_TOP, Y_INK_H = 2.0, 78.0
-# Its ink edges across, in the same box space once that corner is at the
-# origin: the arms' centre lines run from x 24 to 96 and the round caps add
-# half the 16-unit stroke to each end, so 16..104 of the viewBox, 4..92 here.
-Y_INK_L, Y_INK_R = 4.0, 92.0
+# BRAND.md section 4.
+TRACKING = 0.22                  # em, and it is never anything else
+CAP_FACTOR = 0.71                # Fredoka, the app's optical figure, not 0.700
+WGHT_LEAD, WGHT_TAIL = 620, 700  # the S is lighter; 700 is where the axis stops
+WDTH = 100                       # never leave this to the font's default
 
-font = instancer.instantiateVariableFont(TTFont(FONT), {"wght": WEIGHT})
-upem = font["head"].unitsPerEm
-cmap = font.getBestCmap()
-glyphs = font.getGlyphSet()
-cap = font["OS/2"].sCapHeight
+FONT_SIZE = 132                  # px on the 1200x630 canvas
 
-k = CAP_PX / cap          # px per font unit, so the cap height lands on CAP_PX
-em = upem * k             # what one em is worth in px at this size
+# The Y's box, from syvt-glyph-y.svg's viewBox "12 20 96 88". The drawn shape
+# fills the box exactly - BRAND.md section 4 gives boxUnits 88, inkUnits 88 and
+# inkTopUnits 0 - so the box IS the ink's box and there is no drop to correct.
+# The 4.28 units of optical side bearing inside it are deliberate and inherited.
+Y_VB_X, Y_VB_Y, Y_VB_W, Y_VB_H = 12.0, 20.0, 96.0, 88.0
+
+# How far the drawn ink sits inside that box on each side. BRAND.md section 3
+# gives the rounded glyph's bounding box as x 16.281470 to 103.718530 against
+# a nominal 12 to 108, so 4.281470 units at each end are the optical side
+# bearing the letter carries, and a layout has to measure gaps to the ink
+# rather than to the box.
+Y_INK_INSET = 4.281470
+
+
+def y_path():
+    """The funnel path out of syvt-glyph-y.svg, so this file never redraws it."""
+    svg = io.open(GLYPH_Y, encoding="utf-8").read()
+    start = svg.index(' d="', svg.index("<path")) + 4
+    return svg[start:svg.index('"', start)]
+
+
+def face(weight):
+    """Fredoka pinned to one instance. BOTH axes, every time: the wght default
+    is 300 and a wdth left unwritten silently inherits whatever it was."""
+    return instancer.instantiateVariableFont(
+        TTFont(FONT), {"wght": weight, "wdth": WDTH}
+    )
+
+
+lead_font, tail_font = face(WGHT_LEAD), face(WGHT_TAIL)
+upem = lead_font["head"].unitsPerEm
+em = float(FONT_SIZE)
+k = em / upem                    # px per font unit
 track = TRACKING * em
 
-# The funnel at cap height: scale its box so the INK is CAP_PX tall.
-y_scale = CAP_PX / Y_INK_H
-y_w, y_h = Y_BOX_W * y_scale, Y_BOX_H * y_scale
+# The Y stands on the baseline at cap height, and is 96/88 as wide as it is
+# tall. BRAND.md section 4, "Sizing the Y from the cap height".
+y_h = CAP_FACTOR * em
+y_w = y_h * Y_VB_W / Y_VB_H
+y_scale = y_h / Y_VB_H
 
 
-def ink(ch):
-    """(left, right) ink edges of one glyph in px, from its own origin."""
-    pen = BoundsPen(glyphs)
-    glyphs[cmap[ord(ch)]].draw(pen)
-    return pen.bounds[0] * k, pen.bounds[2] * k
-
-
-def outlines(text, x):
-    """SVG path commands for `text` set from x, plus its ink edges.
-
-    Letter-spacing goes BETWEEN the letters of a run and not after the last
-    one, the way #brand's negative margin-right cancels the trailing track.
-    """
-    parts, pen_x = [], x
-    left = right = None
-    for i, ch in enumerate(text):
+def run(font, text, x):
+    """SVG path commands for `text` set from x, its ink edges, and the pen's
+    end position. Letter-spacing goes after every letter, including the last;
+    the lockup is centred on its ink afterwards, which is what absorbs the
+    trailing space that BRAND.md's padding-left trick absorbs in CSS."""
+    glyphs, cmap = font.getGlyphSet(), font.getBestCmap()
+    parts, pen_x, left, right = [], x, None, None
+    for ch in text:
         glyph = glyphs[cmap[ord(ch)]]
-        # y-flip: font units go up, SVG goes down. Baseline sits at y = 0.
         pen = SVGPathPen(glyphs)
+        # y-flip: font units go up, SVG goes down. Baseline sits at y = 0.
         glyph.draw(TransformPen(pen, Transform(k, 0, 0, -k, pen_x, 0)))
         if pen.getCommands():
             parts.append(pen.getCommands())
-        a, b = ink(ch)
-        left = pen_x + a if left is None else left
-        right = pen_x + b
-        pen_x += glyph.width * k
-        if i < len(text) - 1:
-            pen_x += track
-    return parts, left, right
+        bounds = BoundsPen(glyphs)
+        glyph.draw(bounds)
+        if bounds.bounds:
+            lo, hi = pen_x + bounds.bounds[0] * k, pen_x + bounds.bounds[2] * k
+            left = lo if left is None else min(left, lo)
+            right = hi if right is None else max(right, hi)
+        pen_x += glyph.width * k + track
+    return parts, left, right, pen_x
 
 
-# What the tracking is worth as a GAP BETWEEN INK, measured inside the tail
-# run: the funnel is a shape and not a glyph, so it has no side bearings of
-# its own, and spacing it by the letters' advance would leave it swimming.
-# Setting its two ink gaps to this one is what legal.css arrived at by
-# measurement for the same lockup in the page header.
+# What the tracking is worth as a gap BETWEEN INK, measured inside the tail
+# run where it is nothing but tracking and two real side bearings.
+#
+# This, and not a fixed em figure, is what the Y is spaced by. BRAND.md's own
+# CSS block gives the Y margins of 0.092 em and 0.312 em, but those do not
+# reproduce the app: measured off store/play/screenshot-1-start.png, which is
+# _Brand's own render, the three ink gaps come out 25, 26 and 25 px - equal -
+# while the same lockup built from those margins in a browser gives 0.370,
+# 0.372 and 0.262 em. The spec's stated intent, "measured from the render
+# until the gaps either side were even", is what is reproduced here; its two
+# numbers are not.
+
+
+def side_bearings(font, ch):
+    glyphs, cmap = font.getGlyphSet(), font.getBestCmap()
+    glyph = glyphs[cmap[ord(ch)]]
+    pen = BoundsPen(glyphs)
+    glyph.draw(pen)
+    return pen.bounds[0] * k, (glyph.width - pen.bounds[2]) * k, glyph.width * k
+
+
 if len(TAIL) >= 2:
-    a_adv = glyphs[cmap[ord(TAIL[0])]].width * k
-    target = (a_adv + track + ink(TAIL[1])[0]) - ink(TAIL[0])[1]
+    _, v_rsb, _ = side_bearings(tail_font, TAIL[0])
+    t_lsb, _, _ = side_bearings(tail_font, TAIL[1])
+    target = v_rsb + track + t_lsb
 else:
     target = track
 
-lead, lead_l, lead_r = outlines(LEAD, 0.0)
-y_x = lead_r + target - Y_INK_L * y_scale          # the funnel's box, left edge
-tail_x = (y_x + Y_INK_R * y_scale) + target - ink(TAIL[0])[0]
-tail, _, tail_r = outlines(TAIL, tail_x)
+y_inset = Y_INK_INSET / Y_VB_H * y_h          # the Y's own bearing, in px
 
-# Centred on the INK, not on the advance widths: the artwork has no text
-# around it for side bearings to line up with.
-word_w = tail_r - lead_l
-total_w = MARK_PX + GAP + word_w
-x0 = (W - total_w) / 2                     # the lockup, centred
-base = H / 2 + CAP_PX / 2                  # the letters' baseline
-word_x = x0 + MARK_PX + GAP - lead_l
+lead, lead_l, lead_r, _ = run(lead_font, LEAD, 0.0)
+y_x = lead_r + target - y_inset               # box left, so the INK gaps match
+v_lsb, _, _ = side_bearings(tail_font, TAIL[0])
+tail_x = (y_x + y_w - y_inset) + target - v_lsb
+tail, _, tail_r, _ = run(tail_font, TAIL, tail_x)
 
-# The funnel stands on the baseline and reaches cap height, so its ink bottom
-# is the baseline: box top = baseline - cap - the ink's own top inset.
-y_top = base - CAP_PX - Y_INK_TOP * y_scale
+# Centred on the ink. The Y's own ink sits inside its box, so the extremes are
+# always the first and last letter.
+ink_w = tail_r - lead_l
+word_x = (W - ink_w) / 2 - lead_l
+# Centred on the band the lockup actually fills, which is the Y's box: it is
+# the tallest part, cap height plus the optical correction.
+base = H / 2 + y_h / 2
 
-svg = f'''<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}">
+glow_r = GLOW_R * min(W, H)
+
+svg = f'''<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" role="img" aria-label="SYVT">
   <title>SYVT</title>
   <!-- Open Graph artwork, {W}x{H}. GENERATED by brand/make-wordmark.py - edit
-       that, not this. The mark is brand/syvt-mark.svg unit for unit, and the
-       funnel between the letters is its narrow cut, the app's Y. The letters
-       are Manrope wght {WEIGHT} at {TRACKING}em tracking, converted to outlines, so
-       nothing here needs a font at render time. -->
+       that, not this.
+
+       The wordmark alone: the name contains the funnel, so the mark is never
+       shown beside it (BRAND.md rule 1). The plate is the feature graphic's
+       off-centre variant of the brand glow, and the letters are Fredoka
+       converted to outlines, so nothing here needs a font at render time. The
+       Y is assets/brand/syvt-glyph-y.svg verbatim, filled in the letters' own
+       cream - it carries no colour of its own, ever. -->
   <defs>
-    <linearGradient id="plate" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="{PLATE_TOP}"/>
+    <radialGradient id="plate" gradientUnits="userSpaceOnUse"
+                    cx="{GLOW_X * W:.2f}" cy="{GLOW_Y * H:.2f}" r="{glow_r:.2f}">
+      <stop offset="0" stop-color="{PLATE_CORE}"/>
       <stop offset=".55" stop-color="{PLATE_MID}"/>
-      <stop offset="1" stop-color="{PLATE_BOT}"/>
-    </linearGradient>
+      <stop offset="1" stop-color="{PLATE_RIM}"/>
+    </radialGradient>
   </defs>
   <rect width="{W}" height="{H}" fill="url(#plate)"/>
-  <g transform="translate({x0:.2f} {(H - MARK_PX) / 2:.2f}) scale({MARK_PX / 120.0:.5f})">
-    <g fill="none" stroke-width="16" stroke-linecap="round">
-      <path d="M14 38L51 76" stroke="{WRONG}"/>
-      <path d="M106 38L69 76" stroke="{RIGHT}"/>
+  <g fill="{CREAM}">
+    <g transform="translate({word_x:.2f} {base:.2f})">
+      <path d="{' '.join(lead)}"/>
+      <path d="{' '.join(tail)}"/>
     </g>
-    <rect x="47" y="72" width="26" height="36" rx="11" fill="{WHITE}"/>
-    <circle cx="60" cy="28" r="24" fill="{SUN}"/>
-    <circle cx="51" cy="25" r="3.5" fill="{INK}"/>
-    <circle cx="69" cy="25" r="3.5" fill="{INK}"/>
-    <path d="M51 34q9 7 18 0" fill="none" stroke="{INK}" stroke-width="3.5" stroke-linecap="round"/>
-  </g>
-  <g transform="translate({word_x:.2f} {base:.2f})" fill="{CREAM}">
-    <path d="{' '.join(lead)}"/>
-    <path d="{' '.join(tail)}"/>
-  </g>
-  <!-- The funnel as the Y; its spout takes the wordmark's ink, not white.
-       The paths are the app's own, so they are in the glyph's viewBox space
-       (12 28 96 82) and the inner translate brings that box's corner to the
-       origin - which is what the outer transform then places. -->
-  <g transform="translate({word_x + y_x:.2f} {y_top:.2f}) scale({y_scale:.5f}) translate({-Y_BOX_X:.0f} {-Y_BOX_Y:.0f})">
-    <g fill="none" stroke-width="16" stroke-linecap="round">
-      <path d="M24 38L51 76" stroke="{WRONG}"/>
-      <path d="M96 38L69 76" stroke="{RIGHT}"/>
+    <!-- the funnel as the Y, standing on the baseline at cap height; the
+         even-odd rule is what keeps the card a hole rather than filling it -->
+    <g transform="translate({word_x + y_x:.2f} {base - y_h:.2f}) scale({y_scale:.6f}) translate({-Y_VB_X:.0f} {-Y_VB_Y:.0f})">
+      <path d="{y_path()}" fill-rule="evenodd"/>
     </g>
-    <rect x="47" y="72" width="26" height="36" rx="11" fill="{CREAM}"/>
   </g>
 </svg>
 '''
 
 io.open(OUT, "w", encoding="utf-8", newline="\n").write(svg)
-print('%s  "%s+Y+%s"  ink gaps %.2fpx  wordmark %.1fpx wide  lockup %.1fpx'
-      % (OUT, LEAD, TAIL, target, word_w, total_w))
+print('%s  "%s+Y+%s"  Fredoka %g/%g  size %g  ink gap %.2fpx (%.4f em)  '
+      'ink %.1fpx wide, %.1f%% of the canvas'
+      % (OUT, LEAD, TAIL, WGHT_LEAD, WGHT_TAIL, FONT_SIZE, target, target / em,
+         ink_w, 100 * ink_w / W))

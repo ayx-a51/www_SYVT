@@ -16,11 +16,10 @@
 }
 
 :root{
-  /* Brand, verbatim from the app */
-  --violet:#5F36D0;
-  --violet-mid:#4A27AE;
-  --violet-deep:#37198A;
-  --sun:#FFD54A;
+  /* The plate, verbatim from Brand in ../SYVT/lib/ui/marks.dart */
+  --violet:#6E42EE;       /* plate core, gradient stop 0   */
+  --violet-mid:#2A1B84;   /* plate mid,  gradient stop .55 */
+  --violet-deep:#08102C;  /* plate rim,  gradient stop 1   */
   --mint:#2DD4BF;
   --coral:#FB7185;
   --ink:#1E2646;
@@ -56,12 +55,15 @@ a:focus-visible{outline:3px solid var(--violet);outline-offset:3px;border-radius
 .wrap{max-width:820px;margin-inline:auto;padding-inline:clamp(20px,5vw,40px)}
 
 /* ---------- the violet band ----------
-   The launcher plate, full bleed: its gradient and its crown highlight, so
-   the page opens on the same picture as the icon that links to it. */
+   The launcher plate, full bleed: one centred radial of the three brand stops,
+   so the page opens on the same picture as the icon that links to it. The
+   plate has no highlight, no second fill and no stroke, and its stops
+   interpolate in sRGB - naming a colour space here would shift the mid violet
+   and stop being the same picture. */
 .hero{
-  background:
-    radial-gradient(90% 120% at 24% -30%,rgba(255,255,255,.22),rgba(255,255,255,0) 62%),
-    linear-gradient(165deg,var(--violet) 0%,var(--violet-mid) 55%,var(--violet-deep) 100%);
+  background:radial-gradient(68% 68% at 50% 50%,
+                             var(--violet) 0%,var(--violet-mid) 55%,var(--violet-deep) 100%);
+  background-color:var(--violet-deep);   /* what it clamps to, past the rim */
   color:var(--cream);
   padding-bottom:clamp(56px,9vw,96px);
 }
@@ -69,27 +71,33 @@ a:focus-visible{outline:3px solid var(--violet);outline-offset:3px;border-radius
 .hero a:focus-visible{outline-color:var(--cream)}
 
 .top{display:flex;align-items:center;gap:14px;padding-block:clamp(18px,3vw,30px)}
-/* Mark and wordmark are one link back to the game. */
-.top .home{display:flex;align-items:center;gap:14px;text-decoration:none;color:inherit}
-.top .home img{width:48px;height:48px;border-radius:22%}
+/* The wordmark alone is the link back to the game. The mark never stands
+   beside the name, because the name already contains the funnel. */
+.top .home{display:flex;align-items:center;text-decoration:none;color:inherit}
 
-/* The wordmark: S, the funnel as the Y, VT — the app's own lockup. The
-   funnel is a placeholder rather than a glyph, so it gets no letter-space of
-   its own: the margin below is the tracking the S already carries, and the
-   tail pulls back the phantom space after the final T. */
+/* The wordmark: S, the funnel as the Y, VT — the app's own lockup. Tracking is
+   0.22em and is never anything else. The size is set by a floor rather than by
+   taste: the wordmark's minimum is a 24px cap height, and Manrope's caps are
+   .72em, so 24 / .72 = 33.3px is the smallest legal size and 34px gives 24.5px.
+   Under it the card closes up inside the Y and the letter stops reading as a
+   funnel. line-height:1 keeps the 34px lockup from taking the body's leading. */
 .name{
-  display:inline-flex;align-items:baseline;
-  font-weight:800;font-size:1.3rem;letter-spacing:.14em;
+  display:inline-flex;align-items:baseline;line-height:1;
+  font-weight:800;font-size:2.125rem;letter-spacing:.22em;
 }
 /* Manrope's capitals are exactly .72em tall, so that is the funnel's ink
-   height and it stands on the baseline like a letter. The funnel is a
-   placeholder, not a glyph, so it carries no side bearings and no tracking
-   of its own: the two margins were measured until the ink gaps S-Y and Y-V
-   match the one inside VT (20.6px at a 90px test size, all three). The
-   negative margins drop the phantom space letter-spacing leaves after the
-   last glyph of a run. */
-.name .y{height:.72em;width:auto;margin-left:.080em;margin-right:.187em}
-.name .lead,.name .tail{margin-right:-.14em}
+   height and it stands on the baseline like a letter; its width is 96/88 of
+   that, the drawn shape being 96 by 88 units and filling its box exactly. The
+   SVG carries a viewBox and no intrinsic size, so the width is stated rather
+   than left to the engine.
+
+   The two margins are measured, not BRAND.md's .092em/.312em: those come from
+   the Flutter render, where the placeholder gets a trailing letter-space that
+   CSS never adds after an atomic inline. Solved here until each side of the Y
+   matches the ink gap inside VT, which is what the app's own renders show. See
+   the longer note in syvt.css. */
+.name .y{height:.72em;width:calc(.72em * 96 / 88);margin-left:-.058em;margin-right:.1953em}
+.name .tail{margin-right:-.22em}
 
 .toplink{
   margin-left:auto;text-decoration:none;font-weight:700;
@@ -105,7 +113,7 @@ a:focus-visible{outline:3px solid var(--violet);outline-offset:3px;border-radius
 .kicker{
   display:inline-block;
   font-weight:800;font-size:.6875rem;letter-spacing:.14em;text-transform:uppercase;
-  color:var(--violet-deep);background:var(--sun);
+  color:var(--violet-deep);background:var(--cream);
   padding:.45em 1em;border-radius:var(--r-chip);
 }
 .pagehead h1{
@@ -125,7 +133,7 @@ main{margin-top:calc(-1 * clamp(30px,5vw,56px));padding-bottom:8px}
   background:var(--surface);
   border:1px solid var(--line);
   border-radius:var(--r-card);
-  box-shadow:0 10px 30px -12px rgba(55,25,138,.22);
+  box-shadow:0 10px 30px -12px rgba(42,27,132,.22);   /* #2A1B84, the plate mid */
   padding:clamp(22px,3.6vw,36px);
   margin-bottom:clamp(14px,2vw,20px);
 }
@@ -169,7 +177,7 @@ footer{
   margin-top:clamp(20px,3vw,36px);
 }
 footer .frow{display:flex;flex-wrap:wrap;align-items:center;gap:12px clamp(18px,3vw,30px)}
-footer .frow > img{width:28px;height:28px;border-radius:22%}
+footer .frow > img{width:28px;height:28px;border-radius:22.794%}  /* 31 of 136 */
 footer a{color:var(--ink-soft);text-decoration:none;font-size:.875rem;display:inline-block;padding-block:.5em}
 footer a:hover{color:var(--violet-mid);text-decoration:underline}
 footer .copy{margin-left:auto;color:var(--ink-soft);font-size:.875rem}

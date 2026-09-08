@@ -8,13 +8,14 @@
 <title>SYVT</title>
 <meta name="description" content="SYVT &mdash; words fall, you sort them. Swipe right if it is spelled correctly, left if it is not. Play the free levels here; SYVT+ is on Android.">
 <meta name="theme-color" content="#e1e8ea">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="brand/syvt-app-mark-192.png" sizes="192x192">
 <link rel="apple-touch-icon" href="brand/syvt-app-mark-192.png">
 <meta property="og:type" content="website">
 <meta property="og:title" content="SYVT">
 <meta property="og:description" content="Words fall. Swipe right if it is spelled correctly, left if it is not.">
 <meta property="og:url" content="https://syvt.me/">
-<meta property="og:image" content="https://syvt.me/og.png">
+<meta property="og:image" content="https://syvt.me/og.png?v=2">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -121,10 +122,18 @@
 
   <div id="overlay">
     <div id="panel">
-      <!-- S, the funnel as the Y, VT: the app's own lockup. The two walls
-           keep the game's grammar (coral wrong, mint right) in every theme;
-           only the spout takes the theme's ink. -->
-      <div id="brand"><span class="lead">S</span><svg class="y" viewBox="0 0 96 82" aria-hidden="true" focusable="false"><path d="M12 10 39 48" stroke="#fb7185" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M84 10 57 48" stroke="#2dd4bf" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none"/><rect class="spout" x="35" y="44" width="26" height="36" rx="11"/></svg><span class="tail">VT</span></div>
+      <!-- S, the funnel as the Y, VT: the app's own lockup, and the reason the
+           mark is never shown beside it - the name already contains the funnel.
+           The Y is assets/brand/syvt-glyph-y.svg verbatim, the icon's glyph with
+           the word card knocked out of it by the even-odd rule.
+
+           It carries no colour of its own. The letters take the theme's brand
+           gradient through background-clip, which cannot reach an inline SVG
+           child, so the Y repeats the same two stops in user space over the
+           lockup's 1em line box. The two gradients differ only by face: the
+           numbers are BRAND.md's CSS rows, and they depend on the font's own
+           ascent, descent and cap factor, not on the palette. -->
+      <div id="brand" role="img" aria-label="SYVT"><span class="lead" aria-hidden="true">S</span><svg class="y" aria-hidden="true" focusable="false" viewBox="12 20 96 88"><defs><linearGradient id="brandY-manrope" gradientUnits="userSpaceOnUse" x1="0" y1="0.077778" x2="0" y2="122.300000"><stop class="stop-a" offset="0" stop-color="#10282c"/><stop class="stop-b" offset="1" stop-color="#1c8f87"/></linearGradient><linearGradient id="brandY-fredoka" gradientUnits="userSpaceOnUse" x1="0" y1="0.292958" x2="0" y2="124.236620"><stop class="stop-a" offset="0" stop-color="#10282c"/><stop class="stop-b" offset="1" stop-color="#1c8f87"/></linearGradient></defs><path class="glyph" fill-rule="evenodd" d="M18.66 29.98Q12.0 20.0,24.0 20.0L96.0 20.0Q108.0 20.0,101.34 29.98L75.33 69.01Q72.0 74.0,72.0 80.0L72.0 98.0Q72.0 108.0,62.0 108.0L58.0 108.0Q48.0 108.0,48.0 98.0L48.0 80.0Q48.0 74.0,44.67 69.01ZM39.61 42.25Q38.36 36.38,44.23 35.13L71.61 29.31Q77.48 28.06,78.73 33.93L80.39 41.75Q81.64 47.62,75.77 48.87L48.39 54.69Q42.52 55.94,41.27 50.07Z"/></svg><span class="tail" aria-hidden="true">VT</span></div>
 
       <p id="tagline"></p>
 

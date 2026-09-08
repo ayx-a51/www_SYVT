@@ -1,25 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="SYVT">
   <title>SYVT</title>
-  <!-- The SYVT mark: a round face drops into a funnel whose walls carry the
-       verdict colours, coral for wrong on the left and mint for right on the
-       right. One word falls in; it leaves either left or right.
-
-       This is the app's drawing, unit for unit — ../SYVT/assets/brand/syvt-mark.svg,
-       which lib/ui/marks.dart draws and tool/render_icons_test.dart renders
-       the launcher sources from. The wide rim (92 units across) is this, the
-       standalone mark; the narrow one (72 across, no ball) is the funnel that
-       serves as the Y of the wordmark. Flat, no outlines.
-
-       The spout is white here because the mark is only ever shown on the
-       violet plate or another dark ground. In the wordmark it takes the
-       wordmark's own ink instead. -->
-  <g fill="none" stroke-width="16" stroke-linecap="round">
-    <path d="M14 38L51 76" stroke="#FB7185"/>
-    <path d="M106 38L69 76" stroke="#2DD4BF"/>
-  </g>
-  <rect x="47" y="72" width="26" height="36" rx="11" fill="#FFFFFF"/>
-  <circle cx="60" cy="28" r="24" fill="#FFD54A"/>
-  <circle cx="51" cy="25" r="3.5" fill="#1E2646"/>
-  <circle cx="69" cy="25" r="3.5" fill="#1E2646"/>
-  <path d="M51 34q9 7 18 0" fill="none" stroke="#1E2646" stroke-width="3.5" stroke-linecap="round"/>
+  <!-- The mark on its own, without its plate, for a surface that shows it
+       without the name: the funnel takes that surface's own text colour
+       (currentColor); the two triangles keep the game's verdict colours.
+       The app itself does not use this file. Nothing outside marks.dart
+       draws the mark, and the start panel shows the wordmark alone, with
+       the funnel standing in for the Y. -->
+  <path d="M18.66 29.98Q12.0 20.0,24.0 20.0L96.0 20.0Q108.0 20.0,101.34 29.98L75.33 69.01Q72.0 74.0,72.0 80.0L72.0 98.0Q72.0 108.0,62.0 108.0L58.0 108.0Q48.0 108.0,48.0 98.0L48.0 80.0Q48.0 74.0,44.67 69.01ZM39.61 42.25Q38.36 36.38,44.23 35.13L71.61 29.31Q77.48 28.06,78.73 33.93L80.39 41.75Q81.64 47.62,75.77 48.87L48.39 54.69Q42.52 55.94,41.27 50.07Z" fill="currentColor" fill-rule="evenodd"/>
+  <path d="M16.59 90.99Q12.0 89.0,16.59 87.01L37.41 77.99Q42.0 76.0,42.0 81.0L42.0 97.0Q42.0 102.0,37.41 100.01Z" fill="#FB7185"/>
+  <path d="M103.41 90.99Q108.0 89.0,103.41 87.01L82.59 77.99Q78.0 76.0,78.0 81.0L78.0 97.0Q78.0 102.0,82.59 100.01Z" fill="#2DD4BF"/>
 </svg>

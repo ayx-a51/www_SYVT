@@ -127,13 +127,33 @@ y7.ai.
 
 ## Assets
 
-The mark is the app's: a round face drops into a funnel whose walls carry the
-verdict colours, coral for wrong on the left and mint for right on the right,
-on the deep violet plate. It comes in two cuts, both drawn in the same
-120-unit box — the **wide** rim with the face, which is the mark, and the
-**narrow** rim without it, which is the Y of the wordmark. The app is where
-they are defined (`../SYVT/assets/brand/`, drawn by `lib/ui/marks.dart`);
-everything here is a copy of that geometry, unit for unit.
+The mark is the game drawn as one picture: a word card lies at an angle inside
+a funnel, and the two answers leave to the sides, wrong to the left in coral
+and right to the right in mint. The card is not painted on top of the funnel,
+it is **knocked out** of it, so the mark is a single shape and the plate shows
+through the card — which is also what lets the wordmark reuse the same glyph
+as a letter. On the plate, a centred radial of `#6E42EE`, `#2A1B84` and
+`#08102C`.
+
+**The spec is `../SYVT/assets/brand/BRAND.md`, and `lib/ui/marks.dart` is the
+authority on any number in it.** Nothing here is drawn: `icon.svg` and
+`brand/syvt-mark.svg` are copies of `../SYVT/assets/brand/` byte for byte, and
+every inline copy of the funnel carries the same path data and the same
+`fill-rule="evenodd"` — without the fill rule the card fills in.
+
+Two rules from that spec shape this repo more than the rest:
+
+- **The mark and the name never appear together.** The name already contains
+  the funnel. So a page shows one or the other: the game panel, the two legal
+  headers and the link preview show the wordmark; `404.html` shows the mark;
+  the favicon is the mark on its plate and is not part of any lockup.
+- **The Y is exactly the colour of the letters around it** — never coral,
+  never mint, never a second tone. On the game panel the letters take the
+  theme's gradient through `background-clip: text`, which cannot reach an
+  inline SVG child, so the Y repeats the same two stops in `userSpaceOnUse`
+  over the lockup's 1 em line box. Two gradients, one per face: the numbers
+  fall out of the font's ascent, descent and cap factor, not out of the
+  palette.
 
 So the name is set as **S, the funnel, VT** — never with a letter Y. It is
 built that way in three places and drawn in none of them: `#brand` on the
@@ -152,26 +172,53 @@ node make-icons.mjs        # icon.svg -> apple-touch-icon.png, brand/syvt-og.svg
 at the root because that is the path iOS looks for by itself, as a fallback
 for any page that does not declare one.
 
-The letters in `brand/syvt-og.svg` are Manrope converted to outlines, so the
-artwork needs no font at render time. That conversion is one-way, so if the
-game is ever renamed:
+`brand/syvt-app-mark-{192,64}.png` are the favicon's raster fallback and the
+legal pages' footer logo. They are downsampled from the app's **rounded**
+icon, which has transparent corners; `store/play/icon-512.png` is the
+full-bleed one and would give a square tile in a browser tab:
+
+```
+python -c "from PIL import Image; im=Image.open('../SYVT/assets/icon/icon-android-1024.png').convert('RGBA'); [im.resize((n,n), Image.LANCZOS).save(f'brand/syvt-app-mark-{n}.png') for n in (192,64)]"
+```
+
+The letters in `brand/syvt-og.svg` are Fredoka converted to outlines, so the
+artwork needs no font at render time; the Y in it is `syvt-glyph-y.svg`
+verbatim. It is the **wordmark alone** on the plate in flat cream, following
+the Play feature graphic, because the mark may not stand beside the name. That
+conversion is one-way, so if the game is ever renamed:
 
 ```
 pip install fonttools brotli   # once
 python brand/make-wordmark.py  # set LEAD and TAIL at the top, then re-run make-icons.mjs
 ```
 
-That script spaces the funnel by measuring rather than by eye: it gives it
-the same ink gap either side that the tracking leaves between V and T. Note
-that the start panel does it differently — `#brand` spaces the funnel by
-advance width, the way the app's own `_Brand` does, which is a little airier.
-The two lockups do not match to the pixel, and the difference is deliberate
-only in the sense that nobody has yet decided which is right.
+### One number the spec gets wrong
+
+BRAND.md's CSS block spaces the Y with `margin-left: 0.092em` and
+`margin-right: 0.312em`. Those come from the Flutter render, where the
+placeholder is handed a trailing letter-space; CSS never adds one after an
+atomic inline, and an inline SVG is one. Built from them in a browser the
+three ink gaps come out 115 / 105 / 70 at a 300 px em — the Y floating in half
+again the air the letters get.
+
+The app's own renders have all three equal: 25 / 26 / 25 px measured off
+`store/play/screenshot-1-start.png`, and 25 / 25 / 25 off the Play feature
+graphic. That is also what the spec says it was after, *"measured from the
+render until the gaps either side were even"*.
+
+So every lockup here is spaced by measurement instead, solved per face until
+each side of the Y matches the ink gap inside VT. `brand/make-wordmark.py`
+does it arithmetically from the font's own side bearings; `syvt.css` and
+`legal.css` carry solved constants with the derivation beside them. Re-solve
+if the face, the tracking or the cap factor ever changes.
 
 `matter.min.js` is the physics engine; `manrope.woff2` is the typeface the
 grown-up worlds use and `fredoka.woff2` the one the kids' worlds do, the same
-pairing as the app. All three are vendored, so the only origin the page
-reaches at runtime is the audio bucket, and only once a round has started.
+pairing as the app. Both are variable, and both axes are always written:
+Fredoka's `wght` default is 300 and its axis stops at 700, so the S asks for
+620 and the rest for 800 and gets 700. All three files are vendored, so the
+only origin the page reaches at runtime is the audio bucket, and only once a
+round has started.
 Both fonts are SIL Open Font License; `OFL-Manrope.txt` and `OFL-Fredoka.txt`
 are the licences that requires be shipped with them.
 
@@ -185,21 +232,20 @@ third party — not even a font, which on a privacy page would hand the reader's
 IP address to whoever served it. The game's own policy is one line wider than
 theirs; see **The voice** above.
 
-They are skinned in the **app's** palette, not this page's: the deep violet
-plate, cream and the mint/coral verdict pair from `lib/ui/marks.dart` in the
-Flutter repo, because these are the pages the Play listing links to and the
-app icon is what a reader arrives from. `brand/syvt-app-mark-{192,64}.png` are
-that icon, downsampled from the app's `store/play/icon-512.png`:
-
-```
-python -c "from PIL import Image; im=Image.open('../SYVT/store/play/icon-512.png').convert('RGBA'); [im.resize((n,n), Image.LANCZOS).save(f'brand/syvt-app-mark-{n}.png') for n in (192,64)]"
-```
+They are skinned in the **app's** palette, not this page's: the plate's own
+three violets and cream, from `lib/ui/marks.dart` in the Flutter repo, because
+these are the pages the Play listing links to and the app icon is what a
+reader arrives from. The band at the top is the plate itself — one centred
+radial, no highlight laid over it. `brand/syvt-app-mark-{192,64}.png`, the
+footer logo, is regenerated with the command under **Assets** above.
 
 The wordmark in the header is built in HTML rather than drawn: Manrope
 ExtraBold for S and VT with the funnel as an inline SVG in between, sized to
 Manrope's cap height (exactly `.72em`) so it stands on the baseline like a
-letter. Its two margins are measured, not derived — see the comment in
-`legal.css`.
+letter, and 34 px because the wordmark's floor is a 24 px cap height and
+`24 / .72` is 33.3. It shows the name alone — the mark used to sit beside it,
+which the brand does not allow. Its two margins are measured, not derived; see
+**One number the spec gets wrong** above and the comment in `legal.css`.
 
 Keep both pages true to what the app actually does. The claims that matter, and
 that would need editing if the app changed: no ads, no analytics, no crash
