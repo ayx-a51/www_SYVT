@@ -1,35 +1,20 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="-8 -8 136 136" role="img" aria-label="SYVT">
   <title>SYVT</title>
-  <!-- Same mark and the same junction construction as brand/syvt-mark.svg,
-       only inset into a plate and drawn a little heavier so it holds up at
-       16px. The bisector seams do not depend on stroke width, so the clip
-       polygons are shared verbatim with the master.
-
-       Follows the browser theme, but note how: the dark colours are ordinary
-       presentation attributes and CSS only overrides them for light. Two
-       reasons. Dark is SYVT's canonical form, and presentation attributes
-       lose to any CSS rule, so the override still wins where it applies.
-       More importantly this file is also the source for apple-touch-icon.png
-       (see make-icons.mjs) - and the rasteriser resolves neither var() nor
-       media queries, so writing the colours as CSS custom
-       properties, the way favicon.svg does, rendered a plate with no mark on
-       it at all. -->
-  <style>
-    @media (prefers-color-scheme: light) {
-      .plate { fill: #ffffff; }
-      .stem  { stroke: #0d4b46; }
-      .wrong { stroke: #e11d48; }
-      .right { stroke: #0d9488; }
-    }
-  </style>
+  <!-- The SYVT mark: a word card tilted inside a funnel, with the two answers
+       beside it (coral left = misspelled, mint right = correctly spelled).
+       The glyph is one path with the card knocked out by the even-odd rule.
+       The plate is a centre glow made from the three brand colours, so the
+       funnel stands in the light and the triangles sit on the darker ring.
+       Same 120-unit box and 136-unit plate as the icon pipeline. -->
   <defs>
-    <clipPath id="svL"><polygon points="60,73 60,600 -940,600 -940,-441.618"/></clipPath>
-    <clipPath id="svR"><polygon points="60,73 60,600 1060,600 1060,-441.618"/></clipPath>
+    <radialGradient id="plate" cx=".5" cy=".5" r="0.68">
+      <stop offset="0" stop-color="#6E42EE"/>
+      <stop offset=".55" stop-color="#2A1B84"/>
+      <stop offset="1" stop-color="#08102C"/>
+    </radialGradient>
   </defs>
-  <rect class="plate" x="-8" y="-8" width="136" height="136" rx="31" fill="#05100f"/>
-  <g fill="none" stroke-width="15" stroke-linecap="round" stroke-linejoin="round">
-    <path class="stem"  d="M60 17 L60 73"   stroke="#e6f6f4"/>
-    <path class="wrong" d="M60 73 L18 103"  stroke="#fb7185" clip-path="url(#svL)"/>
-    <path class="right" d="M60 73 L102 103" stroke="#2dd4bf" clip-path="url(#svR)"/>
-  </g>
+  <rect x="-8" y="-8" width="136" height="136" rx="31" fill="url(#plate)"/>
+  <path d="M18.66 29.98Q12.0 20.0,24.0 20.0L96.0 20.0Q108.0 20.0,101.34 29.98L75.33 69.01Q72.0 74.0,72.0 80.0L72.0 98.0Q72.0 108.0,62.0 108.0L58.0 108.0Q48.0 108.0,48.0 98.0L48.0 80.0Q48.0 74.0,44.67 69.01ZM39.61 42.25Q38.36 36.38,44.23 35.13L71.61 29.31Q77.48 28.06,78.73 33.93L80.39 41.75Q81.64 47.62,75.77 48.87L48.39 54.69Q42.52 55.94,41.27 50.07Z" fill="#FFFFFF" fill-rule="evenodd"/>
+  <path d="M16.59 90.99Q12.0 89.0,16.59 87.01L37.41 77.99Q42.0 76.0,42.0 81.0L42.0 97.0Q42.0 102.0,37.41 100.01Z" fill="#FB7185"/>
+  <path d="M103.41 90.99Q108.0 89.0,103.41 87.01L82.59 77.99Q78.0 76.0,78.0 81.0L78.0 97.0Q78.0 102.0,82.59 100.01Z" fill="#2DD4BF"/>
 </svg>

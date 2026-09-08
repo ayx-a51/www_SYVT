@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
 <title>SYVT</title>
 <link rel="icon" href="/icon.svg" type="image/svg+xml">
-<meta name="theme-color" content="#05100f">
+<meta name="theme-color" content="#2A1B84">
 <script>
   /* GitHub Pages cannot issue a server-side redirect, but it does serve this
      file for any path it cannot resolve - so this doubles as the redirect
@@ -39,10 +39,16 @@
 </script>
 <style>
   html, body { height: 100%; }
+  /* The plate, full bleed: one centred radial of the three brand colours,
+     the same picture as the icon that brought the reader here. BRAND.md
+     section 2. The stops interpolate in sRGB - naming a colour space here
+     would shift the mid violet and stop being the same picture. */
   body {
     margin: 0;
-    background: #05100f;
-    color: #4d7c78;
+    background: radial-gradient(68% 68% at 50% 50%,
+                                #6E42EE 0%, #2A1B84 55%, #08102C 100%);
+    background-color: #08102C;   /* what the gradient clamps to, past its rim */
+    color: rgba(255, 247, 230, .90);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
     display: flex;
     flex-direction: column;
@@ -53,26 +59,41 @@
     padding: 24px;
     box-sizing: border-box;
   }
-  .mark { width: min(26vw, 104px); height: auto; display: block; }
+  /* The funnel takes the surrounding text colour; the two triangles keep the
+     game's verdict colours and must not. BRAND.md section 8.
+
+     The drawn ink runs y 20 to 108 of the 120 box, so its centre is y 64, not
+     60. Centring the viewBox would sit the mark four units of 120 low, which
+     is why the box is nudged up by that much: 4/120 of its own height. */
+  .mark {
+    width: min(26vw, 104px);
+    height: auto;
+    display: block;
+    color: #FFFFFF;
+    margin-top: calc(min(26vw, 104px) * -4 / 120);
+  }
   p {
     margin: 0;
     font-size: 12px;
     font-weight: 600;
     letter-spacing: 0.22em;
     text-transform: uppercase;
-    color: #3f6b67;
+    color: rgba(255, 247, 230, .90);
   }
   a {
     font-size: 12px;
     font-weight: 700;
-    letter-spacing: 0.2em;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
-    color: #2dd4bf;
+    color: #FFF7E6;
     text-decoration: none;
     transition: color 0.45s ease;
   }
-  a:hover, a:focus-visible { color: #7df0dd; }
-  a:focus-visible { outline: 1px solid #2dd4bf; outline-offset: 6px; }
+  /* Not mint on hover. Coral and mint are the game's verdict pair and carry
+     meaning wherever they appear; a link that borrows one is spending that
+     meaning on decoration, on a page that is already showing the mark. */
+  a:hover, a:focus-visible { color: #FFFFFF; }
+  a:focus-visible { outline: 1px solid #FFF7E6; outline-offset: 6px; }
   /* No entrance fade, deliberately. An `animation: ... both` starts at
      opacity 0 and only becomes visible if the animation actually runs - a bad
      bet on the page people reach when something has already gone wrong. This
@@ -82,22 +103,25 @@
 </head>
 <body>
 
+<!-- brand/syvt-mark.svg inline, because this page loads nothing: its policy
+     is default-src 'none' with no self, so that a 404 served for any path at
+     all can still paint. Copied from ../SYVT/assets/brand/syvt-mark.svg; the
+     fill-rule is what keeps the card a hole rather than filling it in. -->
+<!-- role and aria-label, but no <title>: the standalone file carries all three
+     so that it can be dropped in anywhere, and inlined that is one name too
+     many - a reader given both announces "SYVT SYVT". -->
 <svg class="mark" viewBox="0 0 120 120" role="img" aria-label="SYVT">
-  <title>SYVT</title>
-  <defs>
-    <clipPath id="svL"><polygon points="60,73 60,600 -940,600 -940,-441.618"/></clipPath>
-    <clipPath id="svR"><polygon points="60,73 60,600 1060,600 1060,-441.618"/></clipPath>
-  </defs>
-  <g fill="none" stroke-width="13" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M60 17 L60 73"   stroke="#e6f6f4"/>
-    <path d="M60 73 L18 103"  stroke="#fb7185" clip-path="url(#svL)"/>
-    <path d="M60 73 L102 103" stroke="#2dd4bf" clip-path="url(#svR)"/>
-  </g>
+  <path d="M18.66 29.98Q12.0 20.0,24.0 20.0L96.0 20.0Q108.0 20.0,101.34 29.98L75.33 69.01Q72.0 74.0,72.0 80.0L72.0 98.0Q72.0 108.0,62.0 108.0L58.0 108.0Q48.0 108.0,48.0 98.0L48.0 80.0Q48.0 74.0,44.67 69.01ZM39.61 42.25Q38.36 36.38,44.23 35.13L71.61 29.31Q77.48 28.06,78.73 33.93L80.39 41.75Q81.64 47.62,75.77 48.87L48.39 54.69Q42.52 55.94,41.27 50.07Z" fill="currentColor" fill-rule="evenodd"/>
+  <path d="M16.59 90.99Q12.0 89.0,16.59 87.01L37.41 77.99Q42.0 76.0,42.0 81.0L42.0 97.0Q42.0 102.0,37.41 100.01Z" fill="#FB7185"/>
+  <path d="M103.41 90.99Q108.0 89.0,103.41 87.01L82.59 77.99Q78.0 76.0,78.0 81.0L78.0 97.0Q78.0 102.0,82.59 100.01Z" fill="#2DD4BF"/>
 </svg>
 
 <p>Nothing here</p>
 
-<nav><a href="/">Play SYVT</a></nav>
+<!-- Not "Play SYVT". Uppercase, letterspaced and bold, that sets the name
+     as display type in a system sans, which the brand does not allow - and
+     the mark above has already said it. -->
+<nav><a href="/">Back to the game</a></nav>
 
 </body>
 </html>

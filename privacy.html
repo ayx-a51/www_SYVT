@@ -9,8 +9,9 @@
   <meta name="description" content="What SYVT stores, what never leaves the device, where it is kept, and how to delete it." />
   <!-- the app's icon, not the site's older mark: these two pages are the
        app's, and a reader arrives at them from the Play listing -->
+  <meta name="theme-color" content="#2A1B84" />
   <link rel="icon" href="brand/syvt-app-mark-192.png" sizes="192x192" />
-  <link rel="apple-touch-icon" href="brand/syvt-app-mark-192.png" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
   <link rel="stylesheet" href="legal.css" />
 </head>
 <body>
@@ -19,8 +20,7 @@
 
   <header class="wrap top">
     <a class="home" href="index.html" aria-label="SYVT &mdash; home">
-      <img src="brand/syvt-app-mark-192.png" alt="" width="48" height="48" />
-      <span class="name"><span class="lead">S</span><svg class="y" viewBox="12 30 96 78" aria-hidden="true" focusable="false"><g fill="none" stroke-width="16" stroke-linecap="round"><path d="M24 38 L51 76" stroke="#FB7185" /><path d="M96 38 L69 76" stroke="#2DD4BF" /></g><rect x="47" y="72" width="26" height="36" rx="11" fill="currentColor" /></svg><span class="tail">VT</span></span>
+      <span class="name"><span class="lead">S</span><svg class="y" viewBox="12 20 96 88" aria-hidden="true" focusable="false"><path fill="currentColor" fill-rule="evenodd" d="M18.66 29.98Q12.0 20.0,24.0 20.0L96.0 20.0Q108.0 20.0,101.34 29.98L75.33 69.01Q72.0 74.0,72.0 80.0L72.0 98.0Q72.0 108.0,62.0 108.0L58.0 108.0Q48.0 108.0,48.0 98.0L48.0 80.0Q48.0 74.0,44.67 69.01ZM39.61 42.25Q38.36 36.38,44.23 35.13L71.61 29.31Q77.48 28.06,78.73 33.93L80.39 41.75Q81.64 47.62,75.77 48.87L48.39 54.69Q42.52 55.94,41.27 50.07Z" /></svg><span class="tail">VT</span></span>
     </a>
     <a class="toplink" href="data_deletion.html">Data&nbsp;deletion</a>
   </header>
@@ -99,6 +99,20 @@
     it identifies an installation, not a person, and we do not read it. This
     website is served by GitHub Pages, which, like any web server, logs the IP
     address of a visit.</p>
+
+    <h2>The spoken words</h2>
+    <p>The voice that reads the falling words is a set of fixed audio files on
+    <strong>Cloudflare R2</strong>, at <code>audio.syvt.me</code> &mdash; used
+    by the app and, on the two levels it reads them, by the game on this site.
+    Nothing is generated while you play: the word is turned into a file name on
+    your own device, and only that file name is asked for. No text, no account
+    and no device identifier is ever sent. Cloudflare, like any web server,
+    sees the IP address making the request and which files it asked for
+    &mdash; and because the word list is public, those names say which words
+    were practised. That is the honest limit of it, and the reason a round
+    fetches its words in a batch rather than one at a time as they fall. The
+    files are the same for everyone; nothing about them is personal to a
+    player. Switching the voice off stops every one of these requests.</p>
   </section>
 
   <section class="card">
@@ -120,8 +134,9 @@
     <p>We do not sell data, and we share none of it with third parties for
     their own purposes. The only companies involved are <strong>Google</strong>
     &mdash; as the operator of Firebase, where account data is stored, and of
-    Google Play, which processes purchases &mdash; and <strong>GitHub</strong>,
-    which serves this website. They act as our processors under contract.</p>
+    Google Play, which processes purchases &mdash; <strong>GitHub</strong>,
+    which serves this website, and <strong>Cloudflare</strong>, which serves
+    the spoken words. They act as our processors under contract.</p>
   </section>
 
   <section class="card">
@@ -167,7 +182,6 @@
 
 <footer>
   <div class="wrap frow">
-    <img src="brand/syvt-app-mark-64.png" alt="SYVT logo" width="28" height="28" />
     <a href="index.html">Home</a>
     <a href="data_deletion.html">Data deletion</a>
     <a href="mailto:hi@SYVT.me">hi@SYVT.me</a>

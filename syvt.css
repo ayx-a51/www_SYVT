@@ -30,9 +30,6 @@
   --radius: calc(14 * var(--s));
   --floor-h: calc(46 * var(--s));
   --ceiling-h: calc(56 * var(--s));
-  /* the game's grammar, the same in every world */
-  --coral: #fb7185;
-  --mint: #2dd4bf;
 }
 
 :root[data-theme="day"] {
@@ -532,7 +529,16 @@ body {
   100% { transform: scale(1); }
 }
 
-#pauseBtn {
+/* The pause chip and the voice chip share the middle of the rail, so the HUD
+   keeps its three columns and the score and level chips do not move. */
+#hudMid {
+  display: flex;
+  align-items: flex-start;
+  gap: calc(14 * var(--s));
+  pointer-events: none;
+}
+
+#pauseBtn, #voiceBtn {
   pointer-events: auto;
   width: calc(38 * var(--s));
   height: calc(38 * var(--s));
@@ -546,14 +552,40 @@ body {
   align-items: center;
   justify-content: center;
 }
-#game[data-phase="playing"] #pauseBtn { display: flex; }
-#pauseBtn svg { width: calc(38 * var(--s)); height: calc(38 * var(--s)); }
+#game[data-phase="playing"] #pauseBtn,
+#game[data-phase="playing"] #voiceBtn { display: flex; }
+#pauseBtn svg, #voiceBtn svg { width: calc(38 * var(--s)); height: calc(38 * var(--s)); }
 #pauseBtn path {
   fill: none;
   stroke: var(--chip-text);
   stroke-width: 2.6;
   stroke-linecap: round;
 }
+
+/* One glyph or the other, never both: at 38 px on a moving field silhouette
+   is all a player gets, and "cone plus waves" against "cone plus bar" is two
+   shapes at a glance where all three together is one busy one. */
+#voiceBtn .muted { display: none; }
+#voiceBtn[aria-pressed="false"] .spoken { display: none; }
+#voiceBtn[aria-pressed="false"] .muted { display: inline; }
+#voiceBtn .cone { fill: var(--chip-text); }
+#voiceBtn .wave, #voiceBtn .bar {
+  fill: none;
+  stroke: var(--chip-text);
+  /* 2.4 rather than the pause bars' 2.6: a filled cone already carries more
+     ink than two uprights. */
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* What a control keeps of itself when it cannot be used: switched on with
+   nothing to fetch from, or past the levels the free game reads. Harder than
+   the locked world card's .7, because that card also wears a padlock and
+   there is no room for one here. It still takes taps either way — a player
+   whose train is in a tunnel must be able to switch it off, and a player past
+   level 2 gets the offer. */
+#voiceBtn.dim { opacity: .5; }
 
 #levelChip {
   display: flex;
@@ -805,23 +837,82 @@ body {
 #brand {
   display: inline-flex;
   align-items: baseline;
-  font-size: calc(38 * var(--s));
+  /* 38 is the app's reference size and --s the design-space scale, but the
+     wordmark alone gets a floor under it: the brand's minimum is a 24px cap
+     height, and 34px is where that lands (x .72 Manrope, x .71 Fredoka). The
+     scale model would put it at 20.9px on a 320px phone, where the card
+     knocked out of the Y starts to close. This is the only place --s is
+     departed from, and the lockup is the only thing it moves: the panel is
+     calc(372 * var(--s)) and the floored lockup still sits inside it. */
+  font-size: max(34px, calc(38 * var(--s)));
   font-weight: 800;
   line-height: 1;
   letter-spacing: .22em;
+  /* the final T still gets a trailing letter-space that draws nothing, so the
+     lockup is padded by the same amount on the left to sit centred */
+  padding-left: .22em;
   background: linear-gradient(180deg, var(--brand-a) 0%, var(--brand-b) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
-#brand .lead, #brand .tail { margin-right: -.22em; }
+/* The Y's two margins are MEASURED, not BRAND.md's 0.092em / 0.312em.
+
+   Those two numbers come from the Flutter render, where the placeholder is
+   given a trailing letter-space; CSS does not add one after an atomic inline,
+   and an inline SVG is one, so they do not carry over. Built from them here
+   the three ink gaps come out 115 / 105 / 70 at a 300px em - the Y floating in
+   half again the air the letters get. The app's own renders have all three
+   equal: 25 / 26 / 25 px off store/play/screenshot-1-start.png, which is
+   _Brand, and 25 / 25 / 25 off the Play feature graphic. That is also what
+   BRAND.md says it was after, "measured from the render until the gaps either
+   side were even".
+
+   So these are solved, per face, until each side of the Y matches the gap
+   inside VT: at a 300px em all three land on 70px in Manrope and 77px in
+   Fredoka, exactly. The left one is negative because it is undoing part of the
+   letter-space CSS puts after the S and the app's layout never had. Re-derive
+   with the harness in the commit message if the face or the tracking changes.
+*/
+/* The Y is sized from the cap height and is 96/88 as wide as it is tall; it
+   stands on the baseline, and the drawn shape fills its box exactly, so there
+   is no drop to correct. */
 #brand .y {
   height: var(--cap);
-  width: auto;
-  margin-left: .30em;
-  margin-right: .30em;
+  width: calc(var(--cap) * 96 / 88);
+  margin-left: -.058em;    /* Manrope */
+  margin-right: .1953em;
 }
-#brand .y .spout { fill: var(--brand-b); }
+:root[data-theme="aquarium"] #brand .y {
+  margin-left: -.018em;    /* Fredoka sets the S and the V differently */
+  margin-right: .1987em;
+}
+
+/* The Y takes the letters' own gradient and never a colour of its own.
+   background-clip: text cannot reach an inline SVG child, so the same two
+   stops are repeated here in the Y's user space, mapped over the lockup's 1em
+   line box rather than over the Y's own box - an objectBoundingBox gradient
+   would refit the stops to the cap height and the funnel would come out darker
+   at its foot than the letters beside it.
+
+   Two gradients, because y1/y2 fall out of the font's ascent, descent and cap
+   factor, and gradient coordinates are not CSS geometry properties, so one
+   parameterised gradient is not possible. The stops are attributes in the
+   markup as well, so a stylesheet that never arrives leaves the Y in the Day
+   colours rather than in black. */
+#brand .y .stop-a { stop-color: var(--brand-a); }
+#brand .y .stop-b { stop-color: var(--brand-b); }
+#brand .y .glyph { fill: url(#brandY-manrope); }
+:root[data-theme="aquarium"] #brand .y .glyph { fill: url(#brandY-fredoka); }
+
+/* Fredoka draws its S with more ink than its V and its T, so the name looks
+   like it starts with a bold letter; 620 evens it. Its weight axis also stops
+   at 700, which is why the rest asks for 800 and gets 700 rather than a step
+   below it. Both axes every time: the wght default is 300, and a wdth left
+   unwritten inherits whatever the instance carries. Manrope's S has not been
+   measured, so the Day lockup keeps font-weight: 800 for all of it. */
+:root[data-theme="aquarium"] #brand .lead { font-variation-settings: 'wdth' 100, 'wght' 620; }
+:root[data-theme="aquarium"] #brand .tail { font-variation-settings: 'wdth' 100, 'wght' 800; }
 
 #tagline {
   margin: calc(16 * var(--s)) 0 0;

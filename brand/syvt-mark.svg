@@ -1,23 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="SYVT">
   <title>SYVT</title>
-  <!-- One word falls in; it leaves either left (wrong) or right (right).
-
-       The junction is built the way the y7 mark builds its crossings: the
-       light stroke is drawn first and left uncut - it owns the point - and
-       the others are knocked out against it with a clipPath. Each seam is
-       the angle bisector of the two strokes meeting there, so the colours
-       butt along a straight edge and none of them ever blends into a third.
-       Bisector slope 0.5146179; -441.618 = 73 - 1000 x that. The vertical
-       seam below the junction is the stem's own centreline continued.
-       The stem needs no clip: each arm's round cap fills its own sector, so
-       it overpaints every part of the stem's cap outside stem territory. -->
-  <defs>
-    <clipPath id="svL"><polygon points="60,73 60,600 -940,600 -940,-441.618"/></clipPath>
-    <clipPath id="svR"><polygon points="60,73 60,600 1060,600 1060,-441.618"/></clipPath>
-  </defs>
-  <g fill="none" stroke-width="13" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M60 17 L60 73"   stroke="#e6f6f4"/>
-    <path d="M60 73 L18 103"  stroke="#fb7185" clip-path="url(#svL)"/>
-    <path d="M60 73 L102 103" stroke="#2dd4bf" clip-path="url(#svR)"/>
-  </g>
+  <!-- The mark on its own, without its plate, for a surface that shows it
+       without the name: the funnel takes that surface's own text colour
+       (currentColor); the two triangles keep the game's verdict colours.
+       The app itself does not use this file. Nothing outside marks.dart
+       draws the mark, and the start panel shows the wordmark alone, with
+       the funnel standing in for the Y. -->
+  <path d="M18.66 29.98Q12.0 20.0,24.0 20.0L96.0 20.0Q108.0 20.0,101.34 29.98L75.33 69.01Q72.0 74.0,72.0 80.0L72.0 98.0Q72.0 108.0,62.0 108.0L58.0 108.0Q48.0 108.0,48.0 98.0L48.0 80.0Q48.0 74.0,44.67 69.01ZM39.61 42.25Q38.36 36.38,44.23 35.13L71.61 29.31Q77.48 28.06,78.73 33.93L80.39 41.75Q81.64 47.62,75.77 48.87L48.39 54.69Q42.52 55.94,41.27 50.07Z" fill="currentColor" fill-rule="evenodd"/>
+  <path d="M16.59 90.99Q12.0 89.0,16.59 87.01L37.41 77.99Q42.0 76.0,42.0 81.0L42.0 97.0Q42.0 102.0,37.41 100.01Z" fill="#FB7185"/>
+  <path d="M103.41 90.99Q108.0 89.0,103.41 87.01L82.59 77.99Q78.0 76.0,78.0 81.0L78.0 97.0Q78.0 102.0,82.59 100.01Z" fill="#2DD4BF"/>
 </svg>
