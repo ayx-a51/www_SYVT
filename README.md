@@ -168,9 +168,15 @@ npm install sharp          # once, for rendering only
 node make-icons.mjs        # icon.svg -> apple-touch-icon.png, brand/syvt-og.svg -> og.png
 ```
 
-`apple-touch-icon.png` carries no `<link>` anywhere, and should not: it sits
-at the root because that is the path iOS looks for by itself, as a fallback
-for any page that does not declare one.
+The two icon jobs are not the same picture, deliberately. The browser tab gets
+`icon.svg` as it stands — rounded, `rx="31"`, transparent corners — with
+`brand/syvt-app-mark-192.png` beside it for anything that will not take an SVG.
+`apple-touch-icon.png` is rendered from the same master with the corner radius
+dropped and the alpha flattened onto the plate's rim colour, because iOS masks
+a home-screen icon with its own superellipse and expects an opaque square to
+mask: hand it a rounded, transparent one and the two roundings compound, with
+black showing through the corners iOS does not cut. It also sits at the root
+because that is the path iOS looks for by itself.
 
 `brand/syvt-app-mark-{192,64}.png` are the favicon's raster fallback and the
 legal pages' footer logo. They are downsampled from the app's **rounded**

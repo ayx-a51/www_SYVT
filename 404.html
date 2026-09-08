@@ -89,7 +89,10 @@
     text-decoration: none;
     transition: color 0.45s ease;
   }
-  a:hover, a:focus-visible { color: #2DD4BF; }
+  /* Not mint on hover. Coral and mint are the game's verdict pair and carry
+     meaning wherever they appear; a link that borrows one is spending that
+     meaning on decoration, on a page that is already showing the mark. */
+  a:hover, a:focus-visible { color: #FFFFFF; }
   a:focus-visible { outline: 1px solid #FFF7E6; outline-offset: 6px; }
   /* No entrance fade, deliberately. An `animation: ... both` starts at
      opacity 0 and only becomes visible if the animation actually runs - a bad
