@@ -144,9 +144,13 @@ every inline copy of the funnel carries the same path data and the same
 Two rules from that spec shape this repo more than the rest:
 
 - **The mark and the name never appear together.** The name already contains
-  the funnel. So a page shows one or the other: the game panel, the two legal
-  headers and the link preview show the wordmark; `404.html` shows the mark;
-  the favicon is the mark on its plate and is not part of any lockup.
+  the funnel. So a page shows one or the other, **counting the whole page and
+  not just the header**: the game panel, the two legal pages and the link
+  preview show the wordmark and nothing else; `404.html` shows the mark and
+  does not set the name in type at all. The favicon is the mark on its plate,
+  and is chrome rather than part of any lockup. The legal footers used to
+  carry the mark as a small tile while their headers carried the name, which
+  is exactly the shape this rule forbids — do not put it back.
 - **The Y is exactly the colour of the letters around it** — never coral,
   never mint, never a second tone. On the game panel the letters take the
   theme's gradient through `background-clip: text`, which cannot reach an
@@ -178,13 +182,13 @@ mask: hand it a rounded, transparent one and the two roundings compound, with
 black showing through the corners iOS does not cut. It also sits at the root
 because that is the path iOS looks for by itself.
 
-`brand/syvt-app-mark-{192,64}.png` are the favicon's raster fallback and the
-legal pages' footer logo. They are downsampled from the app's **rounded**
-icon, which has transparent corners; `store/play/icon-512.png` is the
-full-bleed one and would give a square tile in a browser tab:
+`brand/syvt-app-mark-192.png` is the favicon's raster fallback, for anything
+that will not take an SVG, and its only use. It is downsampled from the app's
+**rounded** icon, which has transparent corners; `store/play/icon-512.png` is
+the full-bleed one and would give a square tile in a browser tab:
 
 ```
-python -c "from PIL import Image; im=Image.open('../SYVT/assets/icon/icon-android-1024.png').convert('RGBA'); [im.resize((n,n), Image.LANCZOS).save(f'brand/syvt-app-mark-{n}.png') for n in (192,64)]"
+python -c "from PIL import Image; im=Image.open('../SYVT/assets/icon/icon-android-1024.png').convert('RGBA'); im.resize((192,192), Image.LANCZOS).save('brand/syvt-app-mark-192.png')"
 ```
 
 The letters in `brand/syvt-og.svg` are Fredoka converted to outlines, so the
@@ -242,8 +246,8 @@ They are skinned in the **app's** palette, not this page's: the plate's own
 three violets and cream, from `lib/ui/marks.dart` in the Flutter repo, because
 these are the pages the Play listing links to and the app icon is what a
 reader arrives from. The band at the top is the plate itself — one centred
-radial, no highlight laid over it. `brand/syvt-app-mark-{192,64}.png`, the
-footer logo, is regenerated with the command under **Assets** above.
+radial, no highlight laid over it, which is why both pages set
+`theme-color: #2A1B84`, the plate's own mid tone.
 
 The wordmark in the header is built in HTML rather than drawn: Manrope
 ExtraBold for S and VT with the funnel as an inline SVG in between, sized to

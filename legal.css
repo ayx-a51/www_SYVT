@@ -177,7 +177,6 @@ footer{
   margin-top:clamp(20px,3vw,36px);
 }
 footer .frow{display:flex;flex-wrap:wrap;align-items:center;gap:12px clamp(18px,3vw,30px)}
-footer .frow > img{width:28px;height:28px;border-radius:22.794%}  /* 31 of 136 */
 footer a{color:var(--ink-soft);text-decoration:none;font-size:.875rem;display:inline-block;padding-block:.5em}
 footer a:hover{color:var(--violet-mid);text-decoration:underline}
 footer .copy{margin-left:auto;color:var(--ink-soft);font-size:.875rem}
