@@ -837,7 +837,14 @@ body {
 #brand {
   display: inline-flex;
   align-items: baseline;
-  font-size: calc(38 * var(--s));
+  /* 38 is the app's reference size and --s the design-space scale, but the
+     wordmark alone gets a floor under it: the brand's minimum is a 24px cap
+     height, and 34px is where that lands (x .72 Manrope, x .71 Fredoka). The
+     scale model would put it at 20.9px on a 320px phone, where the card
+     knocked out of the Y starts to close. This is the only place --s is
+     departed from, and the lockup is the only thing it moves: the panel is
+     calc(372 * var(--s)) and the floored lockup still sits inside it. */
+  font-size: max(34px, calc(38 * var(--s)));
   font-weight: 800;
   line-height: 1;
   letter-spacing: .22em;
