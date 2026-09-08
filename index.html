@@ -2,7 +2,7 @@
 <html lang="en" data-theme="day">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self' data: https://audio.syvt.me; connect-src https://audio.syvt.me; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>SYVT</title>
@@ -69,11 +69,38 @@
         <span id="scoreBonus" hidden>+0</span>
       </span>
     </div>
-    <button id="pauseBtn" type="button" aria-label="Pause">
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-        <path d="M9.4 7.6V16.4M14.6 7.6V16.4"/>
-      </svg>
-    </button>
+    <div id="hudMid">
+      <button id="pauseBtn" type="button" aria-label="Pause">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M9.4 7.6V16.4M14.6 7.6V16.4"/>
+        </svg>
+      </button>
+      <!-- The voice, told by shape and by luminance rather than by colour, so
+           the difference survives a colour-blind player and a bright window:
+           a cone with two waves while it is on, a cone with a bar through it
+           when it is off. The bar is knocked out of the cone rather than laid
+           over it, so the chip's own fill shows through the gap either side
+           and it reads as crossing the cone rather than growing out of it. -->
+      <button id="voiceBtn" type="button" aria-pressed="true">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <defs>
+            <mask id="voiceCut" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
+              <rect x="0" y="0" width="24" height="24" fill="#fff"/>
+              <path d="M5.6 18.4 18.4 5.6" stroke="#000" stroke-width="5.2" stroke-linecap="round" fill="none"/>
+            </mask>
+          </defs>
+          <g class="spoken">
+            <path class="cone" d="M5 9.9H7.9L11.7 6.6V17.4L7.9 14.1H5Z"/>
+            <path class="wave" d="M14.28 9.66A3.2 3.2 0 0 1 14.28 14.34"/>
+            <path class="wave" d="M15.92 7.91A5.6 5.6 0 0 1 15.92 16.09"/>
+          </g>
+          <g class="muted">
+            <path class="cone" d="M5 9.9H7.9L11.7 6.6V17.4L7.9 14.1H5Z" mask="url(#voiceCut)"/>
+            <path class="bar" d="M5.6 18.4 18.4 5.6"/>
+          </g>
+        </svg>
+      </button>
+    </div>
     <div id="levelChip">
       <span id="levelLabel">LEVEL 1</span>
       <span id="levelBar"><i id="levelFill"></i></span>
@@ -150,6 +177,7 @@
 <script src="matter.min.js"></script>
 <script src="words.js"></script>
 <script src="scenery.js"></script>
+<script src="voice.js"></script>
 <script src="syvt.js"></script>
 </body>
 </html>

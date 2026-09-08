@@ -34,6 +34,9 @@ Where the app would sell SYVT+, the page points at the Play Store instead:
   as long as the player likes.
 - **Two worlds** are free, Day and Aquarium. The other four sit in the picker
   with a padlock, and tapping one opens the same offer.
+- **Levels 1 and 2** are read out loud, as on Android. The chip beside the
+  pause button switches the voice; on the way into level 3 it goes quiet and
+  the chip dims, and a tap on it then pauses the round and opens the offer.
 
 The score stops counting at 150, which is the same moment. Play does not stop
 — the round runs until the stack reaches the ceiling — but every point after
@@ -56,16 +59,57 @@ a device plays in), and there are no player profiles, so no avatars, no
 statistics and no account — the best score is a `localStorage` number per
 language.
 
-`syvt.js` is the game, `scenery.js` the two worlds and the six picker
-thumbnails, `syvt.css` the whole interface as one themed stylesheet.
-`words.js` is generated:
+## The voice
+
+`voice.js` reads the falling words out loud, from the same corpus the app
+uses — immutable, content-addressed clips on Cloudflare R2 at
+`audio.syvt.me/tts/v1/`. It is a port of the app's `lib/voice/`, and the rules
+are the app's: off means off (switched off it opens no connection and fetches
+nothing at all), one word at a time with a waiting slot exactly one deep and
+last in wins, and nothing interrupts a word except the round itself stopping.
+
+Three things are the page's own, and each has its reason written where it is
+done:
+
+- **Nothing is hashed in the browser.** `make-words.py` computes every clip id
+  by importing the app's own `tool/tts/speech_key.py`, and the page looks a
+  word up rather than addressing it. A third implementation of the normaliser
+  and the SHA-256 would be a third chance to drift from the other two, and a
+  drifted hash does not throw — it misses every file and the voice goes quiet
+  with no error anywhere.
+- **One `<audio>` element for the page, unlocked on the START tap** with 52
+  bytes of silence. iOS lifts its lock per element and only inside a user
+  gesture, so a fresh element per word would be silent forever.
+- **No CORS policy is needed on the bucket.** A media element fetches
+  cross-origin without one, and the warm-up asks in `no-cors` mode and never
+  reads a byte of what comes back — it only wants the file in the browser's
+  cache, where the element will look for it. So the corpus stays exactly as
+  the app left it; see `tool/tts/README.md` in the app repo.
+
+Nothing is fetched until the player taps START: a visitor who only reads the
+panel touches no second origin. That is also why the page's
+Content-Security-Policy is no longer `default-src 'none'` — it now names
+`audio.syvt.me` under `media-src` and `connect-src`, and `data:` under
+`media-src` for the silent clip. Everything else is still same-origin, and
+`privacy.html` says what a clip fetch reveals.
+
+## Generated files
+
+`syvt.js` is the game, `voice.js` the spoken words, `scenery.js` the two
+worlds and the six picker thumbnails, `syvt.css` the whole interface as one
+themed stylesheet. `words.js` is generated:
 
 ```
 python make-words.py       # ../SYVT/tool/words/*.json -> words.js, levels 1-5
 ```
 
 500 words per language, each entry `[correct, ...misspellings]` — the words
-the app teaches, cut off where the free game is.
+the app teaches, cut off where the free game is. It also writes `SYVT_CLIPS`,
+the clip id of every word the page can say: levels 1 and 2 only, which is as
+far as the free voice goes. For German the id is Germany's spelling, from
+`de_germany.json`, keyed by the Swiss spelling the tile shows — the same
+`WordEntry.spoken` rule the app follows, because `ss` tells a German voice the
+vowel before it is short and the Swiss form is the one it cannot pronounce.
 
 ## Still to set up
 
@@ -102,19 +146,20 @@ python brand/make-wordmark.py  # set WORD at the top first, then re-run make-ico
 
 `matter.min.js` is the physics engine; `manrope.woff2` is the typeface the
 grown-up worlds use and `fredoka.woff2` the one the kids' worlds do, the same
-pairing as the app. All three are vendored, so the page has no third-party
-origins at runtime — which is what lets its Content-Security-Policy stay at
-`default-src 'none'`. Both fonts are SIL Open Font License; `OFL-Manrope.txt`
-and `OFL-Fredoka.txt` are the licences that requires be shipped with them.
+pairing as the app. All three are vendored, so the only origin the page
+reaches at runtime is the audio bucket, and only once a round has started.
+Both fonts are SIL Open Font License; `OFL-Manrope.txt` and `OFL-Fredoka.txt`
+are the licences that requires be shipped with them.
 
 ## Legal pages
 
 `privacy.html` and `data_deletion.html`, sharing `legal.css`. Google Play needs
 a privacy-policy URL before the Android app can be listed, and a deletion URL
 alongside it; these are the two, and the contact address on both is
-`hi@SYVT.me`. Both carry the same `default-src 'none'` policy as the game and
-load nothing from a third party — not even a font, which on a privacy page
-would hand the reader's IP address to whoever served it.
+`hi@SYVT.me`. Both carry `default-src 'none'` and load nothing from a
+third party — not even a font, which on a privacy page would hand the reader's
+IP address to whoever served it. The game's own policy is one line wider than
+theirs; see **The voice** above.
 
 They are skinned in the **app's** palette, not this page's: the deep violet
 plate, cream and the mint/coral verdict pair from `lib/ui/marks.dart` in the

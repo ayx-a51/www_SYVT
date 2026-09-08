@@ -532,7 +532,16 @@ body {
   100% { transform: scale(1); }
 }
 
-#pauseBtn {
+/* The pause chip and the voice chip share the middle of the rail, so the HUD
+   keeps its three columns and the score and level chips do not move. */
+#hudMid {
+  display: flex;
+  align-items: flex-start;
+  gap: calc(14 * var(--s));
+  pointer-events: none;
+}
+
+#pauseBtn, #voiceBtn {
   pointer-events: auto;
   width: calc(38 * var(--s));
   height: calc(38 * var(--s));
@@ -546,14 +555,40 @@ body {
   align-items: center;
   justify-content: center;
 }
-#game[data-phase="playing"] #pauseBtn { display: flex; }
-#pauseBtn svg { width: calc(38 * var(--s)); height: calc(38 * var(--s)); }
+#game[data-phase="playing"] #pauseBtn,
+#game[data-phase="playing"] #voiceBtn { display: flex; }
+#pauseBtn svg, #voiceBtn svg { width: calc(38 * var(--s)); height: calc(38 * var(--s)); }
 #pauseBtn path {
   fill: none;
   stroke: var(--chip-text);
   stroke-width: 2.6;
   stroke-linecap: round;
 }
+
+/* One glyph or the other, never both: at 38 px on a moving field silhouette
+   is all a player gets, and "cone plus waves" against "cone plus bar" is two
+   shapes at a glance where all three together is one busy one. */
+#voiceBtn .muted { display: none; }
+#voiceBtn[aria-pressed="false"] .spoken { display: none; }
+#voiceBtn[aria-pressed="false"] .muted { display: inline; }
+#voiceBtn .cone { fill: var(--chip-text); }
+#voiceBtn .wave, #voiceBtn .bar {
+  fill: none;
+  stroke: var(--chip-text);
+  /* 2.4 rather than the pause bars' 2.6: a filled cone already carries more
+     ink than two uprights. */
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* What a control keeps of itself when it cannot be used: switched on with
+   nothing to fetch from, or past the levels the free game reads. Harder than
+   the locked world card's .7, because that card also wears a padlock and
+   there is no room for one here. It still takes taps either way — a player
+   whose train is in a tunnel must be able to switch it off, and a player past
+   level 2 gets the offer. */
+#voiceBtn.dim { opacity: .5; }
 
 #levelChip {
   display: flex;

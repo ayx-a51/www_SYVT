@@ -99,6 +99,20 @@
     it identifies an installation, not a person, and we do not read it. This
     website is served by GitHub Pages, which, like any web server, logs the IP
     address of a visit.</p>
+
+    <h2>The spoken words</h2>
+    <p>The voice that reads the falling words is a set of fixed audio files on
+    <strong>Cloudflare R2</strong>, at <code>audio.syvt.me</code> &mdash; used
+    by the app and, on the two levels it reads them, by the game on this site.
+    Nothing is generated while you play: the word is turned into a file name on
+    your own device, and only that file name is asked for. No text, no account
+    and no device identifier is ever sent. Cloudflare, like any web server,
+    sees the IP address making the request and which files it asked for
+    &mdash; and because the word list is public, those names say which words
+    were practised. That is the honest limit of it, and the reason a round
+    fetches its words in a batch rather than one at a time as they fall. The
+    files are the same for everyone; nothing about them is personal to a
+    player. Switching the voice off stops every one of these requests.</p>
   </section>
 
   <section class="card">
@@ -120,8 +134,9 @@
     <p>We do not sell data, and we share none of it with third parties for
     their own purposes. The only companies involved are <strong>Google</strong>
     &mdash; as the operator of Firebase, where account data is stored, and of
-    Google Play, which processes purchases &mdash; and <strong>GitHub</strong>,
-    which serves this website. They act as our processors under contract.</p>
+    Google Play, which processes purchases &mdash; <strong>GitHub</strong>,
+    which serves this website, and <strong>Cloudflare</strong>, which serves
+    the spoken words. They act as our processors under contract.</p>
   </section>
 
   <section class="card">

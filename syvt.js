@@ -34,6 +34,7 @@
   var modal = $("modal"), modalTitle = $("modalTitle"), modalBody = $("modalBody");
   var modalBuy = $("modalBuy"), modalKeep = $("modalKeep");
   var scoreInfo = $("scoreInfo");
+  var voiceBtn = $("voiceBtn");
 
   var Engine = Matter.Engine, Bodies = Matter.Bodies, Body = Matter.Body,
       Composite = Matter.Composite, Events = Matter.Events;
@@ -58,7 +59,12 @@
       counterBody: "{score} is the whole free game: five levels of thirty points. Past that the words stay at level 5, so those points come easier — they are counted beside your score rather than in it, so that every {score} means the same thing.",
       gotIt: "Got it",
       lockTitle: "A SYVT+ world",
-      lockBody: "This world is part of SYVT+. Six worlds and ten levels — in the Android app."
+      lockBody: "This world is part of SYVT+. Six worlds and ten levels — in the Android app.",
+      voiceSetting: "Read words aloud",
+      voiceOffline: "Needs a connection",
+      voiceNeedsPlus: "SYVT+ reads the higher levels",
+      voiceTitle: "A SYVT+ voice",
+      voiceBody: "The free game reads the words out on levels 1 and 2. SYVT+ goes on reading them all the way up — in the Android app."
     },
     de: {
       tagline: "Wörter fallen vom Himmel. Wische nach rechts, wenn ein Wort richtig geschrieben ist — nach links, wenn es falsch ist.",
@@ -75,7 +81,12 @@
       counterBody: "{score} ist die ganze Gratis-Version: fünf Level à dreissig Punkte. Danach bleiben die Wörter auf Level 5, diese Punkte sind also leichter — sie werden neben deinem Punktestand gezählt und nicht darin, damit {score} überall dasselbe bedeutet.",
       gotIt: "Alles klar",
       lockTitle: "Eine SYVT+ Welt",
-      lockBody: "Diese Welt gehört zu SYVT+. Sechs Welten und zehn Level — in der Android-App."
+      lockBody: "Diese Welt gehört zu SYVT+. Sechs Welten und zehn Level — in der Android-App.",
+      voiceSetting: "Wörter vorlesen",
+      voiceOffline: "Braucht eine Verbindung",
+      voiceNeedsPlus: "SYVT+ liest auch die höheren Level vor",
+      voiceTitle: "Eine SYVT+ Stimme",
+      voiceBody: "Gratis werden die Wörter auf Level 1 und 2 vorgelesen. Mit SYVT+ geht es bis nach oben weiter — in der Android-App."
     },
     fr: {
       tagline: "Des mots tombent du ciel. Glisse à droite si un mot est bien orthographié — à gauche s’il est mal écrit.",
@@ -92,7 +103,12 @@
       counterBody: "{score}, c’est tout le jeu gratuit : cinq niveaux de trente points. Ensuite les mots restent au niveau 5, donc ces points-là sont plus faciles — ils sont comptés à côté de ton score et non dedans, pour que {score} veuille toujours dire la même chose.",
       gotIt: "Compris",
       lockTitle: "Un monde SYVT+",
-      lockBody: "Ce monde fait partie de SYVT+. Six mondes et dix niveaux — dans l’app Android."
+      lockBody: "Ce monde fait partie de SYVT+. Six mondes et dix niveaux — dans l’app Android.",
+      voiceSetting: "Lire les mots à voix haute",
+      voiceOffline: "Nécessite une connexion",
+      voiceNeedsPlus: "SYVT+ lit aussi les niveaux supérieurs",
+      voiceTitle: "Une voix SYVT+",
+      voiceBody: "La version gratuite lit les mots aux niveaux 1 et 2. SYVT+ continue jusqu’en haut — dans l’app Android."
     }
   };
 
@@ -128,10 +144,20 @@
   var GAMEOVER_HOLD = 0.5;
   var PER_LEVEL = 30;            // the app's kPerLevel
   var FREE_MAX_TIER = 4;         // level 5 is the last free one
+  // The last level the words are read out on, the app's Limits.freeVoiceMaxLevel.
+  // Two, not none: two levels of hearing the word said while looking at the
+  // spelling is the feature itself, and those are the levels a new player
+  // spends the most time in. It goes quiet on the way into level three, which
+  // is where the free game starts asking something of them anyway.
+  var VOICE_MAX_TIER = 1;
   var FREE_CAP = (FREE_MAX_TIER + 1) * PER_LEVEL;   // 150: where counting stops
   var RECENT_LIMIT = 10;
   var MATH_SHARE = 0.20;
   var BASE_W = 420;
+  // The app's kSpeakFromY: a tile is named on its way past this, not when it
+  // spawns. A tile spawns above the ceiling, invisible and still fading in,
+  // and a word said then arrives before there is anything to look at.
+  var SPEAK_FROM_Y = BASE_W * 16 / 9 / 10;
 
   var CAT_WORLD = 0x0001, CAT_FALLING = 0x0002, CAT_SETTLED = 0x0004, CAT_FLYING = 0x0008;
   var MASK_FALLING = CAT_WORLD | CAT_FALLING | CAT_SETTLED;
@@ -150,10 +176,83 @@
   var activeDrag = null;
   var shownTier = 0;
   var recent = [];
+  var nextId = 1;
 
   var stage = window.SYVT_SCENERY.stage($("sceneBack"), $("sceneFront"));
 
   function t() { return I18N[lang]; }
+
+  // ------------------------------------------------------------- the voice
+
+  /* The words read out loud, on the two levels the free game reads them.
+     voice.js is the whole of the policy; this hands it the three things only
+     the round knows — where the player is standing, whether a tile is still
+     in the air, and what to say when the switch is flipped mid-round. */
+  var voice = window.SYVT_VOICE.create({
+    entitled: function () { return tier() <= VOICE_MAX_TIER; },
+    stillFalling: function (id) {
+      for (var i = 0; i < blocks.length; i++) {
+        if (blocks[i].id === id) return blocks[i].state === "falling";
+      }
+      return false;
+    },
+    onChange: updateVoiceBtn,
+    // The moment it becomes able to speak: the switch has just been turned
+    // on, or a round has come back from a tunnel. Fetch what can fall next,
+    // and answer with the thing it just allowed rather than leaving the
+    // player to wait out a spawn and guess whether it worked.
+    onLive: function () { warmVoice(); announceNewest(); }
+  });
+
+  /* The words that could fall next, as a voice would say them: this level,
+     the two below it and the one above — bounded, here, by the two levels the
+     free game reads, which is every word the page can ever say. Draws
+     nothing: it touches neither `recent` nor the round's random numbers, so
+     warming the voice can never change the round it is warming up for. */
+  function warmVoice() {
+    var lo = Math.max(0, tier() - 2), hi = Math.min(VOICE_MAX_TIER, tier() + 1);
+    var words = [];
+    for (var i = lo; i <= hi; i++) {
+      var level = WORDS[lang][i];
+      if (!level) continue;
+      for (var k = 0; k < level.length; k++) words.push(level[k][0]);
+    }
+    voice.warm(words, lang);
+  }
+
+  /* Says the newest word still in the air again, if there is one. Newest
+     rather than lowest, because the newest is the one whose word has just
+     been withheld — and only one that is actually on screen, since naming a
+     tile still above the line is the very thing the line prevents. */
+  function announceNewest() {
+    if (!running || paused) return;
+    for (var i = blocks.length - 1; i >= 0; i--) {
+      var b = blocks[i];
+      if (b.state !== "falling" || !b.spoken) continue;
+      if (b.body.bounds.min.y < SPEAK_FROM_Y * S) continue;
+      b.announced = true;
+      voice.say(b.spoken, lang, b.id);
+      return;
+    }
+  }
+
+  /* Told by shape and by luminance rather than by colour, so the difference
+     survives a colour-blind player and a bright window. It is never inert:
+     being offline cannot make it so, because turning the switch on is the
+     only thing that starts the probe — a button that waited for a connection
+     before accepting a tap could never be turned on at all — and past level 2
+     a tap is what opens the offer. */
+  function updateVoiceBtn() {
+    var s = t();
+    var allowed = voice.entitled;
+    var on = allowed && voice.on;
+    var stranded = on && !voice.available;
+    voiceBtn.setAttribute("aria-pressed", on ? "true" : "false");
+    voiceBtn.classList.toggle("dim", !allowed || stranded);
+    voiceBtn.setAttribute("aria-label", s.voiceSetting);
+    voiceBtn.title = !allowed ? s.voiceNeedsPlus
+      : (stranded ? s.voiceOffline : s.voiceSetting);
+  }
 
   // --------------------------------------------------------- measurement
 
@@ -313,8 +412,13 @@
     if (running && tr > shownTier) {
       levelUpLabel.textContent = t().level + " " + (tr + 1);
       retrigger(levelUpEl, "show");
+      warmVoice();
     }
     shownTier = tr;
+    // The level is the other half of the voice's gate, and it moves under a
+    // running round: a player crossing into level three loses the voice they
+    // have been listening to for two levels, and the chip goes quiet with it.
+    voice.refresh();
   }
 
   function wrongFeedback() {
@@ -378,7 +482,10 @@
   }
 
   function spawn() {
-    var word, misspelled, eq = null;
+    // `spoken` is the correct spelling, for the voice — never the one on the
+    // tile, which may well be a misspelling of it. A sum has none: it is not
+    // a spelling, and there is nothing to say that the disc does not show.
+    var word, misspelled, spoken = null, eq = null;
     if (Math.random() < MATH_SHARE) {
       eq = pickEquation();
       word = eq.expr + "=" + eq.answer;
@@ -387,6 +494,7 @@
       var e = pickEntry();
       misspelled = e.length > 1 && Math.random() < 0.5;
       word = misspelled ? e[1 + ((Math.random() * (e.length - 1)) | 0)] : e[0];
+      spoken = e[0];
     }
 
     var el = document.createElement("div");
@@ -434,7 +542,9 @@
       : Bodies.rectangle(x, -height / 2 - 6 * S, width, height, shape);
 
     var block = {
+      id: nextId++,
       el: el, body: body, word: word, misspelled: misspelled, isEq: !!eq,
+      spoken: spoken, announced: false,
       width: width, height: height,
       state: "falling", penalty: false, revealed: false, revealAt: 0,
       dragging: false, dragX: 0, startX: 0, bodyStartX: 0, overTime: 0
@@ -635,6 +745,12 @@
         } else {
           b.overTime = 0;
         }
+      } else if (b.state === "falling" && !b.announced && b.spoken &&
+                 body.bounds.min.y >= SPEAK_FROM_Y * S) {
+        // Far enough down to be worth looking at. Once each, and never for a
+        // tile that has already been called.
+        b.announced = true;
+        voice.say(b.spoken, lang, b.id);
       }
       syncDOM(b);
     }
@@ -718,12 +834,19 @@
     overlay.classList.add("hidden");
     setPhase("playing");
     running = true;
+    // A gesture is on the stack exactly here, and iOS lifts its lock per
+    // element and only inside one. Miss this and the page is silent for the
+    // rest of its life.
+    voice.unlock();
+    voice.refresh();
+    warmVoice();
     spawn();
   }
 
   function gameOver() {
     running = false;
     paused = false;
+    voice.hush();
     pauseVeil.hidden = true;
     closeModal();
     if (score > best) {
@@ -747,6 +870,7 @@
     pauseTitle.textContent = t().paused.toUpperCase();
     pauseVeil.hidden = false;
     setPhase("paused");
+    voice.hush();
   }
 
   function resume() {
@@ -796,6 +920,14 @@
 
   function offerWorld() {
     openModal(t().lockTitle, t().lockBody, t().notNow, true);
+  }
+
+  /* A tap on the chip past the levels the free game reads. The stack stops
+     climbing before anybody is asked to read an offer: every other gate on
+     the page is reached from a screen where nothing is falling. */
+  function offerVoice() {
+    pause();
+    openModal(t().voiceTitle, t().voiceBody, t().keepPlaying, true);
   }
 
   // ------------------------------------------------------------- chrome
@@ -898,12 +1030,17 @@
     best = +(localStorage.getItem(STORE + "best." + lang) || 0);
     setPanel(false);
     updateHUD();
+    updateVoiceBtn();
   }
 
   // -------------------------------------------------------------- wiring
 
   startBtn.addEventListener("click", start);
   pauseBtn.addEventListener("click", pause);
+  voiceBtn.addEventListener("click", function () {
+    if (!voice.entitled) { offerVoice(); return; }
+    voice.toggle();
+  });
   resumeBtn.addEventListener("click", resume);
   quitBtn.addEventListener("click", gameOver);
 
@@ -927,7 +1064,10 @@
       lang = next;
       localStorage.setItem(STORE + "lang", lang);
       recent = [];
+      // Whatever is half-said is in the language the page has just left.
+      voice.hush();
       applyLang();
+      warmVoice();
       // a different language is a different font metric on every tile
       requestAnimationFrame(function () { measureField(); buildWalls(); });
     });
@@ -936,6 +1076,10 @@
   // a round that runs on without its player is worse than one that waits
   document.addEventListener("visibilitychange", function () {
     if (document.hidden) pause();
+    // A backgrounded page does not fetch; a returning one asks again straight
+    // away, because the network it comes back to is very often not the one it
+    // left.
+    voice.awake(!document.hidden);
   });
 
   /* A resize changes --s, so every tile has just been redrawn at a new size.
