@@ -27,16 +27,23 @@ line before the round ends. `--s` is the one factor that turns a design px
 into a screen px; the stylesheet and the physics both read it, so what is
 drawn and what is simulated cannot drift apart.
 
-Where the app would sell SYVT+, the page points at the Play Store instead:
+Where the app would sell SYVT+, the page says it is coming instead. The
+Android app is not listed yet, so there is nowhere to send anyone: the line
+under START is a plain sentence rather than a link, and the three gates
+below open a card that says what SYVT+ is and that it is on its way, with
+one button — the way out — rather than a second one that would open
+nothing. The day it lists, `index.html` gets the two hrefs back and the
+three `openModal` calls in `syvt.js` pass `showBuy` true again; the wording
+of each string is what changes with them, and nothing else is.
 
 - **Level 5** is the last free level, as on Android. At score 150 the round
-  pauses and the offer comes up once; dismissing it carries on at level 5 for
+  pauses and the notice comes up once; dismissing it carries on at level 5 for
   as long as the player likes.
 - **Two worlds** are free, Day and Aquarium. The other four sit in the picker
-  with a padlock, and tapping one opens the same offer.
+  with a padlock, and tapping one opens the same notice.
 - **Levels 1 and 2** are read out loud, as on Android. The chip beside the
   pause button switches the voice; on the way into level 3 it goes quiet and
-  the chip dims, and a tap on it then pauses the round and opens the offer.
+  the chip dims, and a tap on it then pauses the round and opens the notice.
 
 The score stops counting at 150, which is the same moment. Play does not stop
 — the round runs until the stack reaches the ceiling — but every point after
@@ -93,11 +100,43 @@ Content-Security-Policy is no longer `default-src 'none'` — it now names
 `media-src` for the silent clip. Everything else is still same-origin, and
 `privacy.html` says what a clip fetch reveals.
 
+## Poking the visitors
+
+A tap on a bird, a fish, a balloon or a plane makes it squeak and jump. It is
+the app's `Feel.poke`, brought over whole: the same six clips, the same gains
+and the same recoil.
+
+`scenery.js` owns the movement. Every visitor carries a `voice` (the cloud has
+none — a cloud makes no sound) and, once poked, the time it was poked and how
+often. `startle()` is a 1.4-second exponential decay off that moment, and the
+three motions are read off it: a squash, a hop, and a turn. The turn is the
+one that changes with the count — the first poke is a flinch, a wobble either
+way, and from the second the creature spins right round and carries on the way
+it was going. `pokeAt()` takes a point in design px and returns the visitor
+under it, with a 46-px touch radius so a small thing at the top of the sky is
+still catchable with a finger.
+
+`sfx.js` owns the sound, and it is the one thing on the page that is not an
+`<audio>` element. A spoken word is a remote file played through the single
+element iOS allows; these are six small same-origin clips that have to answer
+a finger at once and may overlap, so they are Web Audio: decoded once into
+memory, then any number at a time with gain, pitch and pan for free. That is
+what lets a creature be heard where it is seen — a distant one quieter and a
+shade lower, out of the side of the sky it is crossing, on the app's own
+numbers. The `AudioContext` is created on the first poke and never before, so
+a visitor nobody touches costs nothing at all, and the clips a theme can use
+are warmed on the START tap where there is a gesture to do it in.
+
+`sfx/*.wav` are byte-for-byte copies of the app's `assets/sfx/`, 120 KB for
+the six the two free worlds can reach. A poke never touches the game: it is
+ignored on a tile, on the HUD, on any panel, while a drag is in flight and
+while the round is paused, so nothing about it can cost a swipe.
+
 ## Generated files
 
-`syvt.js` is the game, `voice.js` the spoken words, `scenery.js` the two
-worlds and the six picker thumbnails, `syvt.css` the whole interface as one
-themed stylesheet. `words.js` is generated:
+`syvt.js` is the game, `voice.js` the spoken words, `sfx.js` the poke sounds,
+`scenery.js` the two worlds and the six picker thumbnails, `syvt.css` the
+whole interface as one themed stylesheet. `words.js` is generated:
 
 ```
 python make-words.py       # ../SYVT/tool/words/*.json -> words.js, levels 1-5

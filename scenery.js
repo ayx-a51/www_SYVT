@@ -13,6 +13,10 @@
   "use strict";
 
   var W = 420, H = 746.6667, FLOOR = 46, CEIL = 56;
+  // The smallest box a tap is tested against, design px. A distant butterfly
+  // is 34 px across and a thumb is not.
+  var TOUCH = 46;
+
   var FLOOR_TOP = H - FLOOR;              // 700.667
 
   var reduced = window.matchMedia
@@ -153,7 +157,7 @@
 
     visitors: [
       {
-        name: "birds", w: 76, h: 36, band: [0.04, 0.30], secs: 9, bob: 6,
+        name: "birds", voice: "chirp", w: 76, h: 36, band: [0.04, 0.30], secs: 9, bob: 6,
         weight: 1.2, shadow: 0,
         draw: function (ctx, phase) {
           var ranks = [[68, 18, 1], [53, 11, .92], [53, 25, .92],
@@ -174,7 +178,7 @@
         }
       },
       {
-        name: "cloud", w: 66, h: 30, band: [0.05, 0.25], secs: 30, bob: 1.5,
+        name: "cloud", voice: null, w: 66, h: 30, band: [0.05, 0.25], secs: 30, bob: 1.5,
         weight: 0.4, shadow: 0.13,
         draw: function (ctx) {
           var f = ramp(ctx, "rgba(255,255,255,.88)", 1.5, 28, .35, "#10282c");
@@ -189,7 +193,7 @@
         }
       },
       {
-        name: "plane", w: 46, h: 26, band: [0.10, 0.45], secs: 7, bob: 10,
+        name: "plane", voice: "click", w: 46, h: 26, band: [0.10, 0.45], secs: 7, bob: 10,
         weight: 1.0, shadow: 0.13,
         draw: function (ctx, phase) {
           ctx.save();
@@ -204,7 +208,7 @@
         }
       },
       {
-        name: "balloon", w: 44, h: 68, band: [0.05, 0.30], secs: 24, bob: 4,
+        name: "balloon", voice: "hum", w: 44, h: 68, band: [0.05, 0.30], secs: 24, bob: 4,
         weight: 0.6, shadow: 0.13,
         draw: function (ctx) {
           ctx.save();
@@ -241,7 +245,7 @@
         }
       },
       {
-        name: "butterfly", w: 34, h: 34, band: [0.20, 0.60], secs: 10, bob: 16,
+        name: "butterfly", voice: "tick", w: 34, h: 34, band: [0.20, 0.60], secs: 10, bob: 16,
         weight: 0.8, shadow: 0.13,
         draw: function (ctx, phase) {
           // four ellipses rather than two rebuilt path unions: at this size
@@ -496,7 +500,7 @@
 
     visitors: [
       {
-        name: "school", w: 120, h: 60, band: [0.10, 0.50], secs: 8, bob: 6,
+        name: "school", voice: "pop", w: 120, h: 60, band: [0.10, 0.50], secs: 8, bob: 6,
         weight: 1.5, shadow: 0.13,
         draw: function (ctx, phase) {
           var at = [[104, 30], [82, 14], [80, 46], [58, 28], [34, 38]];
@@ -511,7 +515,7 @@
         }
       },
       {
-        name: "clownfish", w: 70, h: 44, band: [0.15, 0.60], secs: 9, bob: 6,
+        name: "clownfish", voice: "warble", w: 70, h: 44, band: [0.15, 0.60], secs: 9, bob: 6,
         weight: 1.0, shadow: 0.13,
         draw: function (ctx, phase) {
           var wag = Math.sin(phase * 7) * 3, flap = Math.sin(phase * 7 + 1.2) * 2;
@@ -562,7 +566,7 @@
         }
       },
       {
-        name: "tang", w: 80, h: 50, band: [0.20, 0.65], secs: 11, bob: 6,
+        name: "tang", voice: "warble", w: 80, h: 50, band: [0.20, 0.65], secs: 11, bob: 6,
         weight: 1.0, shadow: 0.13,
         draw: function (ctx, phase) {
           var wag = Math.sin(phase * 6) * 3, flap = Math.sin(phase * 6 + 1) * 1.5;
@@ -609,7 +613,7 @@
         }
       },
       {
-        name: "jelly", w: 64, h: 90, band: [0.05, 0.40], secs: 16, bob: 14,
+        name: "jelly", voice: "hum", w: 64, h: 90, band: [0.05, 0.40], secs: 16, bob: 14,
         weight: 0.8, shadow: 0.13,
         draw: function (ctx, phase) {
           var pulse = Math.sin(phase * 2.4);
@@ -732,7 +736,14 @@
       alpha: 1 - 0.36 * depth,
       right: Math.random() < 0.5,
       wobble: Math.random() * Math.PI * 2,
-      y: lerp(pick.band[0], pick.band[1], Math.random()) * FLOOR_TOP
+      y: lerp(pick.band[0], pick.band[1], Math.random()) * FLOOR_TOP,
+      depth: depth,
+      // poke state, reset with every visit: when it was last startled, how
+      // many times this crossing, and where it was last drawn so a tap can
+      // be tested against it
+      poked: null,
+      pokes: 0,
+      box: null
     };
   };
 
@@ -751,16 +762,88 @@
     var travel = W + d.w;
     var x = v.right ? -d.w + travel * t : W - travel * t;
     var yTop = v.y + Math.sin(v.wobble + age * 1.3) * d.bob - d.h / 2;
-    var cx = x + d.w / 2, cy = yTop + d.h / 2;
+    var cx = x + d.w / 2, cy = yTop + d.h / 2 + this.hop(v) * k;
+
+    // where it ended up, so a tap can be tested against it
+    v.box = { cx: cx, cy: cy, w: d.w * k, h: d.h * k };
 
     ctx.save();
     ctx.globalAlpha = v.alpha;
+    // everything - the startle, the distance, the mirroring - turns about the
+    // creature's own middle, so it never slides while it reacts
     ctx.translate(cx, cy);
     ctx.scale(k, k);
+    var turn = this.turn(v);
+    if (turn) ctx.rotate(turn);
+    var sq = this.squash(v);
+    if (sq) ctx.scale(1 + 0.2 * sq, 1 - 0.2 * sq);
     if (!v.right) ctx.scale(-1, 1);
     ctx.translate(-d.w / 2, -d.h / 2);
     d.draw(ctx, age);
     ctx.restore();
+  };
+
+  /* ------------------------------------------------------------ the poke
+
+     A tap inside a creature's box startles it: it squashes, hops, and reels
+     for about a second. A second tap in the same crossing sends it right
+     round, landing the way up it started. The numbers are the app's, from
+     VisitorLayer - a poked bird should behave the same in both places. */
+
+  // How hard it is still reeling, 1 at the moment of the tap and gone within
+  // about a second.
+  Stage.prototype.startle = function (v) {
+    if (v.poked === null) return 0;
+    var p = this.clock - v.poked;
+    return p > 1.4 ? 0 : Math.exp(-3.2 * p);
+  };
+
+  // Squash on the way in, stretch on the way out, settling as it calms.
+  Stage.prototype.squash = function (v) {
+    if (v.poked === null) return 0;
+    return this.startle(v) * Math.sin((this.clock - v.poked) * 17);
+  };
+
+  // The hop the poke knocks it into, design px, up being negative.
+  Stage.prototype.hop = function (v) {
+    if (v.poked === null) return 0;
+    return -26 * this.startle(v) * Math.sin((this.clock - v.poked) * 8.5);
+  };
+
+  // One poke sets it wobbling; a second sends it all the way round.
+  Stage.prototype.turn = function (v) {
+    if (v.poked === null) return 0;
+    var p = this.clock - v.poked;
+    if (v.pokes < 2) return 0.38 * this.startle(v) * Math.sin(p * 19);
+    return 2 * Math.PI * (1 - Math.exp(-3.4 * p)) * (v.right ? 1 : -1);
+  };
+
+  /* A tap at (x, y) in DESIGN px - the same 420 x 746.67 space everything on
+     these canvases is drawn in, since the context carries the scale. Returns
+     what the poked creature sounds
+     like, how far off it is and where it is across the field, so the caller
+     can answer in sound and in the theme's own burst - or null if the tap
+     landed on nothing.
+
+     Only the creature's own box takes a tap, widened to something a finger
+     can actually land on; everywhere else falls through to the game. */
+  Stage.prototype.pokeAt = function (x, y) {
+    var v = this.visitor;
+    if (!v || !v.box) return null;
+    var b = v.box;
+    var grow = Math.max(0, (TOUCH - Math.min(b.w, b.h)) / 2);
+    if (Math.abs(x - b.cx) > b.w / 2 + grow) return null;
+    if (Math.abs(y - b.cy) > b.h / 2 + grow) return null;
+    v.poked = this.clock;
+    v.pokes++;
+    return {
+      voice: v.def.voice,
+      depth: v.depth,
+      // -1 at the left edge of the field, 1 at the right
+      pan: W ? (b.cx / W) * 2 - 1 : 0,
+      x: b.cx,
+      y: b.cy
+    };
   };
 
   Stage.prototype.frame = function (nowMs) {
@@ -992,6 +1075,18 @@
 
   window.SYVT_SCENERY = {
     stage: function (back, front) { return new Stage(back, front); },
+    /* The sounds this world's creatures can make, so the page can have them
+       decoded before the first tap. A creature with no voice - the cloud -
+       contributes nothing and answers a poke with its burst alone. */
+    voicesOf: function (themeId) {
+      var t = THEMES[themeId] || day;
+      var out = [];
+      for (var i = 0; i < t.visitors.length; i++) {
+        var v = t.visitors[i].voice;
+        if (v && out.indexOf(v) === -1) out.push(v);
+      }
+      return out;
+    },
     preview: function (canvas, themeId, cssW, cssH) {
       var dpr = Math.min(window.devicePixelRatio || 1, 2);
       canvas.width = Math.round(cssW * dpr);
