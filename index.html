@@ -2,11 +2,11 @@
 <html lang="en" data-theme="day">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self' data: https://audio.syvt.me; connect-src https://audio.syvt.me; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self' data: https://audio.syvt.me; connect-src 'self' https://audio.syvt.me; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>SYVT</title>
-<meta name="description" content="SYVT &mdash; words fall, you sort them. Swipe right if it is spelled correctly, left if it is not. Play the free levels here; SYVT+ is on Android.">
+<meta name="description" content="SYVT &mdash; words fall, you sort them. Swipe right if it is spelled correctly, left if it is not. Play the free levels here; SYVT+ is coming to Android.">
 <meta name="theme-color" content="#e1e8ea">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="brand/syvt-app-mark-192.png" sizes="192x192">
@@ -162,12 +162,15 @@
 
       <p id="legendText"></p>
 
-      <a id="storeLink" href="https://play.google.com/store/apps/details?id=io.a51.syvt" target="_blank" rel="noopener noreferrer">
+      <!-- Not a link while the app is not public: there is nowhere to send
+           anyone. When it lists, this becomes an <a> to the Play page again
+           and the three offers below pass showBuy true. -->
+      <p id="storeLink">
         <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-          <path d="M4 2.6 19 12 4 21.4Z"/>
+          <path d="M12 2.6a9.4 9.4 0 1 0 0 18.8 9.4 9.4 0 0 0 0-18.8Zm.9 4.7v5l3.4 2-.9 1.5-4.3-2.6V7.3Z"/>
         </svg>
         <span id="storeLinkLabel"></span>
-      </a>
+      </p>
     </div>
   </div>
 
@@ -176,7 +179,10 @@
     <div id="modalCard" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
       <h2 id="modalTitle"></h2>
       <p id="modalBody"></p>
-      <a id="modalBuy" class="pill primary" href="https://play.google.com/store/apps/details?id=io.a51.syvt" target="_blank" rel="noopener noreferrer"></a>
+      <!-- hidden while the app is not public; openModal is passed showBuy
+           false everywhere, so nothing here promises a store that has no page
+           yet. Restore the href with the link above. -->
+      <a id="modalBuy" class="pill primary" hidden></a>
       <button id="modalKeep" class="pill secondary" type="button"></button>
     </div>
   </div>
@@ -187,6 +193,7 @@
 <script src="words.js"></script>
 <script src="scenery.js"></script>
 <script src="voice.js"></script>
+<script src="sfx.js"></script>
 <script src="syvt.js"></script>
 </body>
 </html>

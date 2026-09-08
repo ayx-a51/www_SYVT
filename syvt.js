@@ -2,8 +2,10 @@
 
    Everything the app's free player gets is here — the two open worlds, all
    three languages, levels 1 to 5, the same words, the same sums, the same
-   fall speeds. Where the app would sell SYVT+, this asks the player to go to
-   the Play Store instead: a locked world, or the end of level 5.
+   fall speeds. Where the app would sell SYVT+, this says it is coming: a
+   locked world, the end of level 5, or the voice going quiet. The Android
+   app is not listed yet, so none of the three offers a link - see the note
+   above openModal for what to put back the day it is.
 
    The physics runs in screen px (design px × S) so a body's position is the
    tile's position; the stylesheet gets the same S, so what is drawn and what
@@ -51,20 +53,20 @@
       level: "Level", start: "Start", again: "Play again",
       over: "Stack Overflow", scoreLbl: "Score", bestLbl: "Best",
       paused: "Paused", resume: "Continue", quit: "End round", pauseAction: "Pause",
-      store: "SYVT+ on Google Play",
+      store: "SYVT+ is coming to Android",
       buy: "Get SYVT+", notNow: "Not now", keepPlaying: "Keep playing",
       capTitle: "Level 5 reached!",
-      capBody: "That is the last level of the free game. With SYVT+ on Android the words go on to level 10 — or keep playing here for as long as you like, with anything past {score} counted beside your score.",
+      capBody: "That is the last level of the free game. SYVT+ takes the words on to level 10, and it is coming to Android soon. Until then, keep playing here for as long as you like — anything past {score} is counted beside your score.",
       counterTitle: "Why {score}?",
       counterBody: "{score} is the whole free game: five levels of thirty points. Past that the words stay at level 5, so those points come easier — they are counted beside your score rather than in it, so that every {score} means the same thing.",
       gotIt: "Got it",
       lockTitle: "A SYVT+ world",
-      lockBody: "This world is part of SYVT+. Six worlds and ten levels — in the Android app.",
+      lockBody: "This world is part of SYVT+: six worlds and ten levels. It is coming to Android soon.",
       voiceSetting: "Read words aloud",
       voiceOffline: "Needs a connection",
       voiceNeedsPlus: "SYVT+ reads the higher levels",
       voiceTitle: "A SYVT+ voice",
-      voiceBody: "The free game reads the words out on levels 1 and 2. SYVT+ goes on reading them all the way up — in the Android app."
+      voiceBody: "The free game reads the words out on levels 1 and 2. SYVT+ goes on reading them all the way up, and it is coming to Android soon."
     },
     de: {
       tagline: "Wörter fallen vom Himmel. Wische nach rechts, wenn ein Wort richtig geschrieben ist — nach links, wenn es falsch ist.",
@@ -73,20 +75,20 @@
       level: "Stufe", start: "Los", again: "Nochmal",
       over: "Stack Overflow", scoreLbl: "Punkte", bestLbl: "Rekord",
       paused: "Pausiert", resume: "Weiter", quit: "Runde beenden", pauseAction: "Pause",
-      store: "SYVT+ bei Google Play",
+      store: "SYVT+ kommt bald für Android",
       buy: "SYVT+ holen", notNow: "Nicht jetzt", keepPlaying: "Weiterspielen",
       capTitle: "Level 5 geschafft!",
-      capBody: "Das ist das letzte Level der Gratis-Version. Mit SYVT+ für Android geht es weiter bis Level 10 — oder du spielst hier weiter, so lange du magst; alles über {score} wird neben deinem Punktestand gezählt.",
+      capBody: "Das ist das letzte Level der Gratis-Version. Mit SYVT+ geht es weiter bis Level 10 — bald für Android. Bis dahin spielst du hier weiter, so lange du magst; alles über {score} wird neben deinem Punktestand gezählt.",
       counterTitle: "Warum {score}?",
       counterBody: "{score} ist die ganze Gratis-Version: fünf Level à dreissig Punkte. Danach bleiben die Wörter auf Level 5, diese Punkte sind also leichter — sie werden neben deinem Punktestand gezählt und nicht darin, damit {score} überall dasselbe bedeutet.",
       gotIt: "Alles klar",
       lockTitle: "Eine SYVT+ Welt",
-      lockBody: "Diese Welt gehört zu SYVT+. Sechs Welten und zehn Level — in der Android-App.",
+      lockBody: "Diese Welt gehört zu SYVT+: sechs Welten und zehn Level. Bald für Android.",
       voiceSetting: "Wörter vorlesen",
       voiceOffline: "Braucht eine Verbindung",
       voiceNeedsPlus: "SYVT+ liest auch die höheren Level vor",
       voiceTitle: "Eine SYVT+ Stimme",
-      voiceBody: "Gratis werden die Wörter auf Level 1 und 2 vorgelesen. Mit SYVT+ geht es bis nach oben weiter — in der Android-App."
+      voiceBody: "Gratis werden die Wörter auf Level 1 und 2 vorgelesen. Mit SYVT+ geht es bis nach oben weiter — bald für Android."
     },
     fr: {
       tagline: "Des mots tombent du ciel. Glisse à droite si un mot est bien orthographié — à gauche s’il est mal écrit.",
@@ -95,20 +97,20 @@
       level: "Niveau", start: "Démarrer", again: "Rejouer",
       over: "Stack Overflow", scoreLbl: "Score", bestLbl: "Record",
       paused: "En pause", resume: "Continuer", quit: "Terminer la partie", pauseAction: "Pause",
-      store: "SYVT+ sur Google Play",
+      store: "SYVT+ arrive bientôt sur Android",
       buy: "Passer à SYVT+", notNow: "Pas maintenant", keepPlaying: "Continuer à jouer",
       capTitle: "Niveau 5 atteint !",
-      capBody: "C’est le dernier niveau de la version gratuite. Avec SYVT+ sur Android les mots continuent jusqu’au niveau 10 — ou reste ici aussi longtemps que tu veux ; tout ce qui dépasse {score} est compté à côté de ton score.",
+      capBody: "C’est le dernier niveau de la version gratuite. Avec SYVT+ les mots continuent jusqu’au niveau 10 — bientôt sur Android. En attendant, reste ici aussi longtemps que tu veux ; tout ce qui dépasse {score} est compté à côté de ton score.",
       counterTitle: "Pourquoi {score} ?",
       counterBody: "{score}, c’est tout le jeu gratuit : cinq niveaux de trente points. Ensuite les mots restent au niveau 5, donc ces points-là sont plus faciles — ils sont comptés à côté de ton score et non dedans, pour que {score} veuille toujours dire la même chose.",
       gotIt: "Compris",
       lockTitle: "Un monde SYVT+",
-      lockBody: "Ce monde fait partie de SYVT+. Six mondes et dix niveaux — dans l’app Android.",
+      lockBody: "Ce monde fait partie de SYVT+ : six mondes et dix niveaux. Bientôt sur Android.",
       voiceSetting: "Lire les mots à voix haute",
       voiceOffline: "Nécessite une connexion",
       voiceNeedsPlus: "SYVT+ lit aussi les niveaux supérieurs",
       voiceTitle: "Une voix SYVT+",
-      voiceBody: "La version gratuite lit les mots aux niveaux 1 et 2. SYVT+ continue jusqu’en haut — dans l’app Android."
+      voiceBody: "La version gratuite lit les mots aux niveaux 1 et 2. SYVT+ continue jusqu’en haut — bientôt sur Android."
     }
   };
 
@@ -231,6 +233,14 @@
     voice.warm(words, lang);
   }
 
+  /* The sounds the creatures of this world can make, so the first poke has a
+     voice. Called from the START tap, where there is a gesture: before that
+     sfx.js creates nothing and fetches nothing. */
+  function warmPokes() {
+    var list = window.SYVT_SCENERY.voicesOf(themeId);
+    window.SYVT_SFX.warm(list);
+  }
+
   /* Says the newest word still in the air again, if there is one. Newest
      rather than lowest, because the newest is the one whose word has just
      been withheld — and only one that is actually on screen, since naming a
@@ -245,6 +255,36 @@
       voice.say(b.spoken, lang, b.id);
       return;
     }
+  }
+
+  // ------------------------------------------------------------- the poke
+
+  /* A tap on a passing creature startles it, sets off the theme's own burst
+     and gets a squeak back. The scenery owns the motion and the hit test; all
+     this does is route the tap and answer in the two idioms the page already
+     has - the puff the tiles land with, and a sound.
+
+     A tap that lands on a tile is the tile's, and a tap while a tile is being
+     dragged is part of that drag: the creatures cross behind the words, and
+     they must never take a swipe away from one. */
+  function pokeVisitor(e) {
+    // A creature crosses BEHIND everything, so a tap only reaches it if it
+    // reached nothing else: not a tile, not a control, and not a panel or veil
+    // laid over the field. The scenery keeps breathing behind the start panel
+    // and the pause veil, but what is behind a scrim is not tappable.
+    if (activeDrag) return;
+    if (!running || paused) return;
+    var el = e.target;
+    if (el && el.closest &&
+        el.closest(".block, button, a, #hud, #legend, #overlay, #pauseVeil, #modal")) {
+      return;
+    }
+    var rect = gameEl.getBoundingClientRect();
+    // the canvases are drawn in design px, so the tap has to arrive in them
+    var hit = stage.pokeAt((e.clientX - rect.left) / S, (e.clientY - rect.top) / S);
+    if (!hit) return;
+    puffAt(hit.x * S, hit.y * S);
+    if (hit.voice) window.SYVT_SFX.play(hit.voice, hit.depth, hit.pan);
   }
 
   /* Told by shape and by luminance rather than by colour, so the difference
@@ -851,6 +891,7 @@
     voice.unlock();
     voice.refresh();
     warmVoice();
+    warmPokes();
     spawn();
   }
 
@@ -919,6 +960,11 @@
 
   function closeModal() { modal.hidden = true; }
 
+  /* All three of these pass showBuy FALSE while the app is not public: they
+     say what SYVT+ is and that it is coming, and the way out leads the card
+     rather than sitting under a button that would open nothing. Pass true
+     again, and restore the two hrefs in index.html, the day it lists. */
+
   // level 5 is the last free one. The app pauses the round and offers SYVT+
   // once; dismissing it leaves the pause veil, and play carries on at level 5
   // for as long as the player likes.
@@ -926,11 +972,11 @@
     if (capShown || rawTier() <= FREE_MAX_TIER) return;
     capShown = true;
     pause();
-    openModal(t().capTitle, cap(t().capBody), t().keepPlaying, true);
+    openModal(t().capTitle, cap(t().capBody), t().keepPlaying, false);
   }
 
   function offerWorld() {
-    openModal(t().lockTitle, t().lockBody, t().notNow, true);
+    openModal(t().lockTitle, t().lockBody, t().notNow, false);
   }
 
   /* A tap on the chip past the levels the free game reads. The stack stops
@@ -938,7 +984,7 @@
      the page is reached from a screen where nothing is falling. */
   function offerVoice() {
     pause();
-    openModal(t().voiceTitle, t().voiceBody, t().keepPlaying, true);
+    openModal(t().voiceTitle, t().voiceBody, t().keepPlaying, false);
   }
 
   // ------------------------------------------------------------- chrome
@@ -1048,6 +1094,7 @@
 
   startBtn.addEventListener("click", start);
   pauseBtn.addEventListener("click", pause);
+  gameEl.addEventListener("pointerdown", pokeVisitor);
   voiceBtn.addEventListener("click", function () {
     if (!voice.entitled) { offerVoice(); return; }
     voice.toggle();
