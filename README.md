@@ -160,9 +160,11 @@ Two rules from that spec shape this repo more than the rest:
   palette.
 
 So the name is set as **S, the funnel, VT** — never with a letter Y. It is
-built that way in three places and drawn in none of them: `#brand` on the
-start panel, `.name` in the legal-page header, and `brand/syvt-og.svg` for
-the link preview.
+assembled from type and the funnel in three places, and hand-drawn as a
+logotype in none of them: `#brand` on the start panel, `.name` in the
+legal-page header, and `brand/syvt-og.svg` for the link preview. The last of
+those is the one case where the letters end up as outlines, because a
+generated file cannot depend on a font being resolved at render time.
 
 `icon.svg` and `brand/syvt-mark.svg` are the masters — the mark on its plate
 and the mark alone. The PNGs are **derived**; edit the SVGs and re-run:
@@ -219,8 +221,10 @@ render until the gaps either side were even"*.
 So every lockup here is spaced by measurement instead, solved per face until
 each side of the Y matches the ink gap inside VT. `brand/make-wordmark.py`
 does it arithmetically from the font's own side bearings; `syvt.css` and
-`legal.css` carry solved constants with the derivation beside them. Re-solve
-if the face, the tracking or the cap factor ever changes.
+`legal.css` carry solved constants with the derivation beside them. Computed,
+the three gaps agree to within .002 em; rendered, they move by up to about
+.02 em more, because the letter-space and the margins round to device pixels
+independently. Re-solve if the face, the tracking or the cap factor changes.
 
 `matter.min.js` is the physics engine; `manrope.woff2` is the typeface the
 grown-up worlds use and `fredoka.woff2` the one the kids' worlds do, the same

@@ -48,7 +48,7 @@ body{
   -webkit-font-smoothing:antialiased;
 }
 
-img{display:block;max-width:100%;height:auto}
+
 a{color:var(--violet-mid)}
 a:focus-visible{outline:3px solid var(--violet);outline-offset:3px;border-radius:var(--r-chip)}
 

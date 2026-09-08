@@ -869,10 +869,17 @@ body {
    side were even".
 
    So these are solved, per face, until each side of the Y matches the gap
-   inside VT: at a 300px em all three land on 70px in Manrope and 77px in
-   Fredoka, exactly. The left one is negative because it is undoing part of the
-   letter-space CSS puts after the S and the app's layout never had. Re-derive
-   with the harness in the commit message if the face or the tracking changes.
+   inside VT. Computed against the shipped fonts the three gaps come to
+   .2370/.2353/.2350 em in Manrope and .2489/.2494/.2494 in Fredoka - equal to
+   within .002 em, which is as equal as two side bearings and a tracking value
+   can be made. What lands on screen moves by up to about .02 em on top of
+   that, because the letter-space and the margins round to device pixels
+   independently; at a 300px em all three measure 70px in Manrope and 77px in
+   Fredoka, and at body sizes they differ by a pixel either way.
+
+   The left one is negative because it is undoing part of the letter-space CSS
+   puts after the S and the app's layout never had. Re-derive with the harness
+   in the commit message if the face or the tracking changes.
 */
 /* The Y is sized from the cap height and is 96/88 as wide as it is tall; it
    stands on the baseline, and the drawn shape fills its box exactly, so there

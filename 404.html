@@ -103,9 +103,9 @@
 </head>
 <body>
 
-<!-- brand/syvt-mark.svg inline, because this page loads nothing: its policy
-     is default-src 'none' with no self, so that a 404 served for any path at
-     all can still paint. Copied from ../SYVT/assets/brand/syvt-mark.svg; the
+<!-- brand/syvt-mark.svg inline, because the body loads nothing: the only
+     'self' in this page's policy is the favicon's, so that a 404 served for
+     any path at all can still paint. Copied from ../SYVT/assets/brand/syvt-mark.svg; the
      fill-rule is what keeps the card a hole rather than filling it in. -->
 <!-- role and aria-label, but no <title>: the standalone file carries all three
      so that it can be dropped in anywhere, and inlined that is one name too
