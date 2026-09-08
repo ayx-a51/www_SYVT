@@ -154,10 +154,21 @@
   var RECENT_LIMIT = 10;
   var MATH_SHARE = 0.20;
   var BASE_W = 420;
-  // The app's kSpeakFromY: a tile is named on its way past this, not when it
-  // spawns. A tile spawns above the ceiling, invisible and still fading in,
-  // and a word said then arrives before there is anything to look at.
-  var SPEAK_FROM_Y = BASE_W * 16 / 9 / 10;
+  /* The app's kSpeakFromY. A tile is named on its way past this line, not when
+     it spawns: it spawns above the ceiling, invisible and still fading in, and
+     a word read there arrives before there is anything to look at, which is
+     worse than no word because the child looks up at nothing.
+
+     So this is the first instant there is something to look at and not one
+     moment later - the same 30 the fade-in reaches full opacity at, in
+     syncDOM below, which is what makes it the earliest line that can be
+     defended at all. It used to be a tenth of the way down, more than twice
+     as far; a tile accelerates, so that was much later than it sounded, late
+     enough that the word could arrive after the tile had been read and
+     swiped, naming something the player had stopped looking at. The tile is
+     still crossing the HUD row here, and that is fine: behind the chips is a
+     drawing problem, and it is opaque either way. */
+  var SPEAK_FROM_Y = 30;
 
   var CAT_WORLD = 0x0001, CAT_FALLING = 0x0002, CAT_SETTLED = 0x0004, CAT_FLYING = 0x0008;
   var MASK_FALLING = CAT_WORLD | CAT_FALLING | CAT_SETTLED;
