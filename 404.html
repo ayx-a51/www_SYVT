@@ -107,8 +107,10 @@
      is default-src 'none' with no self, so that a 404 served for any path at
      all can still paint. Copied from ../SYVT/assets/brand/syvt-mark.svg; the
      fill-rule is what keeps the card a hole rather than filling it in. -->
+<!-- role and aria-label, but no <title>: the standalone file carries all three
+     so that it can be dropped in anywhere, and inlined that is one name too
+     many - a reader given both announces "SYVT SYVT". -->
 <svg class="mark" viewBox="0 0 120 120" role="img" aria-label="SYVT">
-  <title>SYVT</title>
   <path d="M18.66 29.98Q12.0 20.0,24.0 20.0L96.0 20.0Q108.0 20.0,101.34 29.98L75.33 69.01Q72.0 74.0,72.0 80.0L72.0 98.0Q72.0 108.0,62.0 108.0L58.0 108.0Q48.0 108.0,48.0 98.0L48.0 80.0Q48.0 74.0,44.67 69.01ZM39.61 42.25Q38.36 36.38,44.23 35.13L71.61 29.31Q77.48 28.06,78.73 33.93L80.39 41.75Q81.64 47.62,75.77 48.87L48.39 54.69Q42.52 55.94,41.27 50.07Z" fill="currentColor" fill-rule="evenodd"/>
   <path d="M16.59 90.99Q12.0 89.0,16.59 87.01L37.41 77.99Q42.0 76.0,42.0 81.0L42.0 97.0Q42.0 102.0,37.41 100.01Z" fill="#FB7185"/>
   <path d="M103.41 90.99Q108.0 89.0,103.41 87.01L82.59 77.99Q78.0 76.0,78.0 81.0L78.0 97.0Q78.0 102.0,82.59 100.01Z" fill="#2DD4BF"/>
