@@ -1,35 +1,29 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="-8 -8 136 136" role="img" aria-label="SYVT">
   <title>SYVT</title>
-  <!-- Same mark and the same junction construction as brand/syvt-mark.svg,
-       only inset into a plate and drawn a little heavier so it holds up at
-       16px. The bisector seams do not depend on stroke width, so the clip
-       polygons are shared verbatim with the master.
+  <!-- The same mark as brand/syvt-mark.svg, inset into the app's deep violet
+       plate: this is the launcher icon a visitor arrives from, and the two
+       should be one thing. Copied from ../SYVT/assets/brand/syvt-icon.svg.
 
-       Follows the browser theme, but note how: the dark colours are ordinary
-       presentation attributes and CSS only overrides them for light. Two
-       reasons. Dark is SYVT's canonical form, and presentation attributes
-       lose to any CSS rule, so the override still wins where it applies.
-       More importantly this file is also the source for apple-touch-icon.png
-       (see make-icons.mjs) - and the rasteriser resolves neither var() nor
-       media queries, so writing the colours as CSS custom
-       properties, the way favicon.svg does, rendered a plate with no mark on
-       it at all. -->
-  <style>
-    @media (prefers-color-scheme: light) {
-      .plate { fill: #ffffff; }
-      .stem  { stroke: #0d4b46; }
-      .wrong { stroke: #e11d48; }
-      .right { stroke: #0d9488; }
-    }
-  </style>
+       No light-theme variant, unlike the mark this replaces. That one was
+       near-black and needed one; the violet plate is its own ground and reads
+       on either. Which also means no <style> block — this file is the source
+       for apple-touch-icon.png (see make-icons.mjs), and the rasteriser
+       resolves neither var() nor media queries. -->
   <defs>
-    <clipPath id="svL"><polygon points="60,73 60,600 -940,600 -940,-441.618"/></clipPath>
-    <clipPath id="svR"><polygon points="60,73 60,600 1060,600 1060,-441.618"/></clipPath>
+    <linearGradient id="plate" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5F36D0"/>
+      <stop offset=".55" stop-color="#4A27AE"/>
+      <stop offset="1" stop-color="#37198A"/>
+    </linearGradient>
   </defs>
-  <rect class="plate" x="-8" y="-8" width="136" height="136" rx="31" fill="#05100f"/>
-  <g fill="none" stroke-width="15" stroke-linecap="round" stroke-linejoin="round">
-    <path class="stem"  d="M60 17 L60 73"   stroke="#e6f6f4"/>
-    <path class="wrong" d="M60 73 L18 103"  stroke="#fb7185" clip-path="url(#svL)"/>
-    <path class="right" d="M60 73 L102 103" stroke="#2dd4bf" clip-path="url(#svR)"/>
+  <rect x="-8" y="-8" width="136" height="136" rx="31" fill="url(#plate)"/>
+  <g fill="none" stroke-width="16" stroke-linecap="round">
+    <path d="M14 38L51 76" stroke="#FB7185"/>
+    <path d="M106 38L69 76" stroke="#2DD4BF"/>
   </g>
+  <rect x="47" y="72" width="26" height="36" rx="11" fill="#FFFFFF"/>
+  <circle cx="60" cy="28" r="24" fill="#FFD54A"/>
+  <circle cx="51" cy="25" r="3.5" fill="#1E2646"/>
+  <circle cx="69" cy="25" r="3.5" fill="#1E2646"/>
+  <path d="M51 34q9 7 18 0" fill="none" stroke="#1E2646" stroke-width="3.5" stroke-linecap="round"/>
 </svg>

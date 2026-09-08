@@ -127,22 +127,46 @@ y7.ai.
 
 ## Assets
 
-`icon.svg` and `brand/syvt-mark.svg` are the masters; the mark is one drawing
-reused at three sizes. The PNGs are **derived** — edit the SVGs and re-run:
+The mark is the app's: a round face drops into a funnel whose walls carry the
+verdict colours, coral for wrong on the left and mint for right on the right,
+on the deep violet plate. It comes in two cuts, both drawn in the same
+120-unit box — the **wide** rim with the face, which is the mark, and the
+**narrow** rim without it, which is the Y of the wordmark. The app is where
+they are defined (`../SYVT/assets/brand/`, drawn by `lib/ui/marks.dart`);
+everything here is a copy of that geometry, unit for unit.
+
+So the name is set as **S, the funnel, VT** — never with a letter Y. It is
+built that way in three places and drawn in none of them: `#brand` on the
+start panel, `.name` in the legal-page header, and `brand/syvt-og.svg` for
+the link preview.
+
+`icon.svg` and `brand/syvt-mark.svg` are the masters — the mark on its plate
+and the mark alone. The PNGs are **derived**; edit the SVGs and re-run:
 
 ```
 npm install sharp          # once, for rendering only
 node make-icons.mjs        # icon.svg -> apple-touch-icon.png, brand/syvt-og.svg -> og.png
 ```
 
-The wordmark inside `brand/syvt-og.svg` is Manrope converted to outlines, so
-the artwork needs no font at render time. That conversion is one-way, so if
-the game is ever renamed again:
+`apple-touch-icon.png` carries no `<link>` anywhere, and should not: it sits
+at the root because that is the path iOS looks for by itself, as a fallback
+for any page that does not declare one.
+
+The letters in `brand/syvt-og.svg` are Manrope converted to outlines, so the
+artwork needs no font at render time. That conversion is one-way, so if the
+game is ever renamed:
 
 ```
 pip install fonttools brotli   # once
-python brand/make-wordmark.py  # set WORD at the top first, then re-run make-icons.mjs
+python brand/make-wordmark.py  # set LEAD and TAIL at the top, then re-run make-icons.mjs
 ```
+
+That script spaces the funnel by measuring rather than by eye: it gives it
+the same ink gap either side that the tracking leaves between V and T. Note
+that the start panel does it differently — `#brand` spaces the funnel by
+advance width, the way the app's own `_Brand` does, which is a little airier.
+The two lockups do not match to the pixel, and the difference is deliberate
+only in the sense that nobody has yet decided which is right.
 
 `matter.min.js` is the physics engine; `manrope.woff2` is the typeface the
 grown-up worlds use and `fredoka.woff2` the one the kids' worlds do, the same

@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
 <title>SYVT</title>
 <link rel="icon" href="/icon.svg" type="image/svg+xml">
-<meta name="theme-color" content="#05100f">
+<meta name="theme-color" content="#4A27AE">
 <script>
   /* GitHub Pages cannot issue a server-side redirect, but it does serve this
      file for any path it cannot resolve - so this doubles as the redirect
@@ -39,10 +39,15 @@
 </script>
 <style>
   html, body { height: 100%; }
+  /* The launcher plate, full bleed, with its crown highlight: the same
+     picture legal.css opens the legal pages on, and the same one the icon
+     that brought the reader here is drawn on. */
   body {
     margin: 0;
-    background: #05100f;
-    color: #4d7c78;
+    background:
+      radial-gradient(90% 120% at 24% -30%, rgba(255, 255, 255, .22), rgba(255, 255, 255, 0) 62%),
+      linear-gradient(165deg, #5F36D0 0%, #4A27AE 55%, #37198A 100%);
+    color: rgba(255, 247, 230, .72);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
     display: flex;
     flex-direction: column;
@@ -60,19 +65,19 @@
     font-weight: 600;
     letter-spacing: 0.22em;
     text-transform: uppercase;
-    color: #3f6b67;
+    color: rgba(255, 247, 230, .72);
   }
   a {
     font-size: 12px;
     font-weight: 700;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: #2dd4bf;
+    color: #FFF7E6;
     text-decoration: none;
     transition: color 0.45s ease;
   }
-  a:hover, a:focus-visible { color: #7df0dd; }
-  a:focus-visible { outline: 1px solid #2dd4bf; outline-offset: 6px; }
+  a:hover, a:focus-visible { color: #2DD4BF; }
+  a:focus-visible { outline: 1px solid #FFF7E6; outline-offset: 6px; }
   /* No entrance fade, deliberately. An `animation: ... both` starts at
      opacity 0 and only becomes visible if the animation actually runs - a bad
      bet on the page people reach when something has already gone wrong. This
@@ -82,17 +87,20 @@
 </head>
 <body>
 
+<!-- brand/syvt-mark.svg inline, because this page loads nothing: its policy
+     is default-src 'none' with no self, so that a 404 served for any path at
+     all can still paint. -->
 <svg class="mark" viewBox="0 0 120 120" role="img" aria-label="SYVT">
   <title>SYVT</title>
-  <defs>
-    <clipPath id="svL"><polygon points="60,73 60,600 -940,600 -940,-441.618"/></clipPath>
-    <clipPath id="svR"><polygon points="60,73 60,600 1060,600 1060,-441.618"/></clipPath>
-  </defs>
-  <g fill="none" stroke-width="13" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M60 17 L60 73"   stroke="#e6f6f4"/>
-    <path d="M60 73 L18 103"  stroke="#fb7185" clip-path="url(#svL)"/>
-    <path d="M60 73 L102 103" stroke="#2dd4bf" clip-path="url(#svR)"/>
+  <g fill="none" stroke-width="16" stroke-linecap="round">
+    <path d="M14 38L51 76" stroke="#FB7185"/>
+    <path d="M106 38L69 76" stroke="#2DD4BF"/>
   </g>
+  <rect x="47" y="72" width="26" height="36" rx="11" fill="#FFFFFF"/>
+  <circle cx="60" cy="28" r="24" fill="#FFD54A"/>
+  <circle cx="51" cy="25" r="3.5" fill="#1E2646"/>
+  <circle cx="69" cy="25" r="3.5" fill="#1E2646"/>
+  <path d="M51 34q9 7 18 0" fill="none" stroke="#1E2646" stroke-width="3.5" stroke-linecap="round"/>
 </svg>
 
 <p>Nothing here</p>

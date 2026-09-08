@@ -1,23 +1,25 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="SYVT">
   <title>SYVT</title>
-  <!-- One word falls in; it leaves either left (wrong) or right (right).
+  <!-- The SYVT mark: a round face drops into a funnel whose walls carry the
+       verdict colours, coral for wrong on the left and mint for right on the
+       right. One word falls in; it leaves either left or right.
 
-       The junction is built the way the y7 mark builds its crossings: the
-       light stroke is drawn first and left uncut - it owns the point - and
-       the others are knocked out against it with a clipPath. Each seam is
-       the angle bisector of the two strokes meeting there, so the colours
-       butt along a straight edge and none of them ever blends into a third.
-       Bisector slope 0.5146179; -441.618 = 73 - 1000 x that. The vertical
-       seam below the junction is the stem's own centreline continued.
-       The stem needs no clip: each arm's round cap fills its own sector, so
-       it overpaints every part of the stem's cap outside stem territory. -->
-  <defs>
-    <clipPath id="svL"><polygon points="60,73 60,600 -940,600 -940,-441.618"/></clipPath>
-    <clipPath id="svR"><polygon points="60,73 60,600 1060,600 1060,-441.618"/></clipPath>
-  </defs>
-  <g fill="none" stroke-width="13" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M60 17 L60 73"   stroke="#e6f6f4"/>
-    <path d="M60 73 L18 103"  stroke="#fb7185" clip-path="url(#svL)"/>
-    <path d="M60 73 L102 103" stroke="#2dd4bf" clip-path="url(#svR)"/>
+       This is the app's drawing, unit for unit — ../SYVT/assets/brand/syvt-mark.svg,
+       which lib/ui/marks.dart draws and tool/render_icons_test.dart renders
+       the launcher sources from. The wide rim (92 units across) is this, the
+       standalone mark; the narrow one (72 across, no ball) is the funnel that
+       serves as the Y of the wordmark. Flat, no outlines.
+
+       The spout is white here because the mark is only ever shown on the
+       violet plate or another dark ground. In the wordmark it takes the
+       wordmark's own ink instead. -->
+  <g fill="none" stroke-width="16" stroke-linecap="round">
+    <path d="M14 38L51 76" stroke="#FB7185"/>
+    <path d="M106 38L69 76" stroke="#2DD4BF"/>
   </g>
+  <rect x="47" y="72" width="26" height="36" rx="11" fill="#FFFFFF"/>
+  <circle cx="60" cy="28" r="24" fill="#FFD54A"/>
+  <circle cx="51" cy="25" r="3.5" fill="#1E2646"/>
+  <circle cx="69" cy="25" r="3.5" fill="#1E2646"/>
+  <path d="M51 34q9 7 18 0" fill="none" stroke="#1E2646" stroke-width="3.5" stroke-linecap="round"/>
 </svg>
