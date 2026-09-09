@@ -1050,6 +1050,18 @@ body {
   transition: box-shadow .18s ease;
 }
 .world[aria-current="true"] .thumb::after { box-shadow: inset 0 0 0 calc(3 * var(--s)) var(--ring); }
+/* The mark on everything SYVT+ holds back. Its own two colours, not the
+   theme's: it used to be a dark disc carrying var(--pick-label), and that
+   label is dark in both worlds the page is ever themed as — so the badge
+   was charcoal on near-black, hardest to see on exactly the cards it is
+   there to mark, and the Night and Space thumbnails under it are darker
+   still. A badge lands on whatever happens to be beneath it and cannot
+   take its contrast from any of it: it brings its own. Pale disc, dark
+   ink, and a shadow so it keeps its edge on the bright artwork too.
+
+   Not pure white on pure black: a hard pair reads as a sticker, and these
+   sit on pictures. It stays an overlay — absolute, never in the flow — so
+   a locked card and a free one are exactly the same size. */
 .world .lock {
   position: absolute;
   top: calc(4 * var(--s));
@@ -1057,14 +1069,16 @@ body {
   width: calc(18 * var(--s));
   height: calc(18 * var(--s));
   border-radius: 50%;
-  background: rgba(0, 0, 0, .55);
+  background: rgba(247, 249, 250, .95);
+  box-shadow: 0 calc(1 * var(--s)) calc(3 * var(--s)) rgba(0, 0, 0, .45);
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.world .lock svg { width: calc(10.8 * var(--s)); height: calc(10.8 * var(--s)); }
-.world .lock path { fill: none; stroke: var(--pick-label); stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
-.world .lock rect { fill: var(--pick-label); }
+/* inset by 22% of the disc on every side: 18 - 2 * (18 * .22) */
+.world .lock svg { width: calc(10.08 * var(--s)); height: calc(10.08 * var(--s)); }
+.world .lock path { fill: none; stroke: rgb(28, 30, 36); stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+.world .lock rect { fill: rgb(28, 30, 36); }
 .world .name {
   height: calc(26 * var(--s));
   font-size: calc(10 * var(--s));

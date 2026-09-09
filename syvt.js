@@ -153,7 +153,23 @@
   // is where the free game starts asking something of them anyway.
   var VOICE_MAX_TIER = 1;
   var FREE_CAP = (FREE_MAX_TIER + 1) * PER_LEVEL;   // 150: where counting stops
-  var RECENT_LIMIT = 10;
+  /* How many recently shown words and sums are kept out of the draw — one
+     memory, shared, and it outlives the round. It used to hold ten and be
+     wiped by `start()`, which is the top of every new round: a child who
+     dies early and taps PLAY AGAIN was handed the same handful of words
+     again, because the page had just forgotten it had shown them. Ten short
+     rounds drawn the way the game really draws them: 64 different words out
+     of 96, and the wipe made the ten all but pointless — a twelve-tile
+     round only just reaches ten before the list is emptied again, so
+     raising the limit alone changed nothing. Thirty and kept: 71 different
+     words, and a repeat landing in the opening tiles of a round down from
+     1.0 a session to 0.7.
+
+     Thirty, not more. The pool is a hundred words a level (the draw takes
+     this level and the two below), so thirty is deep enough to stop the
+     circling and shallow enough that the order never feels decided in
+     advance, which is worse to play than a repeat. */
+  var RECENT_LIMIT = 30;
   var MATH_SHARE = 0.20;
   var BASE_W = 420;
   /* The app's kSpeakFromY. A tile is named on its way past this line, not when
@@ -865,7 +881,10 @@
     measureField();
     buildWalls();
     clearField();
-    recent = [];
+    // `recent` is deliberately NOT cleared here. A new round is the moment
+    // the player has most recently read those words, and starting over is
+    // no reason to forget them; the language switch below is, and it is the
+    // only thing that empties the list.
     activeDrag = null;
     paused = false;
     capShown = false;
@@ -1121,6 +1140,8 @@
       if (LANGS.indexOf(next) === -1) return;
       lang = next;
       localStorage.setItem(STORE + "lang", lang);
+      // the one place the memory is emptied: the words it holds are not in
+      // the pool the draw is about to use anyway
       recent = [];
       // Whatever is half-said is in the language the page has just left.
       voice.hush();
