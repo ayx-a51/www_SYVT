@@ -184,10 +184,57 @@
   var BROWSER = localeDefaults(navigator.languages && navigator.languages.length ?
     navigator.languages : [navigator.language]);
 
-  var lang = localStorage.getItem(STORE + "lang");
+  /* The player's choices. localStorage when the browser allows it; when it
+     refuses site data (the getter throws, or is null) or refuses a write (a
+     full quota), the page still starts and every choice lasts the visit in
+     memory. Never throws. voice.js and syvt.js each carry this same pair on
+     purpose: a helper shared between two separately cached files would bring
+     back, for ten minutes after a deploy, the startup crash it exists to
+     prevent. */
+  var memoryPrefs = {};
+  var diskPrefs;   // undefined: not looked at yet; null: none to be had
+
+  function prefDisk() {
+    if (diskPrefs !== undefined) return diskPrefs;
+    diskPrefs = null;
+    try {
+      var s = window.localStorage;
+      if (s && typeof s.getItem === "function" && typeof s.setItem === "function") diskPrefs = s;
+    } catch (e) {}
+    return diskPrefs;
+  }
+
+  function readPref(key) {
+    if (Object.prototype.hasOwnProperty.call(memoryPrefs, key)) return memoryPrefs[key];
+    var s = prefDisk();
+    if (!s) return null;
+    try {
+      var v = s.getItem(key);
+      return v === null || v === undefined ? null : String(v);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function writePref(key, value) {
+    value = String(value);
+    memoryPrefs[key] = value;
+    var s = prefDisk();
+    if (!s) return false;
+    try { s.setItem(key, value); return true; } catch (e) { return false; }
+  }
+
+  // A stored best, or 0: unary plus on a corrupted value gives NaN, and no
+  // score is ever greater than NaN, so a new best would never be saved.
+  function storedBest(l) {
+    var n = +(readPref(STORE + "best." + l) || 0);
+    return isFinite(n) && n > 0 ? n : 0;
+  }
+
+  var lang = readPref(STORE + "lang");
   if (LANGS.indexOf(lang) === -1) lang = BROWSER.lang;
 
-  var themeId = localStorage.getItem(STORE + "theme");
+  var themeId = readPref(STORE + "theme");
   if (themeId !== "day" && themeId !== "aquarium") themeId = "day";
 
   // ------------------------------------------------------------ the rules
@@ -254,7 +301,7 @@
   var S = 1, fieldWidth = 0, fieldHeight = 0, floorY = 0, ceilingY = 0;
   var blocks = [];
   var score = 0;
-  var best = +(localStorage.getItem(STORE + "best." + lang) || 0);
+  var best = storedBest(lang);
   var running = false, paused = false, capShown = false;
   var lastTime = 0, spawnTimer = 0, stepAcc = 0;
   var activeDrag = null;
@@ -269,9 +316,10 @@
   // ------------------------------------------------------------- the voice
 
   /* The words read out loud, on the two levels the free game reads them.
-     voice.js is the whole of the policy; this hands it the three things only
-     the round knows — where the player is standing, whether a tile is still
-     in the air, and what to say when the switch is flipped mid-round. */
+     voice.js is the whole of the policy; this hands it the things only the
+     round knows — where the player is standing, whether a tile is still in
+     the air, which words are still on their way to the line, and what to say
+     when the switch is flipped mid-round. */
   var voice = window.SYVT_VOICE.create({
     entitled: function () { return tier() <= VOICE_MAX_TIER; },
     stillFalling: function (id) {
@@ -281,27 +329,42 @@
       return false;
     },
     onChange: updateVoiceBtn,
+    // the words still on their way to the line, for voice.js to fetch
+    // whenever it becomes able to (see inAirWords)
+    inAir: function () { return { lang: lang, words: inAirWords() }; },
     // The moment it becomes able to speak: the switch has just been turned
-    // on, or a round has come back from a tunnel. Fetch what can fall next,
-    // and answer with the thing it just allowed rather than leaving the
-    // player to wait out a spawn and guess whether it worked.
-    onLive: function () { warmVoice(); announceNewest(); }
+    // on, or a round has come back from a tunnel. voice.js has already asked
+    // for the words still in the air itself, through inAir; this only answers
+    // with the word already falling, rather than leaving the player to wait
+    // out a spawn and guess whether it worked.
+    onLive: function () { announceNewest(); }
   });
 
-  /* The words that could fall next, as a voice would say them: this level,
-     the two below it and the one above — bounded, here, by the two levels the
-     free game reads, which is every word the page can ever say. Draws
-     nothing: it touches neither `recent` nor the round's random numbers, so
-     warming the voice can never change the round it is warming up for. */
-  function warmVoice() {
-    var lo = Math.max(0, tier() - 2), hi = Math.min(VOICE_MAX_TIER, tier() + 1);
+  /* The words of the tiles whose word has not been said yet: falling, not
+     yet announced, and still above the speak line. voice.js asks for their
+     clips whenever it becomes able to fetch — the START tap, the switch
+     turned on, the page or the network coming back — and resume() asks again
+     after a pause has dropped whatever was waiting. Not gated on `paused`: a
+     page back from the background comes live under the pause veil, with its
+     tiles still in the air. Draws nothing: it touches neither `recent` nor
+     the round's random numbers, so the voice still cannot change the round.
+
+     It no longer warms whole levels, as the app's _warmVoice does. At three
+     hundred words a level that was 600 files and 2.5 MB on the first START,
+     for a page that has no disk cache of its own and cannot speak offline
+     anyway; each word is asked for instead when its tile is placed (spawn),
+     1.25-1.6 s before it reaches the line. */
+  function inAirWords() {
     var words = [];
-    for (var i = lo; i <= hi; i++) {
-      var level = WORDS[lang][i];
-      if (!level) continue;
-      for (var k = 0; k < level.length; k++) words.push(level[k][0]);
+    if (!running) return words;
+    for (var i = 0; i < blocks.length; i++) {
+      var b = blocks[i];
+      if (b.state === "falling" && b.spoken && !b.announced &&
+          b.body.bounds.min.y < SPEAK_FROM_Y * S) {
+        words.push(b.spoken);
+      }
     }
-    voice.warm(words, lang);
+    return words;
   }
 
   /* The sounds the creatures of this world can make, so the first poke has a
@@ -546,7 +609,6 @@
     if (running && tr > shownTier) {
       levelUpLabel.textContent = t().level + " " + (tr + 1);
       retrigger(levelUpEl, "show");
-      warmVoice();
     }
     shownTier = tr;
     // The level is the other half of the voice's gate, and it moves under a
@@ -703,6 +765,12 @@
     blocks.push(block);
     attachSwipe(block);
     syncDOM(block);
+    // The first moment the word is known to fall, 1.25-1.6 s before it
+    // crosses the speak line, so this is when its clip is asked for. A
+    // refused spawn returned above and fetched nothing; a sum has no word;
+    // and `spoken` is the Swiss form the clips are keyed by, whatever
+    // spelling the tile shows.
+    if (spoken) voice.warm([spoken], lang);
     return true;
   }
 
@@ -1013,7 +1081,6 @@
     // rest of its life.
     voice.unlock();
     voice.refresh();
-    warmVoice();
     warmPokes();
     spawn();
   }
@@ -1026,7 +1093,7 @@
     closeModal();
     if (score > best) {
       best = score;
-      localStorage.setItem(STORE + "best." + lang, String(best));
+      writePref(STORE + "best." + lang, String(best));
     }
     setPanel(true);
     setPhase("over");
@@ -1056,6 +1123,10 @@
     setPhase("playing");
     lastTime = 0;
     stepAcc = 0;
+    // pause() hushed the voice, which drops warm requests still waiting, so
+    // ask again for the tiles still above the line (anything already fetched
+    // is skipped)
+    voice.warm(inAirWords(), lang);
   }
 
   // --------------------------------------------------------- the offer
@@ -1177,7 +1248,7 @@
 
   function applyTheme(id) {
     themeId = id;
-    localStorage.setItem(STORE + "theme", id);
+    writePref(STORE + "theme", id);
     document.documentElement.dataset.theme = id;
     stage.setTheme(id);
     for (var i = 0; i < WORLDS.length; i++) {
@@ -1214,7 +1285,7 @@
     for (var k = 0; k < buttons.length; k++) {
       buttons[k].classList.toggle("active", buttons[k].dataset.lang === lang);
     }
-    best = +(localStorage.getItem(STORE + "best." + lang) || 0);
+    best = storedBest(lang);
     setPanel(false);
     updateHUD();
     updateVoiceBtn();
@@ -1250,14 +1321,14 @@
       var next = this.dataset.lang;
       if (LANGS.indexOf(next) === -1) return;
       lang = next;
-      localStorage.setItem(STORE + "lang", lang);
+      writePref(STORE + "lang", lang);
       // the one place the memory is emptied: the words it holds are not in
       // the pool the draw is about to use anyway
       recent = [];
-      // Whatever is half-said is in the language the page has just left.
+      // Whatever is half-said, or still waiting to be fetched, is in the
+      // language the page has just left.
       voice.hush();
       applyLang();
-      warmVoice();
       // a different language is a different font metric on every tile
       requestAnimationFrame(function () { measureField(); buildWalls(); });
     });
@@ -1268,7 +1339,8 @@
     if (document.hidden) pause();
     // A backgrounded page does not fetch; a returning one asks again straight
     // away, because the network it comes back to is very often not the one it
-    // left.
+    // left - unless it had a yes under five minutes old, which is the network
+    // it left (voice.js).
     voice.awake(!document.hidden);
   });
 

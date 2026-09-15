@@ -63,7 +63,12 @@ answers the question without taking the chance to sell anything.
 One deliberate reduction from the app's free tier, because a teaser has
 nothing to protect: there are no player profiles, so no avatars, no
 statistics and no account — the best score is a `localStorage` number per
-language. All three languages are open, as they are in the app.
+language. A browser that refuses site data, or refuses a write, still gets the
+game: the page starts with its defaults, and the language, the world, the
+voice switch and the best score last for the visit, in memory. `syvt.js` and
+`voice.js` each carry their own copy of that small guard, so a deploy where
+one file is served from cache and the other is not cannot bring back a crash
+at startup. All three languages are open, as they are in the app.
 
 The language a first visit opens in follows the app's rule
 (`lib/profile/locale_defaults.dart` in the Flutter repo): the first of the
@@ -91,7 +96,7 @@ are the app's: off means off (switched off it opens no connection and fetches
 nothing at all), one word at a time with a waiting slot exactly one deep and
 last in wins, and nothing interrupts a word except the round itself stopping.
 
-Three things are the page's own, and each has its reason written where it is
+These things are the page's own, and each has its reason written where it is
 done:
 
 - **Nothing is hashed in the browser.** `make-words.py` computes every clip id
@@ -104,10 +109,13 @@ done:
   bytes of silence. iOS lifts its lock per element and only inside a user
   gesture, so a fresh element per word would be silent forever.
 - **No CORS policy is needed on the bucket.** A media element fetches
-  cross-origin without one, and the warm-up asks in `no-cors` mode and never
-  reads a byte of what comes back — it only wants the file in the browser's
-  cache, where the element will look for it. So the corpus stays exactly as
-  the app left it; see `tool/tts/README.md` in the app repo.
+  cross-origin without one, and a clip asked for ahead of its word goes in
+  `no-cors` mode and never reads a byte of what comes back — it only wants the
+  file in the browser's cache, where the element will look for it. So the
+  corpus stays exactly as the app left it; see `tool/tts/README.md` in the app
+  repo. It is also why replaced recordings are resolved when `words.js` is
+  generated rather than read from the manifest in the page: a `no-cors`
+  response is opaque, and the page cannot read it.
 
 Nothing is fetched until the player taps START: a visitor who only reads the
 panel touches no second origin. That is also why the page's
@@ -115,6 +123,67 @@ Content-Security-Policy is no longer `default-src 'none'` — it now names
 `audio.syvt.me` under `media-src` and `connect-src`, and `data:` under
 `media-src` for the silent clip. Everything else is still same-origin, and
 `privacy.html` says what a clip fetch reveals.
+
+### What is fetched, and when
+
+One clip per word tile, asked for the moment the tile is placed — once it has
+a column and has joined the anti-repeat memory, 1.25 to 1.6 seconds before it
+crosses the speak line — so by the time it gets there the file is normally
+already in the browser's cache. A spawn refused for want of a column fetches
+nothing, and a sum has no word. Whenever the voice becomes able to fetch — the
+START tap, the switch turned on, the page or the network coming back — it also
+asks for the words of the tiles still above that line, so a tile placed while
+it could not is not left out. Whatever a request ahead of time missed, the
+`<audio>` element fetches itself when the word is said.
+
+A first minute at level 1 is about 22 clips, some 90 KB. At most three
+requests are in flight and three waiting, the oldest waiting one dropped when
+a fourth comes; a failed one, or one still out after ten seconds, is tried
+once more; and pausing, game over or a language switch drops the ones still
+waiting. A clip already fetched in this visit is not asked for again, not
+even after a return to the page.
+
+Never a whole level, and that is a deliberate divergence from the app.
+Warming the levels a round can reach, as the app's `_warmVoice` still does,
+was 600 files and 2.5 MB on the first START — 300 words a level — and the page
+gets far less for it: the app warms into a disk cache of its own, where the
+page has only the browser's HTTP cache, which it cannot look into, and it
+cannot speak offline anyway.
+
+### Asking whether the corpus is there
+
+The page asks the way the app's `lib/voice/reachability.dart` does: a request
+for `tts/v1/manifest.json`, one at a time, and one with no answer in 4 s is a
+no, as in the app. After a failure it looks again in 4 s, 10 s, 30 s, 2 min,
+5 min, and then every 15 min, the app's ladder, and nothing polls while the
+answer is yes. A clip that arrives counts as a yes, and the browser's `online`
+event asks at once, in place of any request still out from before, so a
+network that comes back need not wait out the ladder. Coming back to the page
+asks again, unless the last yes is under five minutes old by the wall clock —
+that is the network the page left, not a new one — so a glance at a
+notification costs nothing.
+
+### Replaced recordings
+
+A word recorded again after release is published as `<id>.<take>.mp3` beside
+the original, and the manifest's `revisions` names the take; the object name
+follows the app's `voiceObject`. The app reads that table at runtime. The page
+cannot, because the bucket sends no CORS header, so `make-words.py` writes the
+take into `SYVT_CLIPS` from the published manifest, and the page asks for
+`<id>.<take>.mp3` rather than the original a browser was told to keep for a
+year.
+
+So after publishing a retake — clips first, then the manifest, as
+`tool/tts/README.md` in the app repo says — run `make-words.py` again and push
+`words.js`. Until then the page goes on playing the old take.
+
+If a take fails to load the way a 404 does, the page falls back to the take
+before it within the same word, as the app's `VoiceCache` does. A browser
+reports a 5xx or a dropped connection exactly as it reports a 404, though, so
+the page keeps to the take before for the rest of the visit only once that
+take has played, which shows the host answered; if it fails too, it was the
+network, and the newer take is asked for again next time. A no from the probe
+clears the list.
 
 ## Poking the visitors
 
@@ -155,8 +224,11 @@ while the round is paused, so nothing about it can cost a swipe.
 whole interface as one themed stylesheet. `words.js` is generated:
 
 ```
-python make-words.py       # ../SYVT/tool/words/*.json -> words.js, levels 1-5
+python make-words.py       # ../SYVT/tool/words/*.json + the corpus manifest -> words.js, levels 1-5
 ```
+
+It takes `[--manifest URL|PATH] [--out PATH]`; without them it reads the
+published manifest and writes `words.js`.
 
 1,500 words per language, each entry `[correct, ...misspellings]` — the words
 the app teaches on levels 1 to 5, one level past where the free game stops.
@@ -164,11 +236,23 @@ the app teaches on levels 1 to 5, one level past where the free game stops.
 Switzerland writes with ss, keyed by the Swiss form and in the same shape, for
 the tiles a German browser outside Switzerland and Liechtenstein sees. It
 also writes `SYVT_CLIPS`,
-the clip id of every word the page can say: levels 1 and 2 only, which is as
-far as the free voice goes. For German the id is Germany's spelling, from
-`de_germany.json`, keyed by the Swiss spelling the tile shows — the same
-`WordEntry.spoken` rule the app follows, because `ss` tells a German voice the
-vowel before it is short and the Swiss form is the one it cannot pronounce.
+the clip of every word the page can say: levels 1 and 2 only, which is as
+far as the free voice goes. Each value is an object name — the clip id, or
+`<id>.<take>` for a replaced recording. For German the id is Germany's
+spelling, from `de_germany.json`, keyed by the Swiss spelling the tile shows —
+the same `WordEntry.spoken` rule the app follows, because `ss` tells a German
+voice the vowel before it is short and the Swiss form is the one it cannot
+pronounce.
+
+The takes come from `https://audio.syvt.me/tts/v1/manifest.json` by default —
+the published manifest, because it names only takes already on the bucket — so
+a run needs the network. Offline, pass
+`--manifest ../SYVT/tool/tts/out/tts/v1/manifest.json`. The manifest is read
+before anything is built, and one that cannot be read or does not parse stops
+the run and leaves `words.js` as it was. The manifest is served with
+`max-age=300`, which only a browser heeds: Cloudflare does not cache it
+(`cf-cache-status: DYNAMIC`), and the generator fetches it uncached, so a run
+right after uploading one already reads it.
 
 ## Hosting
 

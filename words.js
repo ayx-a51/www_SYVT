@@ -4541,10 +4541,14 @@ window.SYVT_WORDS = {
   ],
 };
 
-// The clip id of every word the page can read out loud: the
+// The clip of every word the page can read out loud: the
 // first 2 levels, which is as far as the free voice goes.
-// Keyed by the spelling the tile shows; for German the id is
+// Keyed by the spelling the tile shows; for German the clip is
 // Germany's spelling, which is the one the voice can read.
+// Each value is the clip's object name: its id, or <id>.<take>
+// for a word recorded again after release, from the corpus
+// manifest's revisions when this file was written.
+// Takes from the corpus manifest generated 2026-09-12T09:05:38Z.
 window.SYVT_CLIPS = {
   en: {
     "friend": "15793f53d3a4a0a31613",
