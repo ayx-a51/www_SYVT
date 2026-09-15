@@ -126,8 +126,9 @@
     and no device identifier is ever sent. Cloudflare, like any web server,
     sees the IP address making the request and which files it asked for
     &mdash; and because the word list is public, those names say which words
-    were practised. That is the honest limit of it, and the reason a round
-    fetches its words in a batch rather than one at a time as they fall. The
+    were practised. That is the honest limit of it. The app fetches a level's
+    words in a batch; the game on this site asks for each word as its tile
+    appears, so its requests follow the words a round actually shows. The
     files are the same for everyone; nothing about them is personal to a
     player. Switching the voice off stops every one of these requests.</p>
   </section>
