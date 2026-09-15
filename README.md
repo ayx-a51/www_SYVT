@@ -2,8 +2,7 @@
 
 SYVT — a word game. Falling words: swipe right if one is spelled correctly,
 left if it is not. Wrong calls pile up until the stack reaches the ceiling.
-English, German (Swiss orthography) and French, with mental-arithmetic discs
-mixed in.
+English, German and French, with mental-arithmetic discs mixed in.
 
 The game **is** the site: `index.html` at the root, served by GitHub Pages.
 It moved here from `y7.ai/SYVT/`; before that it was `y7.ai/SIFT/`, and before
@@ -36,35 +35,52 @@ nothing. The day it lists, `index.html` gets the two hrefs back and the
 three `openModal` calls in `syvt.js` pass `showBuy` true again; the wording
 of each string is what changes with them, and nothing else is.
 
-- **Level 5** is the last free level, as on Android. At score 150 the round
-  pauses and the notice comes up once; dismissing it carries on at level 5 for
-  as long as the player likes.
+- **Level 4** is the last free level, as on Android. At score 120 the round
+  pauses and the notice comes up once; dismissing it carries on at level 4 for
+  as long as the player likes. Level 5's words are still in `words.js`, out of
+  reach, so moving the ceiling is `FREE_MAX_TIER` in `syvt.js` alone.
 - **Two worlds** are free, Day and Aquarium. The other four sit in the picker
   with a padlock, and tapping one opens the same notice.
 - **Levels 1 and 2** are read out loud, as on Android. The chip beside the
   pause button switches the voice; on the way into level 3 it goes quiet and
   the chip dims, and a tap on it then pauses the round and opens the notice.
 
-The score stops counting at 150, which is the same moment. Play does not stop
+The score stops counting at 120, which is the same moment. Play does not stop
 — the round runs until the stack reaches the ceiling — but every point after
-that is won on level-five words, so it is not the same thing as a point won at
+that is won on level-four words, so it is not the same thing as a point won at
 level ten. The overflow therefore runs in a second counter beside the score,
-`150 | +13`, behind a hairline so the two can never be read as one number.
+`120 | +13`, behind a hairline so the two can never be read as one number.
 The whole total is what gets stored; the split is only how it is shown, and it
 is shown the same way in the app.
 
 Two smaller things follow from it. The level bar fills for the last time on
-the way to level five and then stays full, rather than sweeping every thirty
+the way to level four and then stays full, rather than sweeping every thirty
 points under a number that can never change. And the counter explains itself
-only if asked: the SYVT+ notice at 150 mentions it in passing, and a small
-"i" beside the counter on the game-over panel opens a short "Why 150?" that
+only if asked: the SYVT+ notice at 120 mentions it in passing, and a small
+"i" beside the counter on the game-over panel opens a short "Why 120?" that
 answers the question without taking the chance to sell anything.
 
-Two deliberate reductions from the app's free tier, both because a teaser has
-nothing to protect: all three languages are open (the app keeps the first two
-a device plays in), and there are no player profiles, so no avatars, no
+One deliberate reduction from the app's free tier, because a teaser has
+nothing to protect: there are no player profiles, so no avatars, no
 statistics and no account — the best score is a `localStorage` number per
-language.
+language. All three languages are open, as they are in the app.
+
+The language a first visit opens in follows the app's rule
+(`lib/profile/locale_defaults.dart` in the Flutter repo): the first of the
+browser's preferred languages that the game speaks, English if none, until a
+language is tapped on the panel, which is remembered. German is spelled the
+way the browser's country writes it. Switzerland and Liechtenstein have no
+eszett, so the words fall as *Strasse* only where the browser's German, or
+failing any German the browser itself, is in one of those two; everywhere
+else they fall as *Straße*, and a browser that names no country keeps the
+list's own Swiss spelling. In the app a parent can change it per player; the
+page has no switch, so the browser alone decides. The voice says Germany's
+form either way, as the app's does.
+
+A word or sum joins the anti-repeat memory only once its tile is placed, as
+in the app. A crowded field refuses a spawn every frame until a column
+clears, and while the memory took words at the draw, each refusal pushed out
+a word that had really fallen.
 
 ## The voice
 
@@ -142,23 +158,30 @@ whole interface as one themed stylesheet. `words.js` is generated:
 python make-words.py       # ../SYVT/tool/words/*.json -> words.js, levels 1-5
 ```
 
-500 words per language, each entry `[correct, ...misspellings]` — the words
-the app teaches, cut off where the free game is. It also writes `SYVT_CLIPS`,
+1,500 words per language, each entry `[correct, ...misspellings]` — the words
+the app teaches on levels 1 to 5, one level past where the free game stops.
+`window.SYVT_GERMANY` beside them holds Germany's forms of the German words
+Switzerland writes with ss, keyed by the Swiss form and in the same shape, for
+the tiles a German browser outside Switzerland and Liechtenstein sees. It
+also writes `SYVT_CLIPS`,
 the clip id of every word the page can say: levels 1 and 2 only, which is as
 far as the free voice goes. For German the id is Germany's spelling, from
 `de_germany.json`, keyed by the Swiss spelling the tile shows — the same
 `WordEntry.spoken` rule the app follows, because `ss` tells a German voice the
 vowel before it is short and the Swiss form is the one it cannot pronounce.
 
-## Still to set up
+## Hosting
 
-The repo half is done — `CNAME` pins the domain and `.nojekyll` serves files
-as-is. The rest is in the GitHub UI and at the registrar:
+GitHub Pages serves `main` from the root, so a push to `main` is a release.
+`CNAME` pins the domain and `.nojekyll` serves files as-is. The rest lives in
+the GitHub UI and at the registrar, and all of it is in place: on 2026-09-15
+both `http://syvt.me/` and `https://www.syvt.me/` answered with a 301 to
+`https://syvt.me/`.
 
 - **Pages**: Settings → Pages → deploy from branch `main`, folder `/ (root)`.
 - **DNS** for `syvt.me`: apex `A` records to the GitHub Pages addresses
   (185.199.108–111.153), and `www` as a `CNAME` to `syvt.me`.
-- **HTTPS**: tick *Enforce HTTPS* once the certificate has been issued.
+- **HTTPS**: *Enforce HTTPS* is on.
 
 Note that a repository can only carry one custom domain, which is what the
 `CNAME` file is — that is why this lives in its own repo rather than beside
@@ -300,11 +323,15 @@ letter, and 34 px because the wordmark's floor is a 24 px cap height and
 which the brand does not allow. Its two margins are measured, not derived; see
 **One number the spec gets wrong** above and the comment in `legal.css`.
 
-Keep both pages true to what the app actually does. The claims that matter, and
-that would need editing if the app changed: no ads, no analytics, no crash
-reporting, no third-party trackers; the account is optional and holds only
-nicknames, avatars, scores and settings; Firestore is in the European
-multi-region and the callable function in Zurich; and the app's own danger
-zone (Settings for parents, held open at the bottom) deletes the account, its
-backup and every player's statistics, with the email request kept only for
-someone who cannot open the app.
+Keep both pages true to what the app actually does, and in step with the
+app's `store/play/data-safety.md`, which Play compares with them. The claims
+that matter, and that would need editing if the app changed: no ads, no
+analytics, no crash reporting, no third-party trackers; the account is
+optional, signs in with an email address or a Google account, and holds only
+nicknames, avatars, scores and settings; a signed-in purchase is checked with
+Google Play and recorded against the account; the spoken words come from
+`audio.syvt.me` on Cloudflare, with no account or device id in the request;
+Firestore is in the European multi-region and the callable functions in
+Zurich; and the app's own danger zone (Settings for parents, held open at the
+bottom) deletes the account, its backup and every player's statistics, with
+the email request kept only for someone who cannot open the app.

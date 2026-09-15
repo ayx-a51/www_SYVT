@@ -1,9 +1,9 @@
 /* SYVT on the web: the Android game's free tier, rule for rule.
 
    Everything the app's free player gets is here — the two open worlds, all
-   three languages, levels 1 to 5, the same words, the same sums, the same
+   three languages, levels 1 to 4, the same words, the same sums, the same
    fall speeds. Where the app would sell SYVT+, this says it is coming: a
-   locked world, the end of level 5, or the voice going quiet. The Android
+   locked world, the end of level 4, or the voice going quiet. The Android
    app is not listed yet, so none of the three offers a link - see the note
    above openModal for what to put back the day it is.
 
@@ -42,6 +42,9 @@
       Composite = Matter.Composite, Events = Matter.Events;
 
   var WORDS = window.SYVT_WORDS;
+  // Germany's forms of the German words Switzerland writes with ss, keyed by
+  // the Swiss form; empty for a words.js from before they came across
+  var GERMANY = window.SYVT_GERMANY || {};
 
   // ------------------------------------------------------------- strings
 
@@ -55,10 +58,10 @@
       paused: "Paused", resume: "Continue", quit: "End round", pauseAction: "Pause",
       store: "SYVT+ is coming to Android",
       buy: "Get SYVT+", notNow: "Not now", keepPlaying: "Keep playing",
-      capTitle: "Level 5 reached!",
+      capTitle: "Level {level} reached!",
       capBody: "That is the last level of the free game. SYVT+ takes the words on to level 10, and it is coming to Android soon. Until then, keep playing here for as long as you like — anything past {score} is counted beside your score.",
       counterTitle: "Why {score}?",
-      counterBody: "{score} is the whole free game: five levels of thirty points. Past that the words stay at level 5, so those points come easier — they are counted beside your score rather than in it, so that every {score} means the same thing.",
+      counterBody: "{score} is the whole free game: four levels of thirty points. Past that the words stay at level {level}, so those points come easier — they are counted beside your score rather than in it, so that every {score} means the same thing.",
       gotIt: "Got it",
       lockTitle: "A SYVT+ world",
       lockBody: "This world is part of SYVT+: six worlds and ten levels. It is coming to Android soon.",
@@ -77,10 +80,10 @@
       paused: "Pausiert", resume: "Weiter", quit: "Runde beenden", pauseAction: "Pause",
       store: "SYVT+ kommt bald für Android",
       buy: "SYVT+ holen", notNow: "Nicht jetzt", keepPlaying: "Weiterspielen",
-      capTitle: "Level 5 geschafft!",
+      capTitle: "Level {level} geschafft!",
       capBody: "Das ist das letzte Level der Gratis-Version. Mit SYVT+ geht es weiter bis Level 10 — bald für Android. Bis dahin spielst du hier weiter, so lange du magst; alles über {score} wird neben deinem Punktestand gezählt.",
       counterTitle: "Warum {score}?",
-      counterBody: "{score} ist die ganze Gratis-Version: fünf Level à dreissig Punkte. Danach bleiben die Wörter auf Level 5, diese Punkte sind also leichter — sie werden neben deinem Punktestand gezählt und nicht darin, damit {score} überall dasselbe bedeutet.",
+      counterBody: "{score} ist die ganze Gratis-Version: vier Level à dreissig Punkte. Danach bleiben die Wörter auf Level {level}, diese Punkte sind also leichter — sie werden neben deinem Punktestand gezählt und nicht darin, damit {score} überall dasselbe bedeutet.",
       gotIt: "Alles klar",
       lockTitle: "Eine SYVT+ Welt",
       lockBody: "Diese Welt gehört zu SYVT+: sechs Welten und zehn Level. Bald für Android.",
@@ -99,10 +102,10 @@
       paused: "En pause", resume: "Continuer", quit: "Terminer la partie", pauseAction: "Pause",
       store: "SYVT+ arrive bientôt sur Android",
       buy: "Passer à SYVT+", notNow: "Pas maintenant", keepPlaying: "Continuer à jouer",
-      capTitle: "Niveau 5 atteint !",
+      capTitle: "Niveau {level} atteint !",
       capBody: "C’est le dernier niveau de la version gratuite. Avec SYVT+ les mots continuent jusqu’au niveau 10 — bientôt sur Android. En attendant, reste ici aussi longtemps que tu veux ; tout ce qui dépasse {score} est compté à côté de ton score.",
       counterTitle: "Pourquoi {score} ?",
-      counterBody: "{score}, c’est tout le jeu gratuit : cinq niveaux de trente points. Ensuite les mots restent au niveau 5, donc ces points-là sont plus faciles — ils sont comptés à côté de ton score et non dedans, pour que {score} veuille toujours dire la même chose.",
+      counterBody: "{score}, c’est tout le jeu gratuit : quatre niveaux de trente points. Ensuite les mots restent au niveau {level}, donc ces points-là sont plus faciles — ils sont comptés à côté de ton score et non dedans, pour que {score} veuille toujours dire la même chose.",
       gotIt: "Compris",
       lockTitle: "Un monde SYVT+",
       lockBody: "Ce monde fait partie de SYVT+ : six mondes et dix niveaux. Bientôt sur Android.",
@@ -129,8 +132,60 @@
   var LANGS = ["en", "de", "fr"];
   var STORE = "syvt.";
 
+  /* What a first visit opens in, and which German it writes: the app's rule,
+     from lib/profile/locale_defaults.dart in the Flutter repo.
+
+     The browser lists its user's languages in order of preference, so the
+     first of them the game speaks is the one to open in, and English if it
+     speaks none. A language tapped on the panel is remembered, and wins.
+
+     Which German is right is a matter of country, not of language.
+     Switzerland and Liechtenstein write ss where everybody else writes an
+     eszett, so the words fall the Swiss way only where the browser's German,
+     or failing any German the browser itself, is in one of those two, and
+     the way Germany writes them everywhere else. A browser that names no
+     country keeps the list's own spelling, which is Swiss. The app lets a
+     parent change it per player; the page has no switch, so this decides. */
+  var SWISS_SPELLING = ["CH", "LI"];
+
+  // A tag's language, and its region where it names one: "de-CH",
+  // "zh-Hant-TW", "es-419", "de_AT". A lone letter opens an extension
+  // ("de-u-co-phonebk"), and the two-letter parts after it are not countries.
+  function parseTag(tag) {
+    if (typeof tag !== "string" || !tag) return null;
+    var parts = tag.split(/[-_]/), region = "";
+    for (var i = 1; i < parts.length && parts[i].length > 1; i++) {
+      if (/^([A-Za-z]{2}|[0-9]{3})$/.test(parts[i])) {
+        region = parts[i].toUpperCase();
+        break;
+      }
+    }
+    return { language: parts[0].toLowerCase(), region: region };
+  }
+
+  function localeDefaults(tags) {
+    var found = "", first = null, german = null;
+    for (var i = 0; i < tags.length; i++) {
+      var tag = parseTag(tags[i]);
+      if (!tag) continue;
+      if (!first) first = tag;
+      if (!found && LANGS.indexOf(tag.language) !== -1) found = tag.language;
+      if (!german && tag.language === "de") german = tag;
+    }
+    // the German the browser speaks says which German it writes; a browser
+    // that speaks none is judged by where it is
+    var region = (german || first || { region: "" }).region;
+    return {
+      lang: found || "en",
+      germanSpelling: region !== "" && SWISS_SPELLING.indexOf(region) === -1
+    };
+  }
+
+  var BROWSER = localeDefaults(navigator.languages && navigator.languages.length ?
+    navigator.languages : [navigator.language]);
+
   var lang = localStorage.getItem(STORE + "lang");
-  if (LANGS.indexOf(lang) === -1) lang = "en";
+  if (LANGS.indexOf(lang) === -1) lang = BROWSER.lang;
 
   var themeId = localStorage.getItem(STORE + "theme");
   if (themeId !== "day" && themeId !== "aquarium") themeId = "day";
@@ -145,14 +200,14 @@
   var PX_PER_STEP = STEP_MS / 1000;
   var GAMEOVER_HOLD = 0.5;
   var PER_LEVEL = 30;            // the app's kPerLevel
-  var FREE_MAX_TIER = 4;         // level 5 is the last free one
+  var FREE_MAX_TIER = 3;         // level 4 is the last free one: the app's Limits.freeMaxLevel
   // The last level the words are read out on, the app's Limits.freeVoiceMaxLevel.
   // Two, not none: two levels of hearing the word said while looking at the
   // spelling is the feature itself, and those are the levels a new player
   // spends the most time in. It goes quiet on the way into level three, which
   // is where the free game starts asking something of them anyway.
   var VOICE_MAX_TIER = 1;
-  var FREE_CAP = (FREE_MAX_TIER + 1) * PER_LEVEL;   // 150: where counting stops
+  var FREE_CAP = (FREE_MAX_TIER + 1) * PER_LEVEL;   // 120: where counting stops
   /* How many recently shown words and sums are kept out of the draw — one
      memory, shared, and it outlives the round. It used to hold ten and be
      wiped by `start()`, which is the top of every new round: a child who
@@ -354,7 +409,7 @@
   // ------------------------------------------------------- level and pace
 
   // the raw tier is what the score has actually earned; `tier` is what the
-  // free game will play. They part company at score 150, which is where the
+  // free game will play. They part company at score 120, which is where the
   // offer comes up.
   function rawTier() { return Math.min(Math.floor(score / PER_LEVEL), 9); }
   function tier() { return Math.min(rawTier(), FREE_MAX_TIER); }
@@ -377,7 +432,19 @@
     for (var k = 0; k < 14 && recent.indexOf(e[0]) !== -1; k++) {
       e = pool[(Math.random() * pool.length) | 0];
     }
-    remember(e[0]);
+    // not remembered here: only a word that actually falls is (see spawn)
+    return e;
+  }
+
+  // The forms a picked entry falls in, [correct, ...misspellings]. The list
+  // is Swiss; in Germany's German the words the two countries spell
+  // differently fall as Germany writes them, right form and misspellings
+  // alike. The voice keeps its own key, the Swiss form (SYVT_CLIPS).
+  function formsOf(e) {
+    if (lang === "de" && BROWSER.germanSpelling &&
+        Object.prototype.hasOwnProperty.call(GERMANY, e[0])) {
+      return GERMANY[e[0]];
+    }
     return e;
   }
 
@@ -434,7 +501,7 @@
       eq = gen();
       if (recent.indexOf(eq.expr) === -1) break;
     }
-    remember(eq.expr);
+    // not remembered here either: see spawn
 
     var correct = Math.random() < 0.5;
     var shown = eq.value;
@@ -456,8 +523,8 @@
   }
 
   /* The score is one number up to the free ceiling and two after it. A free
-     player who keeps going past level 5 is still playing level-5 words, so
-     those points are not the same currency as someone else's: 150 is what
+     player who keeps going past level 4 is still playing level-4 words, so
+     those points are not the same currency as someone else's: 120 is what
      compares, and the rest is shown beside it as its own count. */
   function showScore(valueEl, bonusEl, value) {
     var over = value > FREE_CAP ? value - FREE_CAP : 0;
@@ -553,14 +620,20 @@
     // tile, which may well be a misspelling of it. A sum has none: it is not
     // a spelling, and there is nothing to say that the disc does not show.
     var word, misspelled, spoken = null, eq = null;
+    // what the anti-repeat memory will hold for this tile once it falls: the
+    // sum, or the word in the list's own Swiss spelling whichever it shows
+    var recentKey;
     if (Math.random() < MATH_SHARE) {
       eq = pickEquation();
+      recentKey = eq.expr;
       word = eq.expr + "=" + eq.answer;
       misspelled = eq.isWrong;              // "misspelled" = "swipe me left"
     } else {
       var e = pickEntry();
-      misspelled = e.length > 1 && Math.random() < 0.5;
-      word = misspelled ? e[1 + ((Math.random() * (e.length - 1)) | 0)] : e[0];
+      recentKey = e[0];
+      var forms = formsOf(e);
+      misspelled = forms.length > 1 && Math.random() < 0.5;
+      word = misspelled ? forms[1 + ((Math.random() * (forms.length - 1)) | 0)] : forms[0];
       spoken = e[0];
     }
 
@@ -593,7 +666,16 @@
     }
 
     var x = spawnX(width);
+    // no clear column right now: the frame loop tries again next frame,
+    // with a fresh draw, as the app's does
     if (x === null) { el.remove(); return false; }
+    // Only now is this a tile the player will see, so only now is it
+    // remembered. Remembered at the draw, every refused spawn burned a word
+    // in, and a crowded field refuses one every frame: the memory filled
+    // with words that never fell and forgot the ones that had. A wide tile
+    // is refused more often, so long words were also kept away more, a
+    // tilt toward the short end of every level. The app fixed the same.
+    remember(recentKey);
 
     var shape = {
       friction: 0.28,
@@ -613,7 +695,7 @@
       el: el, body: body, word: word, misspelled: misspelled, isEq: !!eq,
       spoken: spoken, announced: false,
       width: width, height: height,
-      state: "falling", penalty: false, revealed: false, revealAt: 0,
+      state: "falling", penalty: false, revealed: false, settled: false, revealAt: 0,
       dragging: false, dragX: 0, startX: 0, bodyStartX: 0, overTime: 0
     };
     body.plugin.block = block;
@@ -650,6 +732,14 @@
     }
   }
 
+  // A wrong call has come to rest, for the danger meter, once it touches the
+  // floor or the pile. Bouncing off a side wall is still part of its flight,
+  // as it is in the app (GameController._reveal, settle:).
+  function settle(body) {
+    var blk = body.plugin && body.plugin.block;
+    if (blk && blk.penalty) blk.settled = true;
+  }
+
   Events.on(engine, "collisionStart", function (ev) {
     for (var k = 0; k < ev.pairs.length; k++) {
       var pair = ev.pairs[k];
@@ -657,6 +747,8 @@
       reveal(pair.bodyA);
       reveal(pair.bodyB);
       if (pair.bodyA.plugin.isSideWall || pair.bodyB.plugin.isSideWall) continue;
+      settle(pair.bodyA);
+      settle(pair.bodyB);
       var a = pair.bodyA.plugin && pair.bodyA.plugin.block;
       var b = pair.bodyB.plugin && pair.bodyB.plugin.block;
       // two tiles both still in the air never land each other: the solver
@@ -675,6 +767,8 @@
       if (pair.bodyA.isSensor || pair.bodyB.isSensor) continue;
       reveal(pair.bodyA);
       reveal(pair.bodyB);
+      settle(pair.bodyA);
+      settle(pair.bodyB);
     }
   });
 
@@ -686,8 +780,12 @@
     el.addEventListener("pointerdown", function (e) {
       if (!running || paused) return;
       if (block.state !== "falling") return;
-      if (activeDrag && activeDrag !== block) return;   // ignore a second finger
+      // A second finger, on another tile or on THIS one, as the app refuses
+      // it. The same tile used to get through: the swipe re-anchored under
+      // the new finger, and whichever finger lifted first made the call.
+      if (activeDrag) return;
       activeDrag = block;
+      block.pointerId = e.pointerId;
       block.dragging = true;
       block.startX = e.clientX;
       block.bodyStartX = block.body.position.x;
@@ -697,13 +795,14 @@
       e.preventDefault();
     });
 
+    // only the finger that started the swipe steers it or ends it
     el.addEventListener("pointermove", function (e) {
-      if (!block.dragging) return;
+      if (!block.dragging || e.pointerId !== block.pointerId) return;
       block.dragX = e.clientX - block.startX;
     });
 
-    function finish() {
-      if (!block.dragging) return;
+    function finish(e) {
+      if (!block.dragging || (e && e.pointerId !== block.pointerId)) return;
       block.dragging = false;
       if (activeDrag === block) activeDrag = null;
       el.classList.remove("dragging");
@@ -777,7 +876,12 @@
     for (var i = 0; i < blocks.length; i++) {
       var b = blocks[i], body = b.body;
 
-      if (b.state === "landed" && body.bounds.min.y < highestTop) highestTop = body.bounds.min.y;
+      // A wrong call is "landed" from the moment it is thrown, so until it
+      // has come to rest it is a tile in flight, and the meter is about the
+      // pile: counted, every wrong call near the top flashed the warning to
+      // full for the third of a second the tile flew, on an empty field.
+      var inFlight = b.penalty && !b.settled;
+      if (b.state === "landed" && !inFlight && body.bounds.min.y < highestTop) highestTop = body.bounds.min.y;
 
       if (b.state === "cleared") {
         if (body.position.x < -b.width || body.position.x > fieldWidth + b.width ||
@@ -968,7 +1072,9 @@
     modal.hidden = false;
   }
 
-  function cap(text) { return text.replace(/\{score\}/g, FREE_CAP); }
+  function cap(text) {
+    return text.replace(/\{score\}/g, FREE_CAP).replace(/\{level\}/g, FREE_MAX_TIER + 1);
+  }
 
   /* Behind the small "i" beside the second counter: why a free score stops
      where it does. It explains and nothing else — the player asked a
@@ -984,14 +1090,15 @@
      rather than sitting under a button that would open nothing. Pass true
      again, and restore the two hrefs in index.html, the day it lists. */
 
-  // level 5 is the last free one. The app pauses the round and offers SYVT+
-  // once; dismissing it leaves the pause veil, and play carries on at level 5
-  // for as long as the player likes.
+  // Level 4 is the last free one, as in the app (Limits.freeMaxLevel). The
+  // app pauses the round and offers SYVT+ once; dismissing it leaves the
+  // pause veil, and play carries on at level 4 for as long as the player
+  // likes. Level 5's words are still in words.js, out of reach.
   function checkCap() {
     if (capShown || rawTier() <= FREE_MAX_TIER) return;
     capShown = true;
     pause();
-    openModal(t().capTitle, cap(t().capBody), t().keepPlaying, false);
+    openModal(cap(t().capTitle), cap(t().capBody), t().keepPlaying, false);
   }
 
   function offerWorld() {
@@ -1086,6 +1193,10 @@
 
   function applyLang() {
     var s = t();
+    // The page's own language, which it now often is not English: a screen
+    // reader picks its voice by it, and a browser reads it to decide whether
+    // to offer a translation of German it has been told is English.
+    document.documentElement.lang = lang;
     $("hintLeft").textContent = s.hintLeft;
     $("hintRight").textContent = s.hintRight;
     scoreKicker.textContent = s.scoreLbl.toUpperCase();

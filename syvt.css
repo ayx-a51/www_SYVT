@@ -1228,7 +1228,9 @@ body {
 :focus-visible { outline: calc(2 * var(--s)) solid var(--ring); outline-offset: calc(3 * var(--s)); }
 
 @media (prefers-reduced-motion: reduce) {
-  #aurora, #legend .chip, #score, #levelUp, #flash, .puff, .score-pop, #modal { animation: none !important; }
+  /* the sideways jolt of the field on a wrong call is the one effect that
+     can make a motion-sensitive player ill; the tile turning red says it */
+  #aurora, #legend .chip, #score, #scoreBonus, #levelUp, #flash, #field.shake, .puff, .score-pop, #modal { animation: none !important; }
   #danger.crit { animation: none; }
   .block.locked::after { animation: none; }
 }
