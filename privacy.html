@@ -30,10 +30,11 @@
   <div class="wrap pagehead">
     <p class="kicker">Legal</p>
     <h1>Privacy Policy</h1>
-    <p class="updated">Last updated: 6 September 2026</p>
-    <p class="intro">SYVT is a spelling game for children. It plays with no
-    connection at all, and an account is optional. This page says exactly what
-    is stored, where it is kept, and how to get rid of it.</p>
+    <p class="updated">Last updated: 15 September 2026</p>
+    <p class="intro">SYVT is a spelling game, for children and for anyone
+    learning to spell. It plays with no connection at all, and an account is
+    optional. This page says exactly what is stored, what is sent where, where
+    it is kept, and how to get rid of it.</p>
   </div>
 
 </div>
@@ -47,27 +48,35 @@
     and language, best scores, rounds played, points and settings &mdash; is
     written to the app's own storage on that device and nowhere else. We never
     see it, and uninstalling the app deletes it.</p>
+    <p>Two things can still reach the internet without an account: the spoken
+    words, described below, and a purchase, which Google Play handles.</p>
 
     <h2>What an account stores</h2>
     <p>An account exists so that the same players can be carried to another
-    device, and it is made by a parent in the app's parents' corner. It uses an
-    <strong>email address and a password</strong>. We receive the email
-    address. The password is handled by Google Firebase Authentication, which
-    keeps it only as a salted hash, never in readable form, together with the
+    device, and a parent makes it in the app's settings for parents. It signs
+    in with an <strong>email address and a password</strong>, or with a
+    <strong>Google account</strong>. With a password, we receive the email
+    address, and Google Firebase Authentication keeps the password only as a
+    salted hash, never in readable form. With Google, Firebase Authentication
+    receives the Google account's email address, together with the name and
+    profile-picture link Google may include with a sign-in; the app uses only
+    the email address. Either way, Firebase Authentication also keeps the
     dates the account was created and last used.</p>
     <p>Once signed in, the game keeps <strong>one document per account</strong>
     on our server. For each player it holds the nickname (up to eight
     characters, freely chosen), the avatar (a short string of part numbers),
     the chosen world, the chosen language, the best score in each language, the
-    number of rounds played, the points scored, when the player was made, and
-    the two paid settings &mdash; how much arithmetic is mixed in, and which
-    level a round starts at. Alongside those it holds the identifiers of
-    players deleted on another device, the up to two languages a free account
-    has claimed, the time of the last change and a version number.</p>
+    number of rounds played, the points scored, when the player was made,
+    whether words are read aloud, which country's German spelling counts as
+    right, and the two paid settings &mdash; how much arithmetic is mixed in,
+    and which level a round starts at. Alongside those it holds the identifiers
+    of players deleted on another device, the time of the last change and a
+    version number.</p>
 
     <h2>What we never collect</h2>
-    <p>No real names, no age or date of birth, no address or telephone number,
-    no photographs, no contacts, no location, and no advertising identifier.
+    <p>Apart from what a Google sign-in carries, no real names. No age or date
+    of birth, no address or telephone number, no photographs or files from the
+    device, no contacts, no location, and no advertising identifier.
     Nothing a child types is collected beyond the nickname, which need not be a
     real name. There is no chat and no messaging, and nothing a player does is
     visible to any other user.</p>
@@ -78,29 +87,35 @@
     <p>Account data sits on Google's Firebase platform, in a project we run.
     The database (Cloud Firestore) is in Google's <strong>European
     multi-region</strong>, with the data held in Belgium and the Netherlands.
-    The one server function the app can call &mdash; redeeming a
-    friends-and-family code &mdash; runs in <strong>Zurich,
-    Switzerland</strong>; a second function, which guards the project's
-    spending, runs in Belgium. Data is encrypted in transit and at rest, and
-    the database rules let an account read and write its own document and
-    nothing else. Google acts as our processor here, on our instructions.</p>
+    The server functions the app calls &mdash; redeeming a friends-and-family
+    code, and recording, moving or withdrawing a Google Play purchase &mdash;
+    run in <strong>Zurich, Switzerland</strong>; one more function, which
+    guards the project's spending and handles no user data, runs in Belgium.
+    Data is encrypted in transit and at rest. The database rules let an
+    account read and write its own document and read its own SYVT+ record,
+    and nothing else; purchase and code records are written only by our
+    server. Google acts as our processor here, on our instructions.</p>
 
     <h2>No advertising, no analytics, no tracking</h2>
     <p>SYVT carries no advertising, no analytics, no crash reporting and no
     third-party tracking or marketing software. It sets no cookies and reads no
     advertising identifier. Google Analytics is switched off in the Firebase
-    project. How a child plays never leaves the device, apart from the scores
-    described above, and only while an account is signed in.</p>
+    project. How a child plays stays on the device, apart from the scores and
+    settings described above while an account is signed in, and the spoken
+    words a device asks for, described below.</p>
 
     <h2>What the servers log</h2>
     <p>As with any app built on Firebase, Google records the IP address and the
     user agent of the requests the app makes &mdash; for sign-in security, and
-    in the log of the function that redeems codes. Those logs are kept briefly
-    and are not used to build a profile. Firebase also gives the installed app
-    a random installation identifier, which Google uses to operate the service;
-    it identifies an installation, not a person, and we do not read it. This
-    website is served by GitHub Pages, which, like any web server, logs the IP
-    address of a visit.</p>
+    in the logs of our server functions, which also note the account
+    identifier when a purchase cannot be confirmed with Google Play. Those
+    logs are kept briefly and are not used to build a profile. The Firebase
+    software in the app can give the installed app a random installation
+    identifier, and a call to our functions can carry a Firebase messaging
+    token. Google uses both to operate the service; they identify an
+    installation rather than a person, and we neither read them nor send
+    messages. This website is served by GitHub Pages, which, like any web
+    server, logs the IP address of a visit.</p>
 
     <h2>The spoken words</h2>
     <p>The voice that reads the falling words is a set of fixed audio files on
@@ -119,26 +134,42 @@
 
   <section class="card">
     <h2>SYVT+ and purchases</h2>
-    <p>SYVT+ is sold as a monthly subscription or as a single payment, and
-    is handled entirely by <strong>Google Play</strong>. We never see or
-    receive your payment details &mdash; only whether the entitlement is
-    active. The app remembers that answer on the device, so a paid game still
-    works offline.</p>
+    <p>SYVT+ is sold as a monthly subscription or as a single payment, and the
+    payment is handled entirely by <strong>Google Play</strong>. We never see
+    or receive payment details. The app remembers on the device whether SYVT+
+    is active, so a paid game still works offline.</p>
+    <p>While an account is signed in, the app also tells our server about a
+    SYVT+ purchase, so that SYVT+ follows the account to its other devices. It
+    sends the purchase's Google Play token and which product it is. The server
+    checks both with Google Play and then records, against the account, the
+    product, the token, the date it recorded them, when a subscription
+    expires, and when Google Play last confirmed it. It also records which
+    account holds the purchase, so that one purchase serves one account: if
+    another SYVT account already holds it, the app shows that account's email
+    address cut down to its first letter and its domain, and moves the
+    purchase only if you ask it to. When Google Play reports that a purchase
+    has ended or been refunded, the app asks our server to take SYVT+ off the
+    account. A purchase the server already knows about is reported again at
+    most once a day.</p>
 
     <h2>Friends-and-family codes</h2>
-    <p>Redeeming a code sends the code and your account identifier to our
-    server, which records the code, the account and the moment it was used, so
-    that a code cannot be spent twice, and stores the entitlement it grants
-    &mdash; where it came from, the date, and any expiry date &mdash; against
-    the account. Nothing else is involved.</p>
+    <p>Redeeming a code needs an account. It sends the code, your account
+    identifier and whether a Google Play subscription is active to our server,
+    which records the code, the account and the moment it was used, so that a
+    code cannot be spent twice, and stores the entitlement it grants &mdash;
+    where it came from, the code, the date, and any expiry date &mdash; against
+    the account. So that codes cannot be guessed, the server also counts the
+    codes an account tries, and refuses more than ten in an hour.</p>
 
     <h2>Data sharing</h2>
     <p>We do not sell data, and we share none of it with third parties for
-    their own purposes. The only companies involved are <strong>Google</strong>
-    &mdash; as the operator of Firebase, where account data is stored, and of
-    Google Play, which processes purchases &mdash; <strong>GitHub</strong>,
-    which serves this website, and <strong>Cloudflare</strong>, which serves
-    the spoken words. They act as our processors under contract.</p>
+    their own purposes. The companies involved are <strong>Google</strong>
+    &mdash; as the operator of Firebase, where account data is stored, of
+    Google Play, which processes purchases, and of Google sign-in when you
+    choose it &mdash; <strong>GitHub</strong>, which serves this website, and
+    <strong>Cloudflare</strong>, which serves the spoken words. Firebase,
+    GitHub and Cloudflare act as our processors under contract; Google Play
+    and Google sign-in work under your own agreement with Google.</p>
   </section>
 
   <section class="card">
@@ -154,14 +185,15 @@
     step by step.</p>
 
     <h2>Children</h2>
-    <p>SYVT is made for children of roughly eight to twelve, and is built so
-    that a child gives nothing away in order to play. No account is needed. The
-    only thing a child enters is a nickname of up to eight characters. There is
-    no advertising, nothing links out of the game to the web, and nothing a
-    child does is shown to anyone else. Purchases and the account live in a
-    parents' corner that opens only after a long press, so that an adult sets
-    them up. If you believe a child has given us more than the above, write to
-    us and we will delete it.</p>
+    <p>SYVT is built to be safe to hand to a child of about eight and up, and
+    so that a child gives nothing away in order to play. No account is needed.
+    The only thing a child enters is a nickname of up to eight characters.
+    There is no advertising, and nothing a child does is shown to anyone else.
+    Everything that costs money or leaves the app sits behind a parents' gate,
+    a number written out in words to be typed back in digits; the one link out
+    of the app, to Google Play's subscription settings, is behind it too. If
+    you believe a child has given us more than the above, write to us and we
+    will delete it.</p>
 
     <h2>Your rights</h2>
     <p>You may ask for a copy of the data held under your account, ask us to
