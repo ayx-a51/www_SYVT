@@ -30,7 +30,7 @@
   <div class="wrap pagehead">
     <p class="kicker">Legal</p>
     <h1>Privacy Policy</h1>
-    <p class="updated">Last updated: 15 September 2026</p>
+    <p class="updated">Last updated: 16 September 2026</p>
     <p class="intro">SYVT is a spelling game, for children and for anyone
     learning to spell. It plays with no connection at all, and an account is
     optional. This page says exactly what is stored, what is sent where, where
@@ -48,8 +48,9 @@
     and language, best scores, rounds played, points and settings &mdash; is
     written to the app's own storage on that device and nowhere else. We never
     see it, and uninstalling the app deletes it.</p>
-    <p>Two things can still reach the internet without an account: the spoken
-    words, described below, and a purchase, which Google Play handles.</p>
+    <p>Three things can still reach the internet without an account: the
+    spoken words and the date check, both described below, and a purchase,
+    which Google Play handles.</p>
 
     <h2>What an account stores</h2>
     <p>An account exists so that the same players can be carried to another
@@ -69,9 +70,12 @@
     number of rounds played, the points scored, when the player was made,
     whether words are read aloud, which country's German spelling counts as
     right, and the two paid settings &mdash; how much arithmetic is mixed in,
-    and which level a round starts at. Alongside those it holds the identifiers
-    of players deleted on another device, the time of the last change and a
-    version number.</p>
+    and which level a round starts at. It holds the player's sticker book too:
+    which stickers have been found and how many of each, how many the day's
+    play has given for each level and world, and where each sticker is stuck
+    on the album pages. Alongside those it holds the identifiers of players
+    deleted on another device, the time of the last change and a version
+    number.</p>
 
     <h2>What we never collect</h2>
     <p>Apart from what a Google sign-in carries, no real names. No age or date
@@ -131,6 +135,17 @@
     appears, so its requests follow the words a round actually shows. The
     files are the same for everyone; nothing about them is personal to a
     player. Switching the voice off stops every one of these requests.</p>
+
+    <h2>The date check</h2>
+    <p>Stickers are found by playing well, and each level gives a few a day.
+    So that winding a tablet's clock forward does not refill them, the app
+    asks the same server, <code>audio.syvt.me</code>, what day it is: one
+    request for the name of a single file, made when the app starts and when
+    it comes back from the background, whether or not the voice is on. It
+    sends no account, player or device identifier and nothing typed or
+    played; the only thing read from the reply is the date the server stamps
+    on it. Cloudflare sees the IP address of that request as it does of any
+    other. Offline, the tablet's own clock is used.</p>
   </section>
 
   <section class="card">
