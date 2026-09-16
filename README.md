@@ -293,8 +293,10 @@ Two rules from that spec shape this repo more than the rest:
   the funnel. So a page shows one or the other, **counting the whole page and
   not just the header**: the game panel, the two legal pages and the link
   preview show the wordmark and nothing else; `404.html` shows the mark and
-  does not set the name in type at all. The favicon is the mark on its plate,
-  and is chrome rather than part of any lockup. The legal footers used to
+  does not set the name in type at all. The favicon is chrome rather than
+  part of any lockup, which is why the mark on its plate could sit in the tab
+  of a page that sets the name (at the moment the tab shows the mascot
+  instead; see below). The legal footers used to
   carry the mark as a small tile while their headers carried the name, which
   is exactly the shape this rule forbids — do not put it back.
 - **The Y is exactly the colour of the letters around it** — never coral,
@@ -317,11 +319,13 @@ and the mark alone. The PNGs are **derived**; edit the SVGs and re-run:
 
 ```
 npm install sharp          # once, for rendering only
-node make-icons.mjs        # icon.svg -> apple-touch-icon.png, brand/syvt-og.svg -> og.png
+node make-icons.mjs        # icon.svg -> apple-touch-icon.png, brand/syvt-og.svg -> og.png,
+                           # brand/favicon_drk.webp -> favicon.ico, favicon-192.png, favicon-180.png
 ```
 
-The two icon jobs are not the same picture, deliberately. The browser tab gets
-`icon.svg` as it stands — rounded, `rx="31"`, transparent corners — with
+The two mark jobs are not the same picture, deliberately. When the tab shows
+the mark it gets `icon.svg` as it stands — rounded, `rx="31"`, transparent
+corners — with
 `brand/syvt-app-mark-192.png` beside it for anything that will not take an SVG.
 `apple-touch-icon.png` is rendered from the same master with the corner radius
 dropped and the alpha flattened onto the plate's rim colour, because iOS masks
@@ -330,14 +334,32 @@ mask: hand it a rounded, transparent one and the two roundings compound, with
 black showing through the corners iOS does not cut. It also sits at the root
 because that is the path iOS looks for by itself.
 
-`brand/syvt-app-mark-192.png` is the favicon's raster fallback, for anything
-that will not take an SVG, and its only use. It is downsampled from the app's
-**rounded** icon, which has transparent corners; `store/play/icon-512.png` is
-the full-bleed one and would give a square tile in a browser tab:
+`brand/syvt-app-mark-192.png` is the mark favicon's raster fallback, for
+anything that will not take an SVG, and its only use. It is downsampled from
+the app's **rounded** icon, which has transparent corners;
+`store/play/icon-512.png` is the full-bleed one and would give a square tile in
+a browser tab:
 
 ```
 python -c "from PIL import Image; im=Image.open('../SYVT/assets/icon/icon-android-1024.png').convert('RGBA'); im.resize((192,192), Image.LANCZOS).save('brand/syvt-app-mark-192.png')"
 ```
+
+**What the tab shows at the moment is not the mark.** `brand/favicon_drk.webp`
+is a second master, the mascot on its own navy plate, and `make-icons.mjs`
+renders the favicon set from it: `favicon.ico`, with 16, 32 and 48 inside,
+the sizes a tab and a Windows shortcut ask for and the file browsers fetch by
+name when a page links nothing; `favicon-192.png` for Android's home screen
+and anything else that wants a big PNG; and `favicon-180.png`, the iOS touch
+icon, flattened onto the plate's own navy for the reason `apple-touch-icon.png`
+is flattened. The pages link those (the 404 the first two, as before) and keep
+the mark's own icon links beside them, commented out, so putting the mark back
+is a matter of swapping the comments; the mark's files stay either way. The
+master is the supplied `favicon_drk.png` as it arrived, converted to WebP at
+1254 px; swap the original in under the same stem, and the path at the top of
+the mascot section of `make-icons.mjs`, for full fidelity. The plate in it is
+sixteen pixels shorter than it is wide and sits in uneven margins, which the
+script corrects by cutting to the plate's alpha box and rendering that box
+into a square.
 
 The letters in `brand/syvt-og.svg` are Fredoka converted to outlines, so the
 artwork needs no font at render time; the Y in it is `syvt-glyph-y.svg`
