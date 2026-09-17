@@ -1828,7 +1828,7 @@ window.SYVT_WORDS = {
       ["eigentlich", "eigendlich", "eigentlig"],
       ["Geheimnis", "Geheimniss", "Gehaimnis"],
       ["gemütlich", "gemühtlich", "gemütlig"],
-      ["Hobby", "Hobbie", "Hoby"],
+      ["Kakao", "Kakau", "Kackao"],
       ["Interesse", "Intresse", "Interese"],
       ["Kalender", "Kalendar", "Kallender"],
       ["Kommentar", "Komentar", "Kommenntar"],
@@ -4548,7 +4548,7 @@ window.SYVT_WORDS = {
 // Each value is the clip's object name: its id, or <id>.<take>
 // for a word recorded again after release, from the corpus
 // manifest's revisions when this file was written.
-// Takes from the corpus manifest generated 2026-09-12T09:05:38Z.
+// Takes from the corpus manifest generated 2026-09-17T16:21:11Z.
 window.SYVT_CLIPS = {
   en: {
     "friend": "15793f53d3a4a0a31613",
@@ -4769,7 +4769,7 @@ window.SYVT_CLIPS = {
     "cherry": "ff284b7566cdc030e8f6",
     "lettuce": "a5adec2fd056dd4aac24",
     "noodle": "fb9db86af725e1198150",
-    "cabbage": "ab3b555e0e5369416dbc",
+    "cabbage": "ab3b555e0e5369416dbc.2",
     "porridge": "b3bbe3a6abe380aedeea",
     "recipe": "bf857e44dc16e6f07065",
     "coffee": "ef9d95acf01512e3ba3a",
@@ -5236,7 +5236,7 @@ window.SYVT_CLIPS = {
     "Glocke": "cb8fbe10d2ab88095fb3",
     "Ecke": "695cf80f1faec4d0a301",
     "dick": "3db4c4d5e3f7aba9de7f",
-    "Rock": "7bf706a03d04416f639c",
+    "Rock": "7bf706a03d04416f639c.2",
     "Socke": "1c920555b5d9cac5a771",
     "packen": "31003936e1c4b4158be3",
     "Wecker": "e1b94f4a557031cace8a",
@@ -5452,7 +5452,7 @@ window.SYVT_CLIPS = {
     "Geist": "616af8e3fd0fd97c894a",
     "Grab": "5b0fe750ec1ca8f6a454",
     "Gruss": "9505fdd445f45fafef40",
-    "Heu": "912ba4d9433d93836012",
+    "Heu": "912ba4d9433d93836012.2",
     "Attraktion": "4ffe6cf564d01ddc4022",
     "auseinander": "d170269b80e27037659a",
     "beziehungsweise": "5757e72e0678509d7084",
@@ -5462,7 +5462,7 @@ window.SYVT_CLIPS = {
     "eigentlich": "0e49eeffb253b44cfdb4",
     "Geheimnis": "6ff7c419b6e7e605fd2e",
     "gemütlich": "2640b84bdd6eb9772695",
-    "Hobby": "7688a7488f9bc1b050c9",
+    "Kakao": "dcd52b1c8f5bc5a9ff8d",
     "Interesse": "7fb994faf266937372f7",
     "Kalender": "9065cb83dec2041558ed",
     "Kommentar": "e7d2e91101c47cbb6f0f",
@@ -5570,7 +5570,7 @@ window.SYVT_CLIPS = {
     "Himmel": "8c3f4d050cda5fd1ecc1",
     "schlafen": "d374575ea69def06d58d",
     "Zunge": "b5dff3be150f15acaf7f",
-    "Februar": "701caef5f6ea3bfda868",
+    "Februar": "701caef5f6ea3bfda868.2",
     "obwohl": "d3ad81da7cd100d269ab",
     "Bleistift": "c674f76de8b0109a66ab",
     "trocken": "59d03075704264b11473",
