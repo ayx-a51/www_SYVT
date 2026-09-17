@@ -2,6 +2,7 @@
 /**
  * Renders SYVT's raster assets from the vector originals:
  *   apple-touch-icon.png  180×180   (iOS/Android home screen)
+ * the link preview from the app's own key art, brand/syvt-feature-1024x500.png:
  *   og.png               1200×630   (link previews)
  * and the favicon set from the mascot master, brand/favicon_drk.webp:
  *   favicon.ico          16, 32, 48 (browser tab, Windows shortcuts)
@@ -15,9 +16,9 @@
  * is already converted to outlines, so no font has to be resolved.)
  *
  * Every output is DERIVED. Edit the masters, never the outputs, and re-run:
- *   icon.svg               -> apple-touch-icon.png
- *   brand/syvt-og.svg      -> og.png
- *   brand/favicon_drk.webp -> favicon.ico, favicon-192.png, favicon-180.png
+ *   icon.svg                        -> apple-touch-icon.png
+ *   brand/syvt-feature-1024x500.png -> og.png
+ *   brand/favicon_drk.webp          -> favicon.ico, favicon-192.png, favicon-180.png
  *
  * icon.svg is a byte-for-byte copy of the app's own assets/brand/syvt-icon.svg
  * and is fully self-coloured: no currentColor, no media query, no CSS custom
@@ -61,8 +62,7 @@ const fullBleed = (svg) => Buffer.from(String(svg).replace(' rx="31"', ' rx="0"'
 
 const JOBS = [
   { from: join(DIR, 'icon.svg'), to: join(DIR, 'apple-touch-icon.png'), w: 180, h: 180,
-    transform: fullBleed, flattenTo: '#08102C' },
-  { from: join(DIR, 'brand', 'syvt-og.svg'), to: join(DIR, 'og.png'), w: 1200, h: 630 }
+    transform: fullBleed, flattenTo: '#08102C' }
 ];
 
 for (const { from, to, w, h, transform, flattenTo } of JOBS) {
@@ -75,6 +75,43 @@ for (const { from, to, w, h, transform, flattenTo } of JOBS) {
   const png = await pipe.png({ compressionLevel: 9 }).toBuffer();
   await writeFile(to, png);
   console.log(`${to.replace(DIR + '\\', '').replace(DIR + '/', '')}  ${w}×${h}  ${png.length} bytes`);
+}
+
+/* ---- the link preview -----------------------------------------------------
+
+   og.png is the app's Play feature graphic, which is the current key art:
+   the wordmark, SYVT himself at the sorting pit, and a corner of each world
+   behind him. It replaces the wordmark alone on the violet plate, because a
+   link preview is the one place the game gets to show what it is before
+   anybody taps anything, and a name on a plate shows nothing.
+
+   It does not break the rule that the mark and the name never appear
+   together (BRAND.md section 2). The mark is the funnel with the two
+   triangles; what the key art carries is the wordmark, whose Y IS that
+   funnel with the card knocked out and the triangles dropped, and no second
+   copy of it stands beside the name.
+
+   brand/syvt-og.svg and brand/make-wordmark.py stay where they are. They are
+   the only place the lockup exists as outlines rather than as live type, and
+   putting the plate back is this job's two lines - the same swap the tab
+   icon is kept ready for in index.html.
+
+   1024x500 is not 1200x630, so the art is scaled to cover and the 45 px it
+   over-runs is taken off each side: the castle's outer wall at the left and
+   a sliver of the phone at the right, neither of which is the picture. The
+   upscale is 1.26x, which lanczos carries at the size a preview is shown
+   at. */
+const FEATURE = join(DIR, 'brand', 'syvt-feature-1024x500.png');
+{
+  const og = await sharp(FEATURE)
+    .resize(1200, 630, { fit: 'cover', position: 'centre', kernel: 'lanczos3' })
+    // effort 10 lets libvips look for a palette, which this art has: flat
+    // fills and short ramps quantise to 256 colours with nothing visible
+    // lost, and the file goes from 1.3 MB to just over 200 KB
+    .png({ compressionLevel: 9, effort: 10 })
+    .toBuffer();
+  await writeFile(join(DIR, 'og.png'), og);
+  console.log(`og.png  1200\u00d7630  ${og.length} bytes`);
 }
 
 /* ---- the favicon set, from the mascot master ------------------------------

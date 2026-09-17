@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="day">
+<html lang="en" data-theme="space" data-audience="kids">
 <head>
 <meta charset="UTF-8">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self' data: https://audio.syvt.me; connect-src 'self' https://audio.syvt.me; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>SYVT</title>
-<meta name="description" content="SYVT &mdash; words fall, you sort them. Swipe right if it is spelled correctly, left if it is not. Play the free levels here; SYVT+ is coming to Android.">
-<meta name="theme-color" content="#e1e8ea">
+<meta name="description" content="SYVT &mdash; words fall, you sort them. Swipe right if it is spelled correctly, left if it is not. Two sides, one game: a meadow and a galaxy for the children, a quiet page for the grown-ups. Play the free levels here; SYVT+ is coming to Android.">
+<meta name="theme-color" content="#1a1546">
 <!-- The tab icon is the mascot, rendered by make-icons.mjs from
      brand/favicon_drk.webp. The mark's own icons follow, kept but not
      linked: swap the two blocks to put the mark back. -->
@@ -23,7 +23,7 @@
 <meta property="og:title" content="SYVT">
 <meta property="og:description" content="Words fall. Swipe right if it is spelled correctly, left if it is not.">
 <meta property="og:url" content="https://syvt.me/">
-<meta property="og:image" content="https://syvt.me/og.png?v=2">
+<meta property="og:image" content="https://syvt.me/og.png?v=3">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -141,7 +141,18 @@
            lockup's 1em line box. The two gradients differ only by face: the
            numbers are BRAND.md's CSS rows, and they depend on the font's own
            ascent, descent and cap factor, not on the palette. -->
+      <!-- SYVT himself, on the children's side: he hovers beside the name,
+           waves every few seconds, takes the saucer for a quick round over
+           the letters every half minute or so, and jumps when tapped. His
+           canvas is wider than he is because it has to hold the whole
+           flight; what leaves the panel is clipped by the panel, as the
+           app's own scroll view clips him. The slot keeps his place in the
+           row, so the name does not move when he does — and on the
+           grown-ups' side the slot is gone and the name re-centres itself. -->
+      <div id="brandRow">
+        <i id="mascotSlot" aria-hidden="true"><canvas id="syvtMascot"></canvas></i>
       <div id="brand" role="img" aria-label="SYVT"><span class="lead" aria-hidden="true">S</span><svg class="y" aria-hidden="true" focusable="false" viewBox="12 20 96 88"><defs><linearGradient id="brandY-manrope" gradientUnits="userSpaceOnUse" x1="0" y1="0.077778" x2="0" y2="122.300000"><stop class="stop-a" offset="0" stop-color="#10282c"/><stop class="stop-b" offset="1" stop-color="#1c8f87"/></linearGradient><linearGradient id="brandY-fredoka" gradientUnits="userSpaceOnUse" x1="0" y1="0.292958" x2="0" y2="124.236620"><stop class="stop-a" offset="0" stop-color="#10282c"/><stop class="stop-b" offset="1" stop-color="#1c8f87"/></linearGradient></defs><path class="glyph" fill="url(#brandY-manrope)" fill-rule="evenodd" d="M18.66 29.98Q12.0 20.0,24.0 20.0L96.0 20.0Q108.0 20.0,101.34 29.98L75.33 69.01Q72.0 74.0,72.0 80.0L72.0 98.0Q72.0 108.0,62.0 108.0L58.0 108.0Q48.0 108.0,48.0 98.0L48.0 80.0Q48.0 74.0,44.67 69.01ZM39.61 42.25Q38.36 36.38,44.23 35.13L71.61 29.31Q77.48 28.06,78.73 33.93L80.39 41.75Q81.64 47.62,75.77 48.87L48.39 54.69Q42.52 55.94,41.27 50.07Z"/></svg><span class="tail" aria-hidden="true">VT</span></div>
+      </div>
 
       <p id="tagline"></p>
 
@@ -156,6 +167,29 @@
           <span class="val"><b id="statBest">0</b><em id="statBestBonus" hidden><span class="n">+0</span></em></span>
           <i id="statBestLbl">BEST</i>
         </div>
+      </div>
+
+      <!-- The two sides of the game. On a tablet this is a setting per
+           player in the parents' corner; the page has no players, so it is a
+           switch here and the choice is remembered. Flipping it carries the
+           world across to its twin - Day and Light are the same scene drawn
+           twice, and so are Night and Dark - which is `themeAcross` in the
+           app's lib/ui/themes/themes.dart. -->
+      <div id="audienceRow" role="group">
+        <button class="aud" type="button" data-audience="kids" aria-pressed="true">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <circle cx="12" cy="8.5" r="3.2"/>
+            <path d="M6 20v-1.6A5 5 0 0 1 11 13.4h2A5 5 0 0 1 18 18.4V20"/>
+          </svg>
+          <span data-role="label"></span>
+        </button>
+        <button class="aud" type="button" data-audience="grownups" aria-pressed="false">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <circle cx="12" cy="6.4" r="3"/>
+            <path d="M5 21v-2.2A5.4 5.4 0 0 1 10.4 13.4h3.2A5.4 5.4 0 0 1 19 18.8V21"/>
+          </svg>
+          <span data-role="label"></span>
+        </button>
       </div>
 
       <div id="themePicker"></div>
@@ -200,6 +234,7 @@
 <script src="matter.min.js"></script>
 <script src="words.js"></script>
 <script src="scenery.js"></script>
+<script src="mascot.js"></script>
 <script src="voice.js"></script>
 <script src="sfx.js"></script>
 <script src="syvt.js"></script>

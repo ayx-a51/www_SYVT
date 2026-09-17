@@ -1,0 +1,6 @@
+# Nothing here is served. GitHub Pages serves this repo's root as-is, so what
+# is committed is what the world gets; sharp is a render-time dependency of
+# make-icons.mjs and nothing on the page ever loads it.
+node_modules/
+package.json
+package-lock.json

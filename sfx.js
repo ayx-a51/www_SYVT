@@ -2,9 +2,10 @@
 
    The only sound on the page that is not a spoken word, and it works nothing
    like one. A word is a remote file, fetched once and played through the one
-   element iOS will let us have; these are six small local clips that have to
+   element iOS will let us have; these are ten small local clips that have to
    answer a finger immediately and may overlap, because a creature can be
-   poked as fast as it can be tapped.
+   poked as fast as it can be tapped. Only the ones the world in force can
+   actually reach are ever fetched - see warmPokes in syvt.js.
 
    So this is Web Audio rather than <audio>. Same-origin buffers decode once
    and play from memory with no start-up cost, any number at a time, and gain,
