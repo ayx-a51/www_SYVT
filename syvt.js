@@ -39,6 +39,12 @@
   var statBestBonus = $("statBestBonus");
   var picker = $("themePicker"), langRow = $("langRow");
   var audPills = [].slice.call(document.querySelectorAll("#audienceRow .aud"));
+  /* SYVT beside the name. He is the children's, so he arrives and leaves
+     with the side, and he only ever flies while the panel is up. */
+  var mascot = window.SYVT_MASCOT
+    ? window.SYVT_MASCOT.create($("syvtMascot"))
+    : { frame: function () {}, arrive: function () {}, leave: function () {},
+        pokeAtPoint: function () { return false; }, pointOf: function () { return null; } };
   var startBtn = $("startBtn"), legendText = $("legendText");
   var storeLinkLabel = $("storeLinkLabel");
   var modal = $("modal"), modalTitle = $("modalTitle"), modalBody = $("modalBody");
@@ -452,6 +458,10 @@
      sfx.js creates nothing and fetches nothing. */
   function warmPokes() {
     var list = window.SYVT_SCENERY.voicesOf(themeId);
+    // SYVT's own blip, on the side he is on: he is not a visitor here, so
+    // the world's list does not name him, and a first tap on him would
+    // otherwise be the silent one
+    if (audience === "kids" && list.indexOf("blip") === -1) list = list.concat("blip");
     window.SYVT_SFX.warm(list);
   }
 
@@ -1090,6 +1100,7 @@
   function frame(now) {
     requestAnimationFrame(frame);
     stage.frame(now);
+    mascot.frame(now);
     if (!running || paused) { lastTime = 0; return; }
 
     if (!lastTime) lastTime = now;
@@ -1154,6 +1165,7 @@
     stepAcc = 0;
     updateHUD();
     overlay.classList.add("hidden");
+    mascot.leave();
     setPhase("playing");
     running = true;
     // A gesture is on the stack exactly here, and iOS lifts its lock per
@@ -1178,6 +1190,7 @@
     setPanel(true);
     setPhase("over");
     overlay.classList.remove("hidden");
+    showMascot();
   }
 
   function pause() {
@@ -1374,10 +1387,19 @@
     writePref(STORE + "audience", next);
     document.documentElement.dataset.audience = next;
     markAudience();
+    showMascot();
     buildPicker();
     applyTheme(carried);
     // the pills' own labels are the one piece of text the side owns
     applyLang();
+  }
+
+  /* He belongs to the children's side, and he flies in every time the panel
+     comes back - which is what the app gets for nothing by building his
+     widget again. */
+  function showMascot() {
+    if (audience === "kids" && !overlay.classList.contains("hidden")) mascot.arrive();
+    else mascot.leave();
   }
 
   function markAudience() {
@@ -1443,6 +1465,20 @@
   modal.addEventListener("pointerdown", function (e) {
     if (e.target === modal) closeModal();   // the barrier is the quiet way out
   });
+
+  /* A tap on him. His canvas takes no pointer events - it reaches over the
+     name and into the tagline - so the panel hears every tap and the point
+     is tested against where he actually is at that instant. A miss is not
+     his: nothing is swallowed, and the button under it still gets the tap.
+     His voice is the app's: a blip, off to the left, where he is. */
+  if ($("syvtMascot")) {
+    $("panel").addEventListener("pointerdown", function (e) {
+      var p = mascot.pointOf(e);
+      if (!p || !mascot.pokeAtPoint(p[0], p[1])) return;
+      e.preventDefault();
+      window.SYVT_SFX.play("blip", 0, -0.5);
+    });
+  }
 
   for (var ai = 0; ai < audPills.length; ai++) {
     audPills[ai].addEventListener("click", function () {
@@ -1520,6 +1556,7 @@
   document.documentElement.dataset.audience = audience;
   setThemeColour(themeId);
   markAudience();
+  showMascot();
   measureField();
   stage.setTheme(themeId);
   buildWalls();

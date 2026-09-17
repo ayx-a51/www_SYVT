@@ -2353,6 +2353,15 @@
       }
       return out;
     },
+    /* The creature kit, for mascot.js. SYVT himself is drawn with the same
+       modelled fill and modelled stroke every visitor is - lit along each
+       part's crown, shaded along its underside, nothing outlined - so the
+       alien on the panel belongs to the same world the fish and the rockets
+       do. He lives in his own file because in the app he does: he is one
+       person, and `lib/ui/mascot/` is his. */
+    kit: function (ctx, lit, shade, ink, pencil) {
+      return new Kit(ctx, lit, shade, ink, pencil);
+    },
     preview: function (canvas, themeId, cssW, cssH) {
       var dpr = Math.min(window.devicePixelRatio || 1, 2);
       canvas.width = Math.round(cssW * dpr);

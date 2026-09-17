@@ -976,6 +976,12 @@ body {
   position: relative;
   width: calc(372 * var(--s));
   max-height: 100%;
+  /* `clip`, not `hidden`: SYVT flies in from beyond the panel's left edge
+     and loops out over the letters, and hidden on one axis would make the
+     panel scrollable sideways to follow him. clip draws nothing outside and
+     scrolls nowhere, which is what the app's own scroll view does to him,
+     and it leaves the vertical scrolling below untouched. */
+  overflow-x: clip;
   overflow-y: auto;
   scrollbar-width: none;
   display: flex;
@@ -990,6 +996,47 @@ body {
   -webkit-backdrop-filter: var(--panel-blur);
 }
 #panel::-webkit-scrollbar { display: none; }
+
+/* ------------------------------------------------------------- the mascot
+
+   SYVT beside the name, on the children's side only. The app's _Brand: he
+   is 72 design px tall, his slot in the row is twelve px shorter so the
+   game-over panel still fits the field, and he is drawn sixteen px left of
+   it, which is the air between him and the S. The lockup keeps the slot, so
+   the name does not move as he flies.
+
+   His canvas is far wider and taller than he is - the flight envelope, 396
+   by 130 design px with his slot's top-left at (0, 0) inside it - because a
+   canvas draws nothing outside itself and he leaves his slot in every
+   direction. The numbers are measured from his own ink; mascot.js says how.
+   It takes no pointer events, so the name and the tagline under it are
+   untouched and the panel decides whether a tap was his. */
+
+#brandRow {
+  display: flex;
+  align-items: center;
+  gap: calc(6 * var(--s));
+}
+#mascotSlot {
+  display: none;
+  position: relative;
+  flex: none;
+  /* 72 x 120 / 110: his height, and the width his box gives it */
+  width: calc(78.5455 * var(--s));
+  height: calc(60 * var(--s));
+}
+:root[data-audience="kids"] #mascotSlot { display: block; }
+/* The envelope, and no pointer events: it reaches over the name and down
+   into the tagline, so the panel hears the taps and the script decides
+   whether one of them was his. */
+#syvtMascot {
+  position: absolute;
+  left: calc(-160 * var(--s));
+  top: calc(-34 * var(--s));
+  width: calc(396 * var(--s));
+  height: calc(130 * var(--s));
+  pointer-events: none;
+}
 
 /* the lockup: S, the funnel as the Y, VT. The funnel is a placeholder, not a
    glyph, so it carries no tracking of its own; the margins are the tracking
@@ -1083,7 +1130,15 @@ body {
 :root[data-audience="kids"] #brand .lead { font-variation-settings: 'wdth' 100, 'wght' 620; }
 :root[data-audience="kids"] #brand .tail { font-variation-settings: 'wdth' 100, 'wght' 800; }
 
+/* These two sit directly under the lockup row, and the loop's return leg
+   brings SYVT down across them. In the app they are later children of the
+   panel's Column, so they paint over him; here his canvas is positioned and
+   would otherwise paint over them. Lifting the text is the fix, not sinking
+   the canvas: his round over the letters has to pass IN FRONT of the name,
+   which a negative z-index on the canvas would undo. */
 #tagline {
+  position: relative;
+  z-index: 1;
   margin: calc(16 * var(--s)) 0 0;
   width: calc(306 * var(--s));
   font-size: calc(14.5 * var(--s));
@@ -1094,6 +1149,8 @@ body {
 #tagline[hidden] { display: none; }
 
 #overTitle {
+  position: relative;
+  z-index: 1;
   margin: calc(22 * var(--s)) 0 0;
   font-size: calc(19 * var(--s));
   font-weight: 700;

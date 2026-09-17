@@ -155,6 +155,50 @@ stable noise rather than from `math.Random(2026)`, which a browser cannot
 reproduce — the same 56 stars under the same rules, at their own
 coordinates.
 
+### SYVT himself
+
+The alien from the app's launcher icon is on the children's start and
+game-over panels, beside the name: a round purple fellow with a red antenna
+ball on his left and a green one on his right — the game's own
+wrong-and-right — cheering out of a sorting pit with a red bucket on his
+left and a green one on his right. `mascot.js` is a port of the app's
+`lib/ui/mascot/syvt_art.dart`, drawn with the same modelled fill and
+modelled stroke every creature on the field gets, so he is lit like the
+world he is standing in.
+
+He flies in from off the panel's left edge, hovers, waves every few seconds,
+every half minute or so takes the saucer for a quick round over the letters,
+and jumps and cheers when tapped — the app's own timings, easings and
+amplitudes, from `syvt_mascot.dart`. Under reduced motion he simply sits
+there cheering, and a tap still answers in sound, because the switch is
+about motion.
+
+His canvas is far bigger than he is — 396 × 130 design px, with his slot's
+top-left at its origin — because a canvas draws nothing outside itself and
+he leaves his slot in every direction. Those four numbers are measured
+rather than reasoned: his ink, swept over the arrival, a whole loop, a wave,
+a poke and a couple of breaths, runs x −152 to 227 and y −27 to 89, and each
+edge keeps seven px or more beyond that. Two things make the box bigger than
+it looks — the engine's glow is a disc at y 100 with a radius of 16, so it
+reaches three quarters of his height below his own feet, and the loop's
+second half swings him down as far as its first half swings him up.
+
+What leaves the panel is clipped by `#panel { overflow-x: clip }` — `clip`
+rather than `hidden`, which would have made the panel scrollable sideways to
+follow him. The canvas itself takes no pointer events, since it reaches over
+the name and down into the tagline; the panel hears every tap and the script
+tests it against where he is at that instant, so a miss still reaches the
+button under it. The slot keeps his place in the row, so the name does not
+move as he flies; on the grown-ups' side the slot is gone and the name
+re-centres itself.
+
+The app puts him in three kinds of place on the children's side. The other
+two are not here and each is a small addition rather than a rewrite: he does
+not cross the worlds as a visitor, and there is no pause veil for him to
+doze under — the sleeping pose is ported and simply never reached. That is
+also why the app's `Presence`, the one record that keeps one person from
+being on screen twice, has nothing to arbitrate here and is not ported.
+
 **The sticker book is deliberately not here.** It is the app's reward for a
 level played well, it belongs to a player, and the page has no players — the
 same reason it has no avatars, no statistics and no account.
@@ -293,8 +337,10 @@ while the round is paused, so nothing about it can cost a swipe.
 ## Generated files
 
 `syvt.js` is the game, `voice.js` the spoken words, `sfx.js` the poke sounds,
-`scenery.js` the three worlds and the eight picker thumbnails, `syvt.css` the
-whole interface as one themed stylesheet. `words.js` is generated:
+`scenery.js` the three worlds and the eight picker thumbnails, `mascot.js`
+the alien beside the name, `syvt.css` the whole interface as one themed
+stylesheet. `mascot.js` loads after `scenery.js` because it draws with the
+kit that file exposes. `words.js` is generated:
 
 ```
 python make-words.py       # ../SYVT/tool/words/*.json + the corpus manifest -> words.js, levels 1-5
