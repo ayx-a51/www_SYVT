@@ -2,7 +2,9 @@
 
 SYVT — a word game. Falling words: swipe right if one is spelled correctly,
 left if it is not. Wrong calls pile up until the stack reaches the ceiling.
-English, German and French, with mental-arithmetic discs mixed in.
+English, German and French, with mental-arithmetic discs mixed in. One game
+with two faces: a meadow and a galaxy for the children, a quiet page for the
+grown-ups, and a switch on the start panel between them.
 
 The game **is** the site: `index.html` at the root, served by GitHub Pages.
 It moved here from `y7.ai/SYVT/`; before that it was `y7.ai/SIFT/`, and before
@@ -39,8 +41,12 @@ of each string is what changes with them, and nothing else is.
   pauses and the notice comes up once; dismissing it carries on at level 4 for
   as long as the player likes. Level 5's words are still in `words.js`, out of
   reach, so moving the ceiling is `FREE_MAX_TIER` in `syvt.js` alone.
-- **Two worlds** are free, Day and Aquarium. The other four sit in the picker
-  with a padlock, and tapping one opens the same notice.
+- **Three worlds** are free across the two sides — Light for the grown-ups,
+  Space and Day for the children — which is the app's own
+  `Limits.freeThemes`. The other five sit in the picker with a padlock, and
+  tapping one opens the same notice, counted for the side it was tapped on:
+  six worlds and four to open on the children's side, two and one on the
+  grown-ups'.
 - **Levels 1 and 2** are read out loud, as on Android. The chip beside the
   pause button switches the voice; on the way into level 3 it goes quiet and
   the chip dims, and a tap on it then pauses the round and opens the notice.
@@ -60,12 +66,13 @@ only if asked: the SYVT+ notice at 120 mentions it in passing, and a small
 "i" beside the counter on the game-over panel opens a short "Why 120?" that
 answers the question without taking the chance to sell anything.
 
-One deliberate reduction from the app's free tier, because a teaser has
+Two deliberate reductions from the app's free tier, because a teaser has
 nothing to protect: there are no player profiles, so no avatars, no
 statistics and no account — the best score is a `localStorage` number per
-language. A browser that refuses site data, or refuses a write, still gets the
-game: the page starts with its defaults, and the language, the world, the
-voice switch and the best score last for the visit, in memory. `syvt.js` and
+language — and there is no sticker book (see "The two sides"). A browser that
+refuses site data, or refuses a write, still gets the game: the page starts
+with its defaults, and the language, the side, the world, the voice switch
+and the best score last for the visit, in memory. `syvt.js` and
 `voice.js` each carry their own copy of that small guard, so a deploy where
 one file is served from cache and the other is not cannot bring back a crash
 at startup. All three languages are open, as they are in the app.
@@ -86,6 +93,71 @@ A word or sum joins the anti-repeat memory only once its tile is placed, as
 in the app. A crowded field refuses a spawn every frame until a column
 clears, and while the memory took words at the draw, each refusal pushed out
 a word that had really fallen.
+
+## The two sides
+
+The app has two sides and a player is on one of them: a child, or a grown-up
+(`Profile.grownUp`, `Audience` in the Flutter source). The children's side is
+six worlds in Fredoka with creatures to poke; the grown-ups' is two quiet
+worlds in Manrope. The words, the sums, the levels and the voice are the same
+game on both.
+
+On a tablet it is a setting, one per player, kept in the parents' corner,
+because the adult and the eight-year-old who share one are the whole point.
+The page has no players, so it is a **switch on the start panel**, and which
+way it was left is a `localStorage` value like the language and the world.
+Everything else follows from it: the worlds the picker shows, the face, the
+palette, and what a padlock is counted against.
+
+Flipping it carries the world across to its **twin** on the other side —
+Night and Dark, Day and Light are the same scene drawn twice — or, for a
+world with no twin, to that side's free one. That is the app's `themeAcross`,
+and it is why a grown-up who looks in on the children's side and comes back
+finds their own sky rather than a default. The switch cannot be a way round a
+padlock: one free set serves both sides precisely because no locked world on
+one has a free twin on the other (Day and Light are both free; Night and Dark
+both are not).
+
+A first visit opens on the children's side in Space, as a fresh install of
+the app does. A player is a child unless they say otherwise, which is the
+safe reading: an adult who wakes up in a children's world shrugs and flips
+the switch, where a child moved the other way would lose something.
+
+### Which worlds are drawn
+
+All eight are in the picker; the three the free game may play are drawn
+moving, and the other five are a thumbnail behind a padlock and nothing more.
+
+| Side | World | Here |
+| --- | --- | --- |
+| Grown-ups | Light | played — the warm-paper world this page used to call Day |
+| Grown-ups | Dark | thumbnail — what this page used to call Night |
+| Children | Space | played — a cartoon galaxy, capsules on a squishy moon |
+| Children | Day | played — a sunny meadow, picnic cards on bright grass |
+| Children | Night | thumbnail — a campsite under a big moon |
+| Children | Ocean | thumbnail — it was playable here when it and Day were the free pair |
+| Children | Princess Castle | thumbnail |
+| Children | Dinosaurs | thumbnail |
+
+The two renamings are the same two worlds, not new ones: the app moved its
+original light and dark skins on to the grown-ups' side as Light and Dark,
+and drew the children a Day and a Night of their own. So `scenery.js`'s Light
+is this repo's old Day, ground and visitors unchanged, and its Dark thumbnail
+is the old Night one.
+
+Space and Day are ports of `lib/ui/themes/space_theme.dart` and
+`day_theme.dart` and their `visitors/`, in the app's own design px. Two
+things are drawn differently and both say so where they are done: the app
+blurs its far hills and its planet haloes with a real blur, where a canvas
+gets `ctx.filter` if the browser has one and a radial that fades to nothing
+where it does not; and Space's far stars are seeded from this page's own
+stable noise rather than from `math.Random(2026)`, which a browser cannot
+reproduce — the same 56 stars under the same rules, at their own
+coordinates.
+
+**The sticker book is deliberately not here.** It is the app's reward for a
+level played well, it belongs to a player, and the page has no players — the
+same reason it has no avatars, no statistics and no account.
 
 ## The voice
 
@@ -187,9 +259,9 @@ clears the list.
 
 ## Poking the visitors
 
-A tap on a bird, a fish, a balloon or a plane makes it squeak and jump. It is
-the app's `Feel.poke`, brought over whole: the same six clips, the same gains
-and the same recoil.
+A tap on a bluebird, a rabbit, a flying saucer or a balloon makes it squeak
+and jump. It is the app's `Feel.poke`, brought over whole: the app's own
+clips, the same gains and the same recoil.
 
 `scenery.js` owns the movement. Every visitor carries a `voice` (the cloud has
 none — a cloud makes no sound) and, once poked, the time it was poked and how
@@ -203,24 +275,25 @@ still catchable with a finger.
 
 `sfx.js` owns the sound, and it is the one thing on the page that is not an
 `<audio>` element. A spoken word is a remote file played through the single
-element iOS allows; these are six small same-origin clips that have to answer
+element iOS allows; these are ten small same-origin clips that have to answer
 a finger at once and may overlap, so they are Web Audio: decoded once into
 memory, then any number at a time with gain, pitch and pan for free. That is
 what lets a creature be heard where it is seen — a distant one quieter and a
 shade lower, out of the side of the sky it is crossing, on the app's own
 numbers. The `AudioContext` is created on the first poke and never before, so
 a visitor nobody touches costs nothing at all, and the clips a theme can use
-are warmed on the START tap where there is a gesture to do it in.
+are warmed on the START tap, and on a tap on a picker card, where there is a
+gesture to do it in — a world change is a change of voices.
 
-`sfx/*.wav` are byte-for-byte copies of the app's `assets/sfx/`, 120 KB for
-the six the two free worlds can reach. A poke never touches the game: it is
+`sfx/*.wav` are byte-for-byte copies of the app's `assets/sfx/`, 224 KB for
+the ten the three free worlds can reach. A poke never touches the game: it is
 ignored on a tile, on the HUD, on any panel, while a drag is in flight and
 while the round is paused, so nothing about it can cost a swipe.
 
 ## Generated files
 
 `syvt.js` is the game, `voice.js` the spoken words, `sfx.js` the poke sounds,
-`scenery.js` the two worlds and the six picker thumbnails, `syvt.css` the
+`scenery.js` the three worlds and the eight picker thumbnails, `syvt.css` the
 whole interface as one themed stylesheet. `words.js` is generated:
 
 ```
@@ -308,18 +381,20 @@ Two rules from that spec shape this repo more than the rest:
   palette.
 
 So the name is set as **S, the funnel, VT** — never with a letter Y. It is
-assembled from type and the funnel in three places, and hand-drawn as a
-logotype in none of them: `#brand` on the start panel, `.name` in the
-legal-page header, and `brand/syvt-og.svg` for the link preview. The last of
-those is the one case where the letters end up as outlines, because a
-generated file cannot depend on a font being resolved at render time.
+assembled from type and the funnel in two places, and hand-drawn as a
+logotype in neither: `#brand` on the start panel and `.name` in the
+legal-page header. `brand/syvt-og.svg` is a third, where the letters end up
+as outlines because a generated file cannot depend on a font being resolved
+at render time; the link preview no longer renders it (see below), and it is
+kept because it is the only place the lockup exists as outlines at all.
 
 `icon.svg` and `brand/syvt-mark.svg` are the masters — the mark on its plate
 and the mark alone. The PNGs are **derived**; edit the SVGs and re-run:
 
 ```
 npm install sharp          # once, for rendering only
-node make-icons.mjs        # icon.svg -> apple-touch-icon.png, brand/syvt-og.svg -> og.png,
+node make-icons.mjs        # icon.svg -> apple-touch-icon.png,
+                           # brand/syvt-feature-1024x500.png -> og.png,
                            # brand/favicon_drk.webp -> favicon.ico, favicon-192.png, favicon-180.png
 ```
 
@@ -361,11 +436,30 @@ sixteen pixels shorter than it is wide and sits in uneven margins, which the
 script corrects by cutting to the plate's alpha box and rendering that box
 into a square.
 
+**The link preview is the app's key art.** `og.png` is
+`brand/syvt-feature-1024x500.png` — the Play feature graphic, byte for byte
+the app's own `store/play/feature-1024x500-en.png` — scaled to cover 1200 ×
+630 and cropped by 45 px a side, which takes the castle's outer wall and a
+sliver of the phone and nothing else. It carries the wordmark, SYVT himself
+at the sorting pit, and a corner of each world behind him, which is what a
+link preview is for: the one place the game shows what it is before anybody
+taps anything, where a name on a plate showed nothing.
+
+That is not the rule about the mark and the name being broken. The mark is
+the funnel **with its two triangles**; what the key art carries is the
+wordmark, whose Y is that funnel with the card knocked out and the triangles
+dropped, and no second copy stands beside it.
+
+The English feature graphic, not the German or the French: `og:description`
+is English, and the preview is one image for every visitor. Swapping the
+plate back in is the two lines of the `og.png` job in `make-icons.mjs` — the
+same swap the tab icon is kept ready for in `index.html`.
+
 The letters in `brand/syvt-og.svg` are Fredoka converted to outlines, so the
 artwork needs no font at render time; the Y in it is `syvt-glyph-y.svg`
-verbatim. It is the **wordmark alone** on the plate in flat cream, following
-the Play feature graphic, because the mark may not stand beside the name. That
-conversion is one-way, so if the game is ever renamed:
+verbatim. It is the **wordmark alone** on the plate in flat cream, which is
+what the link preview used to be. That conversion is one-way, so if the game
+is ever renamed:
 
 ```
 pip install fonttools brotli   # once

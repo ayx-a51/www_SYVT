@@ -1,6 +1,8 @@
 /* SYVT for the web — the free version of the Android game, skinned to match
-   it. Two worlds are playable here (Day and Aquarium); the other four, and
-   levels 6 to 10, are SYVT+ on Android.
+   it. The game has two sides, and both are here: the grown-ups' Light and
+   the children's Space and Day are playable, which is the app's own free
+   set; Dark, Night, Aquarium, Princess Castle and Dinosaurs, and levels 6 to
+   10, are SYVT+ on Android.
 
    Everything is drawn in the app's design space, 420 x 746.67 design px,
    scaled to fit the viewport. --s is design px per CSS px and is written by
@@ -22,8 +24,14 @@
 }
 
 /* ------------------------------------------------------------------ tokens
-   Two worlds, one set of names. Everything that differs between them is a
-   custom property; everything that does not is written once. */
+   Three worlds, one set of names. Everything that differs between them is a
+   custom property; everything that does not is written once.
+
+   `data-theme` is the world; `data-audience` is the side of the game it
+   belongs to. The face follows the SIDE rather than the world — Manrope for
+   the grown-ups, Fredoka for the children — so the few rules that have to
+   know which face is set key on the side, and go on working when a world is
+   added to one. */
 
 :root {
   --s: calc(min(100vw, calc(100dvh * 9 / 16)) / 420);
@@ -32,7 +40,7 @@
   --ceiling-h: calc(56 * var(--s));
 }
 
-:root[data-theme="day"] {
+:root[data-theme="light"] {
   --font: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
   --cap: 0.72em;                         /* Manrope's capital height */
   --page: radial-gradient(62% 48% at 50% 42%, #eef3f4 0%, #e1e8ea 58%, #d6dee0 100%);
@@ -112,85 +120,183 @@
   --grain-vignette: inset 0 0 calc(150 * var(--s)) calc(26 * var(--s)) rgba(16, 40, 44, .16);
 }
 
-:root[data-theme="aquarium"] {
+/* The children's Space: a friendly cartoon galaxy. White capsules fall on to
+   a squishy moon under a violet sky. */
+:root[data-theme="space"] {
   --font: "Fredoka", system-ui, -apple-system, "Segoe UI", sans-serif;
   --cap: 0.71em;
-  --page: radial-gradient(70% 55% at 50% 40%, #16608a 0%, #0e4c6e 55%, #07304a 100%);
-  --field: linear-gradient(180deg, #9fe9f5 0%, #4fc4e3 38%, #2593c4 78%, #1b6fa3 100%);
+  --page: radial-gradient(70% 55% at 50% 40%, #1a1546 0%, #110e2e 100%);
+  --field: linear-gradient(180deg, #4a3aa8 0%, #3a2c86 35%, #261f64 72%, #171340 100%);
   --field-shadow:
-    0 calc(26 * var(--s)) calc(60 * var(--s)) calc(-20 * var(--s)) rgba(2, 26, 42, .75),
-    0 0 0 1.5px rgba(255, 255, 255, .16);
+    0 calc(40 * var(--s)) calc(90 * var(--s)) calc(-30 * var(--s)) rgba(0, 0, 0, .75),
+    0 0 calc(80 * var(--s)) calc(-28 * var(--s)) rgba(90, 79, 214, .45),
+    0 0 0 1px rgba(255, 255, 255, .08);
 
-  --scrim: rgba(6, 42, 64, .62);
-  --scrim-blur: 10px;
-  --panel-face: #fff7e6;
+  --scrim: rgba(11, 8, 36, .66);
+  --scrim-blur: 6px;
+  --panel-face: #f6f4ff;
   --panel-shadow:
-    0 0 0 calc(5 * var(--s)) rgba(155, 227, 255, .40),
-    0 calc(8 * var(--s)) 0 rgba(6, 42, 64, .45),
-    0 calc(30 * var(--s)) calc(56 * var(--s)) calc(-14 * var(--s)) rgba(2, 26, 42, .55),
-    inset 0 0 0 calc(4 * var(--s)) #1d5f8a;
+    0 calc(8 * var(--s)) 0 rgba(11, 8, 36, .5),
+    0 calc(28 * var(--s)) calc(56 * var(--s)) calc(-20 * var(--s)) rgba(11, 8, 36, .6),
+    inset 0 0 0 calc(4 * var(--s)) #5a4fd6,
+    inset 0 calc(-4 * var(--s)) 0 #ded9ff;
   --panel-blur: none;
 
-  --brand-a: #2593c4;
-  --brand-b: #12344d;
-  --title: #12344d;
-  --over-title: #12344d;
-  --msg: #3b5a6e;
-  --legend-text: #3b5a6e;
-  --ring: #ff9f43;
-  --pick-label: #3b5a6e;
-  --pick-label-on: #12344d;
+  --brand-a: #7c6cf0;
+  --brand-b: #4a3aa8;
+  --title: #241e5c;
+  --over-title: #241e5c;
+  --msg: #4a4580;
+  --legend-text: #4a4580;
+  --ring: #5a4fd6;
+  --pick-label: #4a4580;
+  --pick-label-on: #241e5c;
 
-  --lang-track: #ddf3fa;
-  --lang-track-border: 1.5px solid rgba(29, 95, 138, .5);
-  --lang-on: #ffb703;
+  --lang-track: #e6e3ff;
+  --lang-track-border: 1px solid rgba(90, 79, 214, .35);
+  --lang-on: #ffd166;
   --lang-on-ring: none;
-  --lang-on-text: #12344d;
-  --lang-text: #12344d;
+  --lang-on-text: #241e5c;
+  --lang-text: #4a4580;
 
-  --start-fill: linear-gradient(180deg, #ffb765 0%, #ff9f43 100%);
+  --start-fill: linear-gradient(180deg, #ffe08a 0%, #ffd166 100%);
   --start-shadow:
-    0 calc(6 * var(--s)) 0 #d9731f,
-    0 calc(16 * var(--s)) calc(26 * var(--s)) calc(-8 * var(--s)) rgba(6, 42, 64, .35),
-    inset 0 calc(4 * var(--s)) 0 rgba(255, 255, 255, .35);
-  --start-text: #3d1f00;
+    0 calc(6 * var(--s)) 0 #d9a62e,
+    0 calc(14 * var(--s)) calc(24 * var(--s)) calc(-8 * var(--s)) rgba(11, 8, 36, .35),
+    inset 0 1px 0 rgba(255, 255, 255, .5);
+  --start-text: #241e5c;
 
-  --quiet-fill: #ddf3fa;
-  --quiet-border: 1.5px solid rgba(29, 95, 138, .5);
-  --quiet-text: #12344d;
+  --quiet-fill: #e6e3ff;
+  --quiet-border: 1px solid rgba(90, 79, 214, .35);
+  --quiet-text: #4a4580;
 
-  --hud-kicker: rgba(29, 95, 138, .9);
-  --hud-score: #12344d;
-  --hud-bump: #ff9f43;
-  --hud-score-shadow: 0 0 calc(8 * var(--s)) rgba(255, 255, 255, .85);
-  --chip-radius: 999px;
-  --chip-fill: rgba(255, 255, 255, .85);
-  --chip-border: 1.5px solid rgba(29, 95, 138, .6);
-  --chip-shadow: 0 calc(2 * var(--s)) 0 rgba(14, 76, 110, .18);
-  --chip-text: #12344d;
-  --bar-track: rgba(29, 95, 138, .25);
-  --bar-fill: linear-gradient(90deg, #ffb703, #ffd166);
+  --hud-kicker: rgba(201, 194, 255, .9);
+  --hud-score: #ffffff;
+  --hud-bump: #ffd166;
+  /* the score has no pill of its own, so a dense dark halo is its body under
+     the red wash */
+  --hud-score-shadow:
+    0 calc(2 * var(--s)) 0 rgba(23, 19, 64, .7),
+    0 0 calc(6 * var(--s)) rgba(23, 19, 64, .9),
+    0 0 calc(14 * var(--s)) rgba(127, 211, 255, .55);
+  --chip-radius: calc(15 * var(--s));
+  /* a mission badge: a dark body that holds under the wash, with a gold
+     stripe along its left end */
+  --chip-fill: linear-gradient(90deg, #ffd166 0%, #ffd166 9%, rgba(23, 19, 64, .72) 9%, rgba(23, 19, 64, .72) 100%);
+  --chip-border: 1.5px solid rgba(255, 255, 255, .45);
+  --chip-shadow: 0 calc(2 * var(--s)) 0 rgba(23, 19, 64, .35);
+  --chip-text: #ffffff;
+  --bar-track: rgba(255, 255, 255, .22);
+  --bar-fill: linear-gradient(90deg, #ffd166, #bfefff);
 
   --legend-chip-radius: calc(14 * var(--s));
-  --legend-left: #7a1f18;
-  --legend-right: #0a4a2c;
-  --legend-left-tint: 142, 30, 26;
-  --legend-right-tint: 10, 74, 44;
+  --legend-left: #8e1a16;
+  --legend-right: #0c4a24;
+  --legend-left-tint: 142, 26, 22;
+  --legend-right-tint: 12, 74, 36;
 
-  --danger-wash: linear-gradient(180deg, rgba(255, 90, 110, .42) 0%, rgba(255, 90, 110, .12) 52%, rgba(255, 90, 110, 0) 100%);
-  --danger-line: linear-gradient(90deg, rgba(255, 61, 87, .95) 0%, rgba(255, 61, 87, .5) 30%, rgba(255, 61, 87, .5) 70%, rgba(255, 61, 87, .95) 100%);
-  --danger-glow: 0 0 calc(12 * var(--s)) rgba(255, 61, 87, .7);
+  --danger-wash: linear-gradient(180deg, rgba(255, 90, 90, .45) 0%, rgba(255, 90, 90, .14) 55%, rgba(255, 90, 90, 0) 100%);
+  --danger-line: linear-gradient(90deg, rgba(255, 97, 97, 1) 0%, rgba(255, 97, 97, .55) 30%, rgba(255, 97, 97, .55) 70%, rgba(255, 97, 97, 1) 100%);
+  --danger-glow: 0 0 calc(12 * var(--s)) rgba(255, 97, 97, .75);
 
-  --plate-text: #12344d;
-  --plate-shadow: 0 0 calc(10 * var(--s)) rgba(255, 255, 255, .95), 0 0 calc(3 * var(--s)) rgba(255, 255, 255, .9);
-  --plate-rule: rgba(29, 95, 138, .7);
-  --flash: rgba(255, 61, 87, .32);
-  --pause-scrim: rgba(79, 196, 227, .62);
-  --pause-blur: 6px;
-  --pop-color: #ffb703;
+  --plate-text: #ffffff;
+  --plate-shadow: 0 calc(2 * var(--s)) calc(6 * var(--s)) rgba(23, 19, 64, .75), 0 0 calc(16 * var(--s)) rgba(255, 209, 102, .8);
+  --plate-rule: #ffd166;
+  --flash: rgba(255, 77, 93, .32);
+  --pause-scrim: rgba(23, 19, 64, .68);
+  --pause-blur: 3px;
+  --pop-color: #ffd166;
   --pop-shadow:
-    1.5px 0 0 #12344d, -1.5px 0 0 #12344d, 0 1.5px 0 #12344d, 0 -1.5px 0 #12344d,
-    0 0 calc(10 * var(--s)) rgba(255, 183, 3, .6);
+    1.5px 0 0 #241e5c, -1.5px 0 0 #241e5c, 0 1.5px 0 #241e5c, 0 -1.5px 0 #241e5c,
+    0 0 calc(12 * var(--s)) rgba(255, 209, 102, .7);
+  --settle-ring: rgba(255, 255, 255, .495);
+  --grain-vignette: none;
+}
+
+/* The children's Day: a sunny meadow, cream picnic cards on bright grass. */
+:root[data-theme="day"] {
+  --font: "Fredoka", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --cap: 0.71em;
+  --page: radial-gradient(70% 55% at 50% 40%, #3fa2e8 0%, #2b8fd8 55%, #1b6fb8 100%);
+  --field: linear-gradient(180deg, #5fb8f5 0%, #8ed3ff 45%, #cfefff 78%, #eaf7ff 100%);
+  --field-shadow:
+    0 calc(26 * var(--s)) calc(60 * var(--s)) calc(-20 * var(--s)) rgba(12, 60, 100, .6),
+    0 0 0 1.5px rgba(255, 255, 255, .35);
+
+  --scrim: rgba(43, 143, 216, .55);
+  --scrim-blur: 10px;
+  --panel-face: #fffdf6;
+  --panel-shadow:
+    0 0 0 calc(5 * var(--s)) rgba(255, 255, 255, .45),
+    0 calc(8 * var(--s)) 0 rgba(31, 127, 69, .35),
+    0 calc(30 * var(--s)) calc(56 * var(--s)) calc(-14 * var(--s)) rgba(12, 60, 100, .45),
+    inset 0 0 0 calc(4 * var(--s)) #2e9e58;
+  --panel-blur: none;
+
+  --brand-a: #2b8fd8;
+  --brand-b: #1f7f45;
+  --title: #1b3a2e;
+  --over-title: #1b3a2e;
+  --msg: #3e5a4e;
+  --legend-text: #3e5a4e;
+  --ring: #fb7185;
+  --pick-label: #3e5a4e;
+  --pick-label-on: #1b3a2e;
+
+  --lang-track: #eaf7ea;
+  --lang-track-border: 1.5px solid rgba(46, 158, 88, .5);
+  /* gold already means "held / selected" here — the drag ring and the level
+     bar are both this colour — and ink reads on it and on the cream face
+     alike, which is why the picker's active label takes it too */
+  --lang-on: #ffc93c;
+  --lang-on-ring: none;
+  --lang-on-text: #1b3a2e;
+  --lang-text: #1b3a2e;
+
+  --start-fill: linear-gradient(180deg, #ff9dae 0%, #fb7185 100%);
+  --start-shadow:
+    0 calc(6 * var(--s)) 0 #c94d65,
+    0 calc(16 * var(--s)) calc(26 * var(--s)) calc(-8 * var(--s)) rgba(27, 58, 46, .3),
+    inset 0 calc(4 * var(--s)) 0 rgba(255, 255, 255, .35);
+  --start-text: #4a0f1e;
+
+  --quiet-fill: #eaf7ea;
+  --quiet-border: 1.5px solid rgba(46, 158, 88, .5);
+  --quiet-text: #1b3a2e;
+
+  --hud-kicker: rgba(27, 58, 46, .8);
+  --hud-score: #1b3a2e;
+  --hud-bump: #f07a2e;
+  --hud-score-shadow: 0 0 calc(8 * var(--s)) rgba(255, 255, 255, .85);
+  --chip-radius: 999px;
+  --chip-fill: rgba(255, 255, 255, .88);
+  --chip-border: 1.5px solid rgba(46, 158, 88, .7);
+  --chip-shadow: 0 calc(2 * var(--s)) 0 rgba(31, 127, 69, .25);
+  --chip-text: #1b3a2e;
+  --bar-track: rgba(27, 58, 46, .18);
+  --bar-fill: linear-gradient(90deg, #ffc93c, #ffe08a);
+
+  --legend-chip-radius: calc(14 * var(--s));
+  /* dark tints: a mid-luminance coral and green sink into the grass */
+  --legend-left: #7a1530;
+  --legend-right: #0b4a40;
+  --legend-left-tint: 122, 21, 48;
+  --legend-right-tint: 11, 74, 64;
+
+  --danger-wash: linear-gradient(180deg, rgba(255, 77, 94, .42) 0%, rgba(255, 77, 94, .12) 52%, rgba(255, 77, 94, 0) 100%);
+  --danger-line: linear-gradient(90deg, rgba(255, 77, 94, .95) 0%, rgba(255, 77, 94, .5) 30%, rgba(255, 77, 94, .5) 70%, rgba(255, 77, 94, .95) 100%);
+  --danger-glow: 0 0 calc(12 * var(--s)) rgba(255, 77, 94, .7);
+
+  --plate-text: #1b3a2e;
+  --plate-shadow: 0 0 calc(10 * var(--s)) rgba(255, 255, 255, .95), 0 0 calc(3 * var(--s)) rgba(255, 255, 255, .9);
+  --plate-rule: rgba(31, 127, 69, .8);
+  --flash: rgba(255, 77, 94, .32);
+  --pause-scrim: rgba(142, 211, 255, .66);
+  --pause-blur: 6px;
+  --pop-color: #ff9f43;
+  --pop-shadow:
+    1.5px 0 0 #1b3a2e, -1.5px 0 0 #1b3a2e, 0 1.5px 0 #1b3a2e, 0 -1.5px 0 #1b3a2e,
+    0 0 calc(10 * var(--s)) rgba(255, 159, 67, .6);
   --settle-ring: rgba(255, 255, 255, .495);
   --grain-vignette: none;
 }
@@ -248,13 +354,15 @@ body {
   85% { transform: translateX(calc(-1 * var(--s))); }
 }
 
-/* Day's static scenery is three CSS layers; Aquarium paints its own on the
-   canvas and hides these. */
+/* Light's static scenery is three CSS layers and a grain; the children's
+   worlds paint their own on the canvas and hide these. Keyed on the side
+   rather than on each world, so a world added to the children never arrives
+   wearing the grown-ups' aurora. */
 #aurora, #dots, #ceiling, #grain { pointer-events: none; position: absolute; }
-:root[data-theme="aquarium"] #aurora,
-:root[data-theme="aquarium"] #dots,
-:root[data-theme="aquarium"] #ceiling,
-:root[data-theme="aquarium"] #grain { display: none; }
+:root[data-audience="kids"] #aurora,
+:root[data-audience="kids"] #dots,
+:root[data-audience="kids"] #ceiling,
+:root[data-audience="kids"] #grain { display: none; }
 
 #aurora {
   inset: -28%;
@@ -349,7 +457,7 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
-:root[data-theme="day"] .block {
+:root[data-theme="light"] .block {
   background: linear-gradient(158deg, #ffffff 0%, #f4f8f8 100%);
   border: 1px solid rgba(16, 40, 44, .16);
   color: #10282c;
@@ -359,14 +467,14 @@ body {
     inset 0 1px 0 rgba(255, 255, 255, .9),
     inset 0 calc(-2 * var(--s)) calc(6 * var(--s)) rgba(16, 40, 44, .06);
 }
-:root[data-theme="day"] .block.dragging {
+:root[data-theme="light"] .block.dragging {
   border-color: rgba(28, 143, 135, .6);
   box-shadow:
     0 calc(22 * var(--s)) calc(40 * var(--s)) calc(-18 * var(--s)) rgba(16, 40, 44, .32),
     0 0 calc(26 * var(--s)) calc(-6 * var(--s)) rgba(45, 212, 191, .35),
     inset 0 1px 0 rgba(255, 255, 255, .9);
 }
-:root[data-theme="day"] .block.ok {
+:root[data-theme="light"] .block.ok {
   background: linear-gradient(158deg, #d7f8ef 0%, #bfefe2 100%);
   border-color: rgba(31, 181, 158, .8);
   color: #0b4a40;
@@ -375,7 +483,7 @@ body {
     0 0 calc(24 * var(--s)) calc(-6 * var(--s)) rgba(45, 212, 191, .35),
     inset 0 1px 0 rgba(255, 255, 255, .7);
 }
-:root[data-theme="day"] .block.mis {
+:root[data-theme="light"] .block.mis {
   background: linear-gradient(158deg, #ffd6dc 0%, #fbaab8 100%);
   border-color: rgba(240, 84, 111, .8);
   color: #7a1526;
@@ -384,7 +492,7 @@ body {
     0 0 calc(24 * var(--s)) calc(-6 * var(--s)) rgba(251, 113, 133, .35),
     inset 0 1px 0 rgba(255, 255, 255, .7);
 }
-:root[data-theme="day"] .block.eq:not(.locked) {
+:root[data-theme="light"] .block.eq:not(.locked) {
   background: radial-gradient(120% 120% at 34% 24%, #ffffff 0%, #e9e4ff 72%);
   border-color: rgba(120, 110, 210, .45);
   color: #3e2a7a;
@@ -395,47 +503,98 @@ body {
     inset 0 1px 0 rgba(255, 255, 255, .9);
 }
 
-:root[data-theme="aquarium"] .block {
-  background: linear-gradient(180deg, #fffbf0 0%, #fff0d6 100%);
-  border: calc(2.5 * var(--s)) solid #1d5f8a;
-  color: #12344d;
+/* Space: a white capsule with a violet rim, a hard 4px drop and a faint cyan
+   halo so the white pops off the violet sky. A settled tile keeps the drop
+   and a small shadow; a pile of forty must stay cheap. */
+:root[data-theme="space"] .block {
+  background: linear-gradient(180deg, #ffffff 0%, #ffffff 62%, #efedff 100%);
+  border: calc(2.5 * var(--s)) solid #5a4fd6;
+  color: #241e5c;
   box-shadow:
-    0 calc(4 * var(--s)) 0 rgba(14, 76, 110, .35),
-    0 calc(10 * var(--s)) calc(18 * var(--s)) rgba(6, 42, 64, .28),
+    0 calc(4 * var(--s)) 0 rgba(23, 19, 64, .45),
+    0 calc(12 * var(--s)) calc(20 * var(--s)) rgba(11, 8, 36, .5),
+    0 0 calc(10 * var(--s)) rgba(127, 211, 255, .18);
+}
+:root[data-theme="space"] .block.dragging {
+  border-color: #ffd166;
+  box-shadow:
+    0 calc(6 * var(--s)) 0 rgba(23, 19, 64, .45),
+    0 calc(14 * var(--s)) calc(22 * var(--s)) rgba(11, 8, 36, .45),
+    0 0 calc(16 * var(--s)) rgba(255, 209, 102, .5);
+}
+:root[data-theme="space"] .block.ok {
+  background: linear-gradient(180deg, #aef3bf 0%, #a6f0b8 50%, #93e6ab 100%);
+  border-color: #2fa85a;
+  color: #0c4a24;
+  box-shadow:
+    0 calc(4 * var(--s)) 0 rgba(23, 19, 64, .45),
+    0 calc(6 * var(--s)) calc(8 * var(--s)) rgba(11, 8, 36, .35);
+}
+:root[data-theme="space"] .block.mis {
+  background: linear-gradient(180deg, #d03d39 0%, #cc3a36 50%, #be332f 100%);
+  border-color: #8e1a16;
+  color: #fff7f3;
+  box-shadow:
+    0 calc(4 * var(--s)) 0 rgba(23, 19, 64, .45),
+    0 calc(6 * var(--s)) calc(8 * var(--s)) rgba(11, 8, 36, .35);
+}
+/* a sum falls as a little moon: a different shape AND a different family */
+:root[data-theme="space"] .block.eq:not(.locked) {
+  background: radial-gradient(78% 78% at 36% 28%, #fff8cf 0%, #ffe58a 62%, #e8c25a 100%);
+  border-color: #c89a2e;
+  color: #4a3600;
+  box-shadow:
+    0 calc(4 * var(--s)) 0 rgba(23, 19, 64, .45),
+    0 calc(12 * var(--s)) calc(20 * var(--s)) rgba(11, 8, 36, .5),
+    0 0 calc(10 * var(--s)) rgba(255, 233, 168, .25);
+}
+
+/* Day: a cream picnic card with a leaf-green rim. Every look keeps the same
+   three shadow slots — a hard lift, a soft glow, an inset gloss — so the
+   verdict transitions interpolate shadow by shadow. */
+:root[data-theme="day"] .block {
+  background: linear-gradient(180deg, #fffdf5 0%, #fff0d2 100%);
+  border: calc(2.5 * var(--s)) solid #2e9e58;
+  color: #1b3a2e;
+  box-shadow:
+    0 calc(4 * var(--s)) 0 rgba(31, 127, 69, .35),
+    0 calc(10 * var(--s)) calc(18 * var(--s)) rgba(27, 58, 46, .22),
     inset 0 calc(5 * var(--s)) 1px rgba(255, 255, 255, .6);
 }
-:root[data-theme="aquarium"] .block.dragging {
-  border-color: #ffb703;
+:root[data-theme="day"] .block.dragging {
+  border-color: #ffc93c;
   box-shadow:
-    0 calc(6 * var(--s)) 0 rgba(14, 76, 110, .35),
-    0 0 calc(14 * var(--s)) rgba(255, 183, 3, .45),
+    0 calc(6 * var(--s)) 0 rgba(31, 127, 69, .35),
+    0 0 calc(14 * var(--s)) rgba(255, 201, 60, .55),
     inset 0 calc(5 * var(--s)) 1px rgba(255, 255, 255, .6);
 }
-:root[data-theme="aquarium"] .block.ok {
-  background: linear-gradient(180deg, #9ef0bf 0%, #8be9b0 100%);
-  border-color: #23a85f;
-  color: #0a4a2c;
+:root[data-theme="day"] .block.ok {
+  background: linear-gradient(180deg, #9ef0d9 0%, #7ee3c8 100%);
+  border-color: #1c8f87;
+  color: #0b4a40;
   box-shadow:
-    0 calc(4 * var(--s)) 0 rgba(14, 76, 110, .3),
-    0 0 calc(8 * var(--s)) rgba(35, 168, 95, .35),
+    0 calc(4 * var(--s)) 0 rgba(31, 127, 69, .3),
+    0 0 calc(8 * var(--s)) rgba(45, 212, 191, .4),
     inset 0 calc(5 * var(--s)) 1px rgba(255, 255, 255, .5);
 }
-:root[data-theme="aquarium"] .block.mis {
-  background: linear-gradient(180deg, #d2363f 0%, #c42f38 100%);
-  border-color: #8e1e1a;
+/* the top stop IS the 4.5:1 colour; the card only gets darker below it */
+:root[data-theme="day"] .block.mis {
+  background: linear-gradient(180deg, #d2304f 0%, #c22a46 100%);
+  border-color: #7a1530;
   color: #ffffff;
   box-shadow:
-    0 calc(4 * var(--s)) 0 rgba(6, 42, 64, .35),
-    0 0 calc(8 * var(--s)) rgba(210, 54, 63, .4),
+    0 calc(4 * var(--s)) 0 rgba(27, 58, 46, .35),
+    0 0 calc(8 * var(--s)) rgba(251, 113, 133, .4),
     inset 0 calc(5 * var(--s)) 1px rgba(255, 255, 255, .3);
 }
-:root[data-theme="aquarium"] .block.eq:not(.locked) {
-  background: radial-gradient(80% 80% at 34% 26%, #ffffff 0%, #e9ddff 55%, #c9b6f2 100%);
-  border-color: #8b6fd8;
-  color: #3e2a7a;
+/* a sum falls as a little sun */
+:root[data-theme="day"] .block.eq:not(.locked) {
+  background: radial-gradient(80% 80% at 36% 30%, #fff8d6 0%, #ffe27a 55%, #ffc93c 100%);
+  border-color: #f07a2e;
+  color: #4a3600;
   box-shadow:
-    0 calc(4 * var(--s)) 0 rgba(14, 76, 110, .35),
-    0 calc(10 * var(--s)) calc(18 * var(--s)) rgba(6, 42, 64, .28),
+    0 calc(4 * var(--s)) 0 rgba(31, 127, 69, .35),
+    0 0 calc(18 * var(--s)) rgba(255, 209, 102, .5),
     inset 0 calc(5 * var(--s)) 1px rgba(255, 255, 255, .7);
 }
 
@@ -450,7 +609,8 @@ body {
   border: calc(1.5 * var(--s)) solid var(--puff-ring, rgba(28, 143, 135, .6));
   animation: puff .6s cubic-bezier(.2, .75, .3, 1) forwards;
 }
-:root[data-theme="aquarium"] .puff { --puff-ring: rgba(255, 255, 255, .8); }
+:root[data-theme="day"] .puff { --puff-ring: rgba(255, 201, 60, .95); }
+:root[data-theme="space"] .puff { --puff-ring: rgba(255, 233, 168, .9); }
 @keyframes puff {
   0%   { transform: scale(.22); opacity: .85; }
   100% { transform: scale(1.4); opacity: 0; }
@@ -875,7 +1035,9 @@ body {
    can be made. What lands on screen moves by up to about .02 em on top of
    that, because the letter-space and the margins round to device pixels
    independently; at a 300px em all three measure 70px in Manrope and 77px in
-   Fredoka, and at body sizes they differ by a pixel either way.
+   Fredoka, and at body sizes they differ by a pixel either way. The second
+   pair below is the Fredoka solution, and it is keyed on the side of the
+   game rather than on one world, because the face is.
 
    The left one is negative because it is undoing part of the letter-space CSS
    puts after the S and the app's layout never had. Re-derive with the harness
@@ -890,7 +1052,7 @@ body {
   margin-left: -.058em;    /* Manrope */
   margin-right: .1953em;
 }
-:root[data-theme="aquarium"] #brand .y {
+:root[data-audience="kids"] #brand .y {
   margin-left: -.018em;    /* Fredoka sets the S and the V differently */
   margin-right: .1987em;
 }
@@ -905,21 +1067,21 @@ body {
    Two gradients, because y1/y2 fall out of the font's ascent, descent and cap
    factor, and gradient coordinates are not CSS geometry properties, so one
    parameterised gradient is not possible. The stops are attributes in the
-   markup as well, so a stylesheet that never arrives leaves the Y in the Day
+   markup as well, so a stylesheet that never arrives leaves the Y in Light's
    colours rather than in black. */
 #brand .y .stop-a { stop-color: var(--brand-a); }
 #brand .y .stop-b { stop-color: var(--brand-b); }
 #brand .y .glyph { fill: url(#brandY-manrope); }
-:root[data-theme="aquarium"] #brand .y .glyph { fill: url(#brandY-fredoka); }
+:root[data-audience="kids"] #brand .y .glyph { fill: url(#brandY-fredoka); }
 
 /* Fredoka draws its S with more ink than its V and its T, so the name looks
    like it starts with a bold letter; 620 evens it. Its weight axis also stops
    at 700, which is why the rest asks for 800 and gets 700 rather than a step
    below it. Both axes every time: the wght default is 300, and a wdth left
    unwritten inherits whatever the instance carries. Manrope's S has not been
-   measured, so the Day lockup keeps font-weight: 800 for all of it. */
-:root[data-theme="aquarium"] #brand .lead { font-variation-settings: 'wdth' 100, 'wght' 620; }
-:root[data-theme="aquarium"] #brand .tail { font-variation-settings: 'wdth' 100, 'wght' 800; }
+   measured, so the grown-ups' lockup keeps font-weight: 800 for all of it. */
+:root[data-audience="kids"] #brand .lead { font-variation-settings: 'wdth' 100, 'wght' 620; }
+:root[data-audience="kids"] #brand .tail { font-variation-settings: 'wdth' 100, 'wght' 800; }
 
 #tagline {
   margin: calc(16 * var(--s)) 0 0;
@@ -1003,6 +1165,59 @@ body {
   letter-spacing: calc(1.71 * var(--s));
   color: var(--legend-text);
 }
+
+/* ------------------------------------------------------- the two sides
+
+   The app has two sides and a player is on one of them: a child, or a
+   grown-up. On a tablet that is a setting, one per player, kept in the
+   parents' corner; here there are no players, so it is a switch on the start
+   panel and the page remembers which way it was left.
+
+   The pills carry `aria-pressed` rather than `aria-current`: this is a
+   two-state control being toggled, not a choice among a list, and the picker
+   below it redraws to the side that wins. */
+
+#audienceRow {
+  margin-top: calc(18 * var(--s));
+  width: calc(226 * var(--s));
+  height: calc(40 * var(--s));
+  padding: calc(4 * var(--s));
+  display: flex;
+  gap: calc(4 * var(--s));
+  border-radius: 999px;
+  background: var(--lang-track);
+  border: var(--lang-track-border);
+}
+.aud {
+  flex: 1;
+  height: calc(32 * var(--s));
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  font-family: var(--font);
+  font-size: calc(12.5 * var(--s));
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--lang-text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(6 * var(--s));
+  transition: background .18s ease, color .18s ease, box-shadow .18s ease;
+}
+.aud[aria-pressed="true"] {
+  background: var(--lang-on);
+  color: var(--lang-on-text);
+  box-shadow: var(--lang-on-ring);
+}
+/* A face for each side, so the switch reads before the words do: a child and
+   a grown-up as the same two strokes at two heights. They are decoration —
+   the label beside them is what is read out. */
+.aud svg { width: calc(15 * var(--s)); height: calc(15 * var(--s)); flex: none; }
+.aud svg circle { fill: currentColor; }
+.aud svg path { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
 
 /* ------------------------------------------------------- theme picker */
 

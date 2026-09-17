@@ -1,11 +1,18 @@
 /* SYVT on the web: the Android game's free tier, rule for rule.
 
-   Everything the app's free player gets is here — the two open worlds, all
-   three languages, levels 1 to 4, the same words, the same sums, the same
-   fall speeds. Where the app would sell SYVT+, this says it is coming: a
-   locked world, the end of level 4, or the voice going quiet. The Android
-   app is not listed yet, so none of the three offers a link - see the note
-   above openModal for what to put back the day it is.
+   Everything the app's free player gets is here — both sides of the game
+   and the three worlds open across them, all three languages, levels 1 to 4,
+   the same words, the same sums, the same fall speeds. Where the app would
+   sell SYVT+, this says it is coming: a locked world, the end of level 4, or
+   the voice going quiet. The Android app is not listed yet, so none of the
+   three offers a link - see the note above openModal for what to put back
+   the day it is.
+
+   Which side is being played is the page's own answer to a setting the app
+   keeps per player: there are no players here, so it is a switch on the
+   start panel, and everything that follows from it - the worlds in the
+   picker, the face, the palette, what a padlock is counted against - follows
+   from that one value.
 
    The physics runs in screen px (design px × S) so a body's position is the
    tile's position; the stylesheet gets the same S, so what is drawn and what
@@ -31,6 +38,7 @@
   var statBest = $("statBest"), statBestLbl = $("statBestLbl"), bestStat = $("bestStat");
   var statBestBonus = $("statBestBonus");
   var picker = $("themePicker"), langRow = $("langRow");
+  var audPills = [].slice.call(document.querySelectorAll("#audienceRow .aud"));
   var startBtn = $("startBtn"), legendText = $("legendText");
   var storeLinkLabel = $("storeLinkLabel");
   var modal = $("modal"), modalTitle = $("modalTitle"), modalBody = $("modalBody");
@@ -63,6 +71,8 @@
       counterTitle: "Why {score}?",
       counterBody: "{score} is the whole free game: four levels of thirty points. Past that the words stay at level {level}, so those points come easier — they are counted beside your score rather than in it, so that every {score} means the same thing.",
       gotIt: "Got it",
+      audienceKids: "Kids", audienceGrown: "Grown-ups",
+      lockBodyGrown: "This world is part of SYVT+: both of the grown-ups’ worlds and ten levels. It is coming to Android soon.",
       lockTitle: "A SYVT+ world",
       lockBody: "This world is part of SYVT+: six worlds and ten levels. It is coming to Android soon.",
       voiceSetting: "Read words aloud",
@@ -85,6 +95,8 @@
       counterTitle: "Warum {score}?",
       counterBody: "{score} ist die ganze Gratis-Version: vier Level à dreissig Punkte. Danach bleiben die Wörter auf Level {level}, diese Punkte sind also leichter — sie werden neben deinem Punktestand gezählt und nicht darin, damit {score} überall dasselbe bedeutet.",
       gotIt: "Alles klar",
+      audienceKids: "Kinder", audienceGrown: "Erwachsene",
+      lockBodyGrown: "Diese Welt gehört zu SYVT+: beide Welten für Erwachsene und zehn Level. Bald für Android.",
       lockTitle: "Eine SYVT+ Welt",
       lockBody: "Diese Welt gehört zu SYVT+: sechs Welten und zehn Level. Bald für Android.",
       voiceSetting: "Wörter vorlesen",
@@ -107,6 +119,8 @@
       counterTitle: "Pourquoi {score} ?",
       counterBody: "{score}, c’est tout le jeu gratuit : quatre niveaux de trente points. Ensuite les mots restent au niveau {level}, donc ces points-là sont plus faciles — ils sont comptés à côté de ton score et non dedans, pour que {score} veuille toujours dire la même chose.",
       gotIt: "Compris",
+      audienceKids: "Enfants", audienceGrown: "Adultes",
+      lockBodyGrown: "Ce monde fait partie de SYVT+ : les deux mondes pour adultes et dix niveaux. Bientôt sur Android.",
       lockTitle: "Un monde SYVT+",
       lockBody: "Ce monde fait partie de SYVT+ : six mondes et dix niveaux. Bientôt sur Android.",
       voiceSetting: "Lire les mots à voix haute",
@@ -117,15 +131,69 @@
     }
   };
 
-  // the app's picker order; the first two are what the free game opens
+  /* The app's own `kThemes`, in its own order: the grown-ups' two and then
+     the children's six, each side's free worlds first so a first tap lands
+     on something the player may keep. `free` is the app's
+     `Limits.freeThemes` - Light on one side, Space and Day on the other -
+     and it is what decides both the padlock and whether this page has the
+     world drawn at all. The two sides never see each other's worlds, which
+     is why one free set serves both: a locked world on one side must never
+     have a free twin on the other, or a flip of the switch would be a way
+     round the lock. */
   var WORLDS = [
-    { id: "night",    free: false, names: { en: "Night", de: "Nacht", fr: "Nuit" } },
-    { id: "day",      free: true,  names: { en: "Day", de: "Tag", fr: "Jour" } },
-    { id: "aquarium", free: true,  names: { en: "Aquarium", de: "Aquarium", fr: "Aquarium" } },
-    { id: "space",    free: false, names: { en: "Space", de: "Weltall", fr: "Espace" } },
-    { id: "castle",   free: false, names: { en: "Princess Castle", de: "Schloss", fr: "Château" } },
-    { id: "dino",     free: false, names: { en: "Dinosaurs", de: "Dinos", fr: "Dinos" } }
+    { id: "light",    audience: "grownups", free: true,  names: { en: "Light", de: "Hell", fr: "Clair" } },
+    { id: "dark",     audience: "grownups", free: false, names: { en: "Dark", de: "Dunkel", fr: "Sombre" } },
+    { id: "space",    audience: "kids",     free: true,  names: { en: "Space", de: "Weltall", fr: "Espace" } },
+    { id: "day",      audience: "kids",     free: true,  names: { en: "Day", de: "Tag", fr: "Jour" } },
+    { id: "night",    audience: "kids",     free: false, names: { en: "Night", de: "Nacht", fr: "Nuit" } },
+    { id: "aquarium", audience: "kids",     free: false, names: { en: "Ocean", de: "Ozean", fr: "Oc\u00e9an" } },
+    { id: "castle",   audience: "kids",     free: false, names: { en: "Princess Castle", de: "Schloss", fr: "Ch\u00e2teau" } },
+    { id: "dino",     audience: "kids",     free: false, names: { en: "Dinosaurs", de: "Dinos", fr: "Dinos" } }
   ];
+
+  var AUDIENCES = ["kids", "grownups"];
+
+  function worldById(id) {
+    for (var i = 0; i < WORLDS.length; i++) {
+      if (WORLDS[i].id === id) return WORLDS[i];
+    }
+    return null;
+  }
+
+  function worldsFor(a) {
+    var out = [];
+    for (var i = 0; i < WORLDS.length; i++) {
+      if (WORLDS[i].audience === a) out.push(WORLDS[i]);
+    }
+    return out;
+  }
+
+  /* The world a fresh player on this side opens in: the free one, so nobody
+     begins somewhere they would be asked to pay to stay. The children's is
+     Space rather than Day, though both are free, for the eight-year-old's
+     sake: a first screen that is clearly a game. */
+  function defaultThemeFor(a) { return a === "grownups" ? "light" : "space"; }
+
+  /* Where a world goes when the switch is flipped: to its twin on the other
+     side - Night and Dark, Day and Light are the same scene drawn twice - or,
+     for a world with no twin, that side's default. So a grown-up who tries
+     the children's side and comes back gets their sky back. The app's
+     `themeAcross`, in lib/ui/themes/themes.dart. */
+  function themeAcross(id, to) {
+    if (to === "grownups") {
+      if (id === "night") return "dark";
+      if (id === "day") return "light";
+    } else {
+      if (id === "dark") return "night";
+      if (id === "light") return "day";
+    }
+    return defaultThemeFor(to);
+  }
+
+  /* The page behind the letterboxed field, per world, so the browser's own
+     chrome is the colour the world is. Only a world this page can play needs
+     one; a locked world is never in force. */
+  var PAGE_COLOUR = { light: "#e1e8ea", space: "#1a1546", day: "#2b8fd8" };
 
   // an explicit allowlist, not a property lookup: "__proto__" would pass a
   // truthy check on any object and then crash the round
@@ -234,8 +302,20 @@
   var lang = readPref(STORE + "lang");
   if (LANGS.indexOf(lang) === -1) lang = BROWSER.lang;
 
+  /* Which side of the game the page opens on. A player is a child unless
+     they say otherwise, which is the app's own reading and the safe one; the
+     switch on the panel is where they say otherwise, and it is remembered. */
+  var audience = readPref(STORE + "audience");
+  if (AUDIENCES.indexOf(audience) === -1) audience = "kids";
+
+  /* The world in force. It has to be one this page draws AND one on the side
+     being played from: a stale id, or one left behind by a flip of the
+     switch, opens the side's free world rather than stripping the scenery. */
   var themeId = readPref(STORE + "theme");
-  if (themeId !== "day" && themeId !== "aquarium") themeId = "day";
+  (function () {
+    var w = worldById(themeId);
+    if (!w || !w.free || w.audience !== audience) themeId = defaultThemeFor(audience);
+  })();
 
   // ------------------------------------------------------------ the rules
 
@@ -1172,8 +1252,12 @@
     openModal(cap(t().capTitle), cap(t().capBody), t().keepPlaying, false);
   }
 
+  /* What SYVT+ opens is counted for the side being played on, as the app's
+     paywall counts it: six worlds and four to open, or two and one. */
   function offerWorld() {
-    openModal(t().lockTitle, t().lockBody, t().notNow, false);
+    var s = t();
+    openModal(s.lockTitle,
+      audience === "grownups" ? s.lockBodyGrown : s.lockBody, s.notNow, false);
   }
 
   /* A tap on the chip past the levels the free game reads. The stack stops
@@ -1201,9 +1285,15 @@
     startBtn.textContent = (over ? t().again : t().start).toUpperCase();
   }
 
+  /* The picker shows one side's worlds and nothing of the other's, so it is
+     rebuilt when the switch is flipped rather than filtered in place: a card
+     that is no longer on the screen must not keep a canvas the thumbnail
+     loop would go on painting. */
   function buildPicker() {
     picker.innerHTML = "";
-    for (var i = 0; i < WORLDS.length; i++) {
+    for (var i = 0; i < WORLDS.length; i++) { WORLDS[i].el = null; WORLDS[i].canvas = null; }
+    var shown = worldsFor(audience);
+    for (i = 0; i < shown.length; i++) {
       (function (world) {
         var btn = document.createElement("button");
         btn.type = "button";
@@ -1235,7 +1325,7 @@
         picker.appendChild(btn);
         world.el = btn;
         world.canvas = cv;
-      })(WORLDS[i]);
+      })(shown[i]);
     }
     drawThumbs();
   }
@@ -1250,7 +1340,13 @@
     themeId = id;
     writePref(STORE + "theme", id);
     document.documentElement.dataset.theme = id;
+    document.documentElement.dataset.audience = audience;
+    setThemeColour(id);
     stage.setTheme(id);
+    /* The new world's creatures have their own voices. A tap on a picker card
+       is a gesture, which is the one moment an AudioContext may be made, so
+       this is where the clips are asked for rather than at the next START. */
+    warmPokes();
     for (var i = 0; i < WORLDS.length; i++) {
       if (WORLDS[i].el) WORLDS[i].el.setAttribute("aria-current", WORLDS[i].id === id ? "true" : "false");
     }
@@ -1262,12 +1358,45 @@
     });
   }
 
+  // the browser's own chrome, kept the colour the world behind the field is
+  function setThemeColour(id) {
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (meta && PAGE_COLOUR[id]) meta.setAttribute("content", PAGE_COLOUR[id]);
+  }
+
+  /* Flipping the switch. The world goes across to its twin in the same
+     movement, so a grown-up who looks in on the children's side and comes
+     back finds their own sky waiting rather than the side's default. */
+  function setAudience(next) {
+    if (next === audience || AUDIENCES.indexOf(next) === -1) return;
+    var carried = themeAcross(themeId, next);
+    audience = next;
+    writePref(STORE + "audience", next);
+    document.documentElement.dataset.audience = next;
+    markAudience();
+    buildPicker();
+    applyTheme(carried);
+    // the pills' own labels are the one piece of text the side owns
+    applyLang();
+  }
+
+  function markAudience() {
+    for (var i = 0; i < audPills.length; i++) {
+      audPills[i].setAttribute("aria-pressed",
+        audPills[i].dataset.audience === audience ? "true" : "false");
+    }
+  }
+
   function applyLang() {
     var s = t();
     // The page's own language, which it now often is not English: a screen
     // reader picks its voice by it, and a browser reads it to decide whether
     // to offer a translation of German it has been told is English.
     document.documentElement.lang = lang;
+    for (var a = 0; a < audPills.length; a++) {
+      audPills[a].querySelector('[data-role="label"]').textContent =
+        audPills[a].dataset.audience === "kids" ? s.audienceKids : s.audienceGrown;
+    }
     $("hintLeft").textContent = s.hintLeft;
     $("hintRight").textContent = s.hintRight;
     scoreKicker.textContent = s.scoreLbl.toUpperCase();
@@ -1314,6 +1443,12 @@
   modal.addEventListener("pointerdown", function (e) {
     if (e.target === modal) closeModal();   // the barrier is the quiet way out
   });
+
+  for (var ai = 0; ai < audPills.length; ai++) {
+    audPills[ai].addEventListener("click", function () {
+      setAudience(this.dataset.audience);
+    });
+  }
 
   var langButtons = langRow.querySelectorAll(".lang");
   for (var li = 0; li < langButtons.length; li++) {
@@ -1382,6 +1517,9 @@
   // ------------------------------------------------------------- go
 
   document.documentElement.dataset.theme = themeId;
+  document.documentElement.dataset.audience = audience;
+  setThemeColour(themeId);
+  markAudience();
   measureField();
   stage.setTheme(themeId);
   buildWalls();
