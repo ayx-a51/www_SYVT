@@ -2032,7 +2032,7 @@ window.SYVT_WORDS = {
       ["Bonbon", "Bonban"],
       ["Brieftasche", "Briftasche", "Brieftashe"],
       ["Drachen", "Drachan"],
-      ["Dunkel", "Dungel"],
+      ["dunkel", "dungel"],
       ["Einkauf", "Eingauf"],
       ["Eintritt", "Eintrit", "Eintritd"],
       ["Eisen", "Eisan"],
@@ -4548,7 +4548,7 @@ window.SYVT_WORDS = {
 // Each value is the clip's object name: its id, or <id>.<take>
 // for a word recorded again after release, from the corpus
 // manifest's revisions when this file was written.
-// Takes from the corpus manifest generated 2026-09-17T16:21:11Z.
+// Takes from the corpus manifest generated 2026-09-20T09:48:15Z.
 window.SYVT_CLIPS = {
   en: {
     "friend": "15793f53d3a4a0a31613",
@@ -4655,7 +4655,7 @@ window.SYVT_CLIPS = {
     "mouse": "93842663f3cf288441a1",
     "sheep": "04ff60eb53b78576bc76",
     "tiger": "70618866f6067f57cf4a",
-    "zebra": "b2561bf3ee7531c6dd82",
+    "zebra": "b2561bf3ee7531c6dd82.2",
     "camel": "41e99d54d51a29bdf6ed",
     "spider": "9a1de57c6b9f044a6123",
     "turtle": "121d52ccdb2f0f71a53a",
@@ -4767,7 +4767,7 @@ window.SYVT_CLIPS = {
     "sausage": "ac3949c3c4730b5ef33b",
     "pepper": "131bf09dd0821acb2d1a",
     "cherry": "ff284b7566cdc030e8f6",
-    "lettuce": "a5adec2fd056dd4aac24",
+    "lettuce": "a5adec2fd056dd4aac24.2",
     "noodle": "fb9db86af725e1198150",
     "cabbage": "ab3b555e0e5369416dbc.2",
     "porridge": "b3bbe3a6abe380aedeea",
@@ -4970,7 +4970,7 @@ window.SYVT_CLIPS = {
     "crocodile": "36c60a6fc5cf75a50af4",
     "butterfly": "43dd1d8652375326d7e7",
     "leopard": "08cae5ad4e4e4a9804a4",
-    "ostrich": "f1260d2c2205b53029b3",
+    "ostrich": "f1260d2c2205b53029b3.2",
     "seagull": "8e0af931a571621a3e4a",
     "peacock": "07c999282aaed8c92624",
     "snail": "63192fdb946c17e8cea9",
@@ -5194,7 +5194,7 @@ window.SYVT_CLIPS = {
     "Bahn": "38d3a388c1731b89e0eb",
     "fahren": "9a78c5245f3fe9c9da37",
     "Kuh": "14db2118df822f05cd81",
-    "Ohr": "862cf8ab0e0b733f7ba5",
+    "Ohr": "862cf8ab0e0b733f7ba5.2",
     "Zahl": "a500478ad2ec3468ae3a",
     "Mehl": "5d354c3b72f8a7f3d583",
     "wohnen": "fe4b2488ba3d28c676f6",
@@ -5374,7 +5374,7 @@ window.SYVT_CLIPS = {
     "zwölf": "ff233d8abd397d6a9603",
     "Löwe": "3f163540312be5c1d55b",
     "hören": "9d465db64fd93dd0d9ed",
-    "Angel": "0525679095768ba1f6f4",
+    "Angel": "0525679095768ba1f6f4.2",
     "Anker": "e290bcef903f576a12f3",
     "Ast": "1cfc208f2b3cac7e1e76",
     "Ball": "293e7f476e3b0ea88372",
@@ -5666,7 +5666,7 @@ window.SYVT_CLIPS = {
     "Bonbon": "993cd7df4690fbff80c3",
     "Brieftasche": "812f0ee13935148c5b39",
     "Drachen": "859c421c44690d95b546",
-    "Dunkel": "a39340466f6714c3b8ed",
+    "dunkel": "b1e8d7d4c510baa45507",
     "Einkauf": "83167e683370b784aadc",
     "Eintritt": "0fa285efe06f71032ab3",
     "Eisen": "f876636424466e349193",
