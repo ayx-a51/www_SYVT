@@ -3,10 +3,8 @@
    Everything the app's free player gets is here — both sides of the game
    and the three worlds open across them, all three languages, levels 1 to 4,
    the same words, the same sums, the same fall speeds. Where the app would
-   sell SYVT+, this says it is coming: a locked world, the end of level 4, or
-   the voice going quiet. The Android app is not listed yet, so none of the
-   three offers a link - see the note above openModal for what to put back
-   the day it is.
+   sell SYVT+, this points at the Play Store instead: a locked world, the end
+   of level 4, or the voice going quiet.
 
    Which side is being played is the page's own answer to a setting the app
    keeps per player: there are no players here, so it is a switch on the
@@ -70,22 +68,22 @@
       level: "Level", start: "Start", again: "Play again",
       over: "Stack Overflow", scoreLbl: "Score", bestLbl: "Best",
       paused: "Paused", resume: "Continue", quit: "End round", pauseAction: "Pause",
-      store: "SYVT+ is coming to Android",
+      store: "SYVT+ on Google Play",
       buy: "Get SYVT+", notNow: "Not now", keepPlaying: "Keep playing",
       capTitle: "Level {level} reached!",
-      capBody: "That is the last level of the free game. SYVT+ takes the words on to level 10, and it is coming to Android soon. Until then, keep playing here for as long as you like — anything past {score} is counted beside your score.",
+      capBody: "That is the last level of the free game. With SYVT+ on Android the words go on to level 10 — or keep playing here for as long as you like, with anything past {score} is counted beside your score.",
       counterTitle: "Why {score}?",
       counterBody: "{score} is the whole free game: four levels of thirty points. Past that the words stay at level {level}, so those points come easier — they are counted beside your score rather than in it, so that every {score} means the same thing.",
       gotIt: "Got it",
       audienceKids: "Kids", audienceGrown: "Grown-ups",
-      lockBodyGrown: "This world is part of SYVT+: both of the grown-ups’ worlds and ten levels. It is coming to Android soon.",
+      lockBodyGrown: "This world is part of SYVT+: both of the grown-ups’ worlds and ten levels, in the Android app.",
       lockTitle: "A SYVT+ world",
-      lockBody: "This world is part of SYVT+: six worlds and ten levels. It is coming to Android soon.",
+      lockBody: "This world is part of SYVT+: six worlds and ten levels, in the Android app.",
       voiceSetting: "Read words aloud",
       voiceOffline: "Needs a connection",
       voiceNeedsPlus: "SYVT+ reads the higher levels",
       voiceTitle: "A SYVT+ voice",
-      voiceBody: "The free game reads the words out on levels 1 and 2. SYVT+ goes on reading them all the way up, and it is coming to Android soon."
+      voiceBody: "The free game reads the words out on levels 1 and 2. SYVT+ goes on reading them all the way up — in the Android app."
     },
     de: {
       tagline: "Wörter fallen vom Himmel. Wische nach rechts, wenn ein Wort richtig geschrieben ist — nach links, wenn es falsch ist.",
@@ -94,22 +92,22 @@
       level: "Stufe", start: "Los", again: "Nochmal",
       over: "Stack Overflow", scoreLbl: "Punkte", bestLbl: "Rekord",
       paused: "Pausiert", resume: "Weiter", quit: "Runde beenden", pauseAction: "Pause",
-      store: "SYVT+ kommt bald für Android",
+      store: "SYVT+ bei Google Play",
       buy: "SYVT+ holen", notNow: "Nicht jetzt", keepPlaying: "Weiterspielen",
       capTitle: "Level {level} geschafft!",
-      capBody: "Das ist das letzte Level der Gratis-Version. Mit SYVT+ geht es weiter bis Level 10 — bald für Android. Bis dahin spielst du hier weiter, so lange du magst; alles über {score} wird neben deinem Punktestand gezählt.",
+      capBody: "Das ist das letzte Level der Gratis-Version. Mit SYVT+ für Android geht es weiter bis Level 10 — oder du spielst hier weiter, so lange du magst; alles über {score} wird neben deinem Punktestand gezählt.",
       counterTitle: "Warum {score}?",
       counterBody: "{score} ist die ganze Gratis-Version: vier Level à dreissig Punkte. Danach bleiben die Wörter auf Level {level}, diese Punkte sind also leichter — sie werden neben deinem Punktestand gezählt und nicht darin, damit {score} überall dasselbe bedeutet.",
       gotIt: "Alles klar",
       audienceKids: "Kinder", audienceGrown: "Erwachsene",
-      lockBodyGrown: "Diese Welt gehört zu SYVT+: beide Welten für Erwachsene und zehn Level. Bald für Android.",
+      lockBodyGrown: "Diese Welt gehört zu SYVT+: beide Welten für Erwachsene und zehn Level, in der Android-App.",
       lockTitle: "Eine SYVT+ Welt",
-      lockBody: "Diese Welt gehört zu SYVT+: sechs Welten und zehn Level. Bald für Android.",
+      lockBody: "Diese Welt gehört zu SYVT+: sechs Welten und zehn Level, in der Android-App.",
       voiceSetting: "Wörter vorlesen",
       voiceOffline: "Braucht eine Verbindung",
       voiceNeedsPlus: "SYVT+ liest auch die höheren Level vor",
       voiceTitle: "Eine SYVT+ Stimme",
-      voiceBody: "Gratis werden die Wörter auf Level 1 und 2 vorgelesen. Mit SYVT+ geht es bis nach oben weiter — bald für Android."
+      voiceBody: "Gratis werden die Wörter auf Level 1 und 2 vorgelesen. Mit SYVT+ geht es bis nach oben weiter — in der Android-App."
     },
     fr: {
       tagline: "Des mots tombent du ciel. Glisse à droite si un mot est bien orthographié — à gauche s’il est mal écrit.",
@@ -118,22 +116,22 @@
       level: "Niveau", start: "Démarrer", again: "Rejouer",
       over: "Stack Overflow", scoreLbl: "Score", bestLbl: "Record",
       paused: "En pause", resume: "Continuer", quit: "Terminer la partie", pauseAction: "Pause",
-      store: "SYVT+ arrive bientôt sur Android",
+      store: "SYVT+ sur Google Play",
       buy: "Passer à SYVT+", notNow: "Pas maintenant", keepPlaying: "Continuer à jouer",
       capTitle: "Niveau {level} atteint !",
-      capBody: "C’est le dernier niveau de la version gratuite. Avec SYVT+ les mots continuent jusqu’au niveau 10 — bientôt sur Android. En attendant, reste ici aussi longtemps que tu veux ; tout ce qui dépasse {score} est compté à côté de ton score.",
+      capBody: "C’est le dernier niveau de la version gratuite. Avec SYVT+ sur Android les mots continuent jusqu’au niveau 10 — ou reste ici aussi longtemps que tu veux ; tout ce qui dépasse {score} est compté à côté de ton score.",
       counterTitle: "Pourquoi {score} ?",
       counterBody: "{score}, c’est tout le jeu gratuit : quatre niveaux de trente points. Ensuite les mots restent au niveau {level}, donc ces points-là sont plus faciles — ils sont comptés à côté de ton score et non dedans, pour que {score} veuille toujours dire la même chose.",
       gotIt: "Compris",
       audienceKids: "Enfants", audienceGrown: "Adultes",
-      lockBodyGrown: "Ce monde fait partie de SYVT+ : les deux mondes pour adultes et dix niveaux. Bientôt sur Android.",
+      lockBodyGrown: "Ce monde fait partie de SYVT+ : les deux mondes pour adultes et dix niveaux, dans l’app Android.",
       lockTitle: "Un monde SYVT+",
-      lockBody: "Ce monde fait partie de SYVT+ : six mondes et dix niveaux. Bientôt sur Android.",
+      lockBody: "Ce monde fait partie de SYVT+ : six mondes et dix niveaux, dans l’app Android.",
       voiceSetting: "Lire les mots à voix haute",
       voiceOffline: "Nécessite une connexion",
       voiceNeedsPlus: "SYVT+ lit aussi les niveaux supérieurs",
       voiceTitle: "Une voix SYVT+",
-      voiceBody: "La version gratuite lit les mots aux niveaux 1 et 2. SYVT+ continue jusqu’en haut — bientôt sur Android."
+      voiceBody: "La version gratuite lit les mots aux niveaux 1 et 2. SYVT+ continue jusqu’en haut — dans l’app Android."
     }
   };
 
@@ -1249,11 +1247,6 @@
 
   function closeModal() { modal.hidden = true; }
 
-  /* All three of these pass showBuy FALSE while the app is not public: they
-     say what SYVT+ is and that it is coming, and the way out leads the card
-     rather than sitting under a button that would open nothing. Pass true
-     again, and restore the two hrefs in index.html, the day it lists. */
-
   // Level 4 is the last free one, as in the app (Limits.freeMaxLevel). The
   // app pauses the round and offers SYVT+ once; dismissing it leaves the
   // pause veil, and play carries on at level 4 for as long as the player
@@ -1262,7 +1255,7 @@
     if (capShown || rawTier() <= FREE_MAX_TIER) return;
     capShown = true;
     pause();
-    openModal(cap(t().capTitle), cap(t().capBody), t().keepPlaying, false);
+    openModal(cap(t().capTitle), cap(t().capBody), t().keepPlaying, true);
   }
 
   /* What SYVT+ opens is counted for the side being played on, as the app's
@@ -1270,7 +1263,7 @@
   function offerWorld() {
     var s = t();
     openModal(s.lockTitle,
-      audience === "grownups" ? s.lockBodyGrown : s.lockBody, s.notNow, false);
+      audience === "grownups" ? s.lockBodyGrown : s.lockBody, s.notNow, true);
   }
 
   /* A tap on the chip past the levels the free game reads. The stack stops
@@ -1278,7 +1271,7 @@
      the page is reached from a screen where nothing is falling. */
   function offerVoice() {
     pause();
-    openModal(t().voiceTitle, t().voiceBody, t().keepPlaying, false);
+    openModal(t().voiceTitle, t().voiceBody, t().keepPlaying, true);
   }
 
   // ------------------------------------------------------------- chrome

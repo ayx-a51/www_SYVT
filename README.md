@@ -28,28 +28,24 @@ line before the round ends. `--s` is the one factor that turns a design px
 into a screen px; the stylesheet and the physics both read it, so what is
 drawn and what is simulated cannot drift apart.
 
-Where the app would sell SYVT+, the page says it is coming instead. The
-Android app is not listed yet, so there is nowhere to send anyone: the line
-under START is a plain sentence rather than a link, and the three gates
-below open a card that says what SYVT+ is and that it is on its way, with
-one button — the way out — rather than a second one that would open
-nothing. The day it lists, `index.html` gets the two hrefs back and the
-three `openModal` calls in `syvt.js` pass `showBuy` true again; the wording
-of each string is what changes with them, and nothing else is.
+Where the app would sell SYVT+, the page points at the Play Store instead:
+the line under START links to the app's Play page, and the three gates below
+open a card that says what SYVT+ is, with a button to the same page beside
+the way out.
 
 - **Level 4** is the last free level, as on Android. At score 120 the round
-  pauses and the notice comes up once; dismissing it carries on at level 4 for
+  pauses and the offer comes up once; dismissing it carries on at level 4 for
   as long as the player likes. Level 5's words are still in `words.js`, out of
   reach, so moving the ceiling is `FREE_MAX_TIER` in `syvt.js` alone.
 - **Three worlds** are free across the two sides — Light for the grown-ups,
   Space and Day for the children — which is the app's own
   `Limits.freeThemes`. The other five sit in the picker with a padlock, and
-  tapping one opens the same notice, counted for the side it was tapped on:
+  tapping one opens the same offer, counted for the side it was tapped on:
   six worlds and four to open on the children's side, two and one on the
   grown-ups'.
 - **Levels 1 and 2** are read out loud, as on Android. The chip beside the
   pause button switches the voice; on the way into level 3 it goes quiet and
-  the chip dims, and a tap on it then pauses the round and opens the notice.
+  the chip dims, and a tap on it then pauses the round and opens the offer.
 
 The score stops counting at 120, which is the same moment. Play does not stop
 — the round runs until the stack reaches the ceiling — but every point after
@@ -62,7 +58,7 @@ is shown the same way in the app.
 Two smaller things follow from it. The level bar fills for the last time on
 the way to level four and then stays full, rather than sweeping every thirty
 points under a number that can never change. And the counter explains itself
-only if asked: the SYVT+ notice at 120 mentions it in passing, and a small
+only if asked: the SYVT+ offer at 120 mentions it in passing, and a small
 "i" beside the counter on the game-over panel opens a short "Why 120?" that
 answers the question without taking the chance to sell anything.
 
