@@ -6,7 +6,7 @@
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>SYVT</title>
-<meta name="description" content="SYVT &mdash; words fall, you sort them. Swipe right if it is spelled correctly, left if it is not. Two sides, one game: a meadow and a galaxy for the children, a quiet page for the grown-ups. Play the free levels here; SYVT+ is coming to Android.">
+<meta name="description" content="SYVT &mdash; words fall, you sort them. Swipe right if it is spelled correctly, left if it is not. Two sides, one game: a meadow and a galaxy for the children, a quiet page for the grown-ups. Play the free levels here; SYVT+ is on Google Play.">
 <meta name="theme-color" content="#1a1546">
 <!-- The tab icon is the mascot, rendered by make-icons.mjs from
      brand/favicon_drk.webp. The mark's own icons follow, kept but not
@@ -204,15 +204,12 @@
 
       <p id="legendText"></p>
 
-      <!-- Not a link while the app is not public: there is nowhere to send
-           anyone. When it lists, this becomes an <a> to the Play page again
-           and the three offers below pass showBuy true. -->
-      <p id="storeLink">
+      <a id="storeLink" href="https://play.google.com/store/apps/details?id=io.a51.syvt" target="_blank" rel="noopener noreferrer">
         <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-          <path d="M12 2.6a9.4 9.4 0 1 0 0 18.8 9.4 9.4 0 0 0 0-18.8Zm.9 4.7v5l3.4 2-.9 1.5-4.3-2.6V7.3Z"/>
+          <path d="M4 2.6 19 12 4 21.4Z"/>
         </svg>
         <span id="storeLinkLabel"></span>
-      </p>
+      </a>
     </div>
   </div>
 
@@ -221,10 +218,7 @@
     <div id="modalCard" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
       <h2 id="modalTitle"></h2>
       <p id="modalBody"></p>
-      <!-- hidden while the app is not public; openModal is passed showBuy
-           false everywhere, so nothing here promises a store that has no page
-           yet. Restore the href with the link above. -->
-      <a id="modalBuy" class="pill primary" hidden></a>
+      <a id="modalBuy" class="pill primary" href="https://play.google.com/store/apps/details?id=io.a51.syvt" target="_blank" rel="noopener noreferrer"></a>
       <button id="modalKeep" class="pill secondary" type="button"></button>
     </div>
   </div>

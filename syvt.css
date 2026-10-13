@@ -1425,9 +1425,8 @@ body {
   white-space: pre-line;
 }
 
-/* A <p> while the app is not listed, an <a> once it is. The margin has to be
-   written down for the paragraph - a link has none and this sits flush under
-   the legend - and the 44 px row is the tap target the link will want back. */
+/* The link to the Play page, flush under the legend; the 44 px row is its
+   tap target. */
 #storeLink {
   margin: 0;
   min-height: calc(44 * var(--s));
