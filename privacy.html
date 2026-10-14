@@ -37,7 +37,7 @@
   <div class="wrap pagehead">
     <p class="kicker">Legal</p>
     <h1>Privacy Policy</h1>
-    <p class="updated">Last updated: 16 September 2026</p>
+    <p class="updated">Last updated: 14 October 2026</p>
     <p class="intro">SYVT is a spelling game, for children and for anyone
     learning to spell. It plays with no connection at all, and an account is
     optional. This page says exactly what is stored, what is sent where, where
@@ -52,9 +52,10 @@
     <h2>Playing without an account</h2>
     <p>SYVT needs no sign-in. Used that way, everything the game remembers
     &mdash; the players on the device, their nicknames, avatars, chosen world
-    and language, best scores, rounds played, points and settings &mdash; is
-    written to the app's own storage on that device and nowhere else. We never
-    see it, and uninstalling the app deletes it.</p>
+    and language, best scores, rounds played, points, the days they played
+    and settings &mdash; is written to the app's own storage on that device
+    and nowhere else. We never see it, and uninstalling the app deletes
+    it.</p>
     <p>Three things can still reach the internet without an account: the
     spoken words and the date check, both described below, and a purchase,
     which Google Play handles.</p>
@@ -77,7 +78,11 @@
     number of rounds played, the points scored, when the player was made,
     whether words are read aloud, which country's German spelling counts as
     right, and the two paid settings &mdash; how much arithmetic is mixed in,
-    and which level a round starts at. It holds the player's sticker book too:
+    and which level a round starts at. It holds the days on which the player
+    earned a star (a day with a round of ten points or more, which is what
+    the star chain is counted from) and how many stars a week a parent has
+    asked of them, with the days that number was changed. It holds the
+    player's sticker book too:
     which stickers have been found and how many of each, how many the day's
     play has given for each level and world, and where each sticker is stuck
     on the album pages. Alongside those it holds the identifiers of players
@@ -111,9 +116,9 @@
     <p>SYVT carries no advertising, no analytics, no crash reporting and no
     third-party tracking or marketing software. It sets no cookies and reads no
     advertising identifier. Google Analytics is switched off in the Firebase
-    project. How a child plays stays on the device, apart from the scores and
-    settings described above while an account is signed in, and the spoken
-    words a device asks for, described below.</p>
+    project. How a child plays stays on the device, apart from the scores,
+    days played and settings described above while an account is signed in,
+    and the spoken words a device asks for, described below.</p>
 
     <h2>What the servers log</h2>
     <p>As with any app built on Firebase, Google records the IP address and the
@@ -153,6 +158,20 @@
     played; the only thing read from the reply is the date the server stamps
     on it. Cloudflare sees the IP address of that request as it does of any
     other. Offline, the tablet's own clock is used.</p>
+
+    <h2>The daily reminder</h2>
+    <p>SYVT can remind the children on a device to come and play, with one
+    notification a day at most. It is off until somebody says yes: the game
+    asks once, after the first round that earns a star, and a parent can
+    change the time or switch it off in the settings for parents. The
+    reminder is worked out and scheduled on the device itself, from what the
+    device already holds &mdash; which children have not played yet that day,
+    and the line SYVT says to them. Nothing is sent anywhere to make it or to
+    show it, and no push-notification service is involved. Its settings
+    &mdash; whether it is on, its time, and the reminders it has handed to the
+    device &mdash; stay on that device and are never backed up to an account.
+    On Android 13 and later the system asks for permission to show
+    notifications when the reminder is switched on, and not before.</p>
   </section>
 
   <section class="card">
@@ -201,8 +220,9 @@
     can end that itself: <strong>Settings (for parents) &rarr; Danger zone
     &rarr; Delete account</strong> removes the sign-in and everything backed
     up under it, straight away. The same danger zone wipes every player's
-    games, points and best scores, and deleting a player removes them from the
-    device and from the account on every device signed in to it. Data held
+    games, points, best scores and the days their star chains are counted
+    from, and deleting a player removes them from the device and from the
+    account on every device signed in to it. Data held
     only on a device goes when the app is uninstalled. The
     <a href="data_deletion.html">Data Deletion Policy</a> sets all of this out
     step by step.</p>
@@ -212,6 +232,8 @@
     so that a child gives nothing away in order to play. No account is needed.
     The only thing a child enters is a nickname of up to eight characters.
     There is no advertising, and nothing a child does is shown to anyone else.
+    The only notification is the daily reminder, which stays off until
+    somebody agrees to it and which a parent can switch off.
     Everything that costs money or leaves the app sits behind a parents' gate,
     a number written out in words to be typed back in digits; the one link out
     of the app, to Google Play's subscription settings, is behind it too. If
