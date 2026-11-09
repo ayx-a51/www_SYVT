@@ -406,8 +406,8 @@ Two rules from that spec shape this repo more than the rest:
 
 - **The mark and the name never appear together.** The name already contains
   the funnel. So a page shows one or the other, **counting the whole page and
-  not just the header**: the game panel, the two legal pages and the link
-  preview show the wordmark and nothing else; `404.html` shows the mark and
+  not just the header**: the game panel, the legal pages, the help page and
+  the link preview show the wordmark and nothing else; `404.html` shows the mark and
   does not set the name in type at all. The favicon is chrome rather than
   part of any lockup, which is why the mark on its plate could sit in the tab
   of a page that sets the name (at the moment the tab shows the mascot
@@ -540,21 +540,27 @@ round has started.
 Both fonts are SIL Open Font License; `OFL-Manrope.txt` and `OFL-Fredoka.txt`
 are the licences that requires be shipped with them.
 
-## Legal pages
+## Legal pages and help
 
-`privacy.html` and `data_deletion.html`, sharing `legal.css`. Google Play needs
-a privacy-policy URL before the Android app can be listed, and a deletion URL
-alongside it; these are the two, and the contact address on both is
-`hi@SYVT.me`. Both carry `default-src 'none'` and load nothing from a
+`privacy.html`, `data_deletion.html` and `support.html`, sharing `legal.css`.
+Google Play needs a privacy-policy URL before the Android app can be listed,
+and a deletion URL alongside it. The App Store needs two of its own in App
+Store Connect: the privacy policy (under App Information) and a support URL
+(on each version), which has to lead to a way of reaching us. A
+privacy-choices URL is optional there, and SYVT has none, since there is
+nothing to opt out of. App Review opens all of them, and a changed URL reaches
+the App Store only with the next app version, so each must be right before a
+submission rather than after. The contact address on all three is
+`hi@SYVT.me`. All three carry `default-src 'none'` and load nothing from a
 third party — not even a font, which on a privacy page would hand the reader's
 IP address to whoever served it. The game's own policy is one line wider than
 theirs; see **The voice** above.
 
 They are skinned in the **app's** palette, not this page's: the plate's own
 three violets and cream, from `lib/ui/marks.dart` in the Flutter repo, because
-these are the pages the Play listing links to and the app icon is what a
-reader arrives from. The band at the top is the plate itself — one centred
-radial, no highlight laid over it, which is why both pages set
+these are the pages the store listings and the app link to and the app icon is
+what a reader arrives from. The band at the top is the plate itself — one
+centred radial, no highlight laid over it, which is why all three set
 `theme-color: #2A1B84`, the plate's own mid tone.
 
 The wordmark in the header is built in HTML rather than drawn: Manrope
@@ -565,8 +571,35 @@ letter, and 34 px because the wordmark's floor is a 24 px cap height and
 which the brand does not allow. Its two margins are measured, not derived; see
 **One number the spec gets wrong** above and the comment in `legal.css`.
 
-Keep both pages true to what the app actually does, and in step with the
-app's `store/play/data-safety.md`, which Play compares with them. The claims
+### The help page
+
+`support.html` is the App Store's support URL and what the app's "Help and
+contact" link opens, from an iPhone and from Android alike (behind the
+parents' gate, as every link out of the app is). It is the one page in three
+languages: English first, under the page's own head, then German and French,
+each under a head of its own, with pills in the band that jump to `#en`, `#de`
+and `#fr` — so the app can open it straight at the reader's language. Help is
+what a German- or French-speaking parent acts on; the legal texts stay in
+English, because three versions of each would be three documents that must
+agree. German is spelled the Swiss way, as everywhere on this site, and every
+label in bold is the app's own word for it in that language: when the app
+renames a button, the page follows.
+
+It never tells an iPhone reader to buy anywhere but in the app (App Review
+guidelines 3.1.1 and 3.1.3). Each store's way to buy, restore and cancel is a
+section of its own, and SYVT+ crosses from one kind of device to the other
+only as the account's, which is what 3.1.3(b) allows.
+
+Its foot is the one place the site says who makes SYVT: a legal name and a
+postal address beside `hi@SYVT.me`. App Store Connect asks for contact details
+where local law requires them, and shows a trader's address, phone number and
+email on the EU product pages under the Digital Services Act; the page gives
+the same name and address. Until the owner writes them in they are
+placeholders, marked in coral so that they cannot be missed, and the page is
+not finished while one shows.
+
+Keep the three pages true to what the app actually does, and in step with
+the app's `store/play/data-safety.md`, which Play compares with them. The claims
 that matter, and that would need editing if the app changed: no ads, no
 analytics, no crash reporting, no third-party trackers; the account is
 optional, signs in with an email address or a Google account, and holds only

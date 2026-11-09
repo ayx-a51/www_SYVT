@@ -1,9 +1,10 @@
-/* Shared styles for the SYVT legal pages (privacy, data deletion).
+/* Shared styles for the SYVT legal pages (privacy, data deletion) and the
+   help page.
 
    Colour and shape come from the app itself — the launcher plate's violet
    gradient, the cream panels, and the mint/coral pair that means "right" and
    "wrong" all over the game (lib/ui/marks.dart, Brand and Ink). Kept in one
-   file, linked from both pages, so they cannot drift apart.
+   file, linked from all three pages, so they cannot drift apart.
 
    Manrope is self-hosted, the same file the game already ships: these are
    the privacy pages, and pulling a font from a third party to render them
@@ -139,11 +140,13 @@ main{margin-top:calc(-1 * clamp(30px,5vw,56px));padding-bottom:8px}
   padding:clamp(22px,3.6vw,36px);
   margin-bottom:clamp(14px,2vw,20px);
 }
-.card h2{
+/* h3 for the help page, whose German and French topics sit one level under
+   their language's own head; drawn exactly as the legal pages' h2. */
+.card h2,.card h3{
   font-size:1.0625rem;font-weight:800;line-height:1.3;
   margin-top:2.2em;color:var(--ink);letter-spacing:-.005em;
 }
-.card > h2:first-child{margin-top:0}
+.card > h2:first-child,.card > h3:first-child{margin-top:0}
 .card p{color:var(--ink-soft);margin-top:.75em;max-width:66ch}
 .card ul,.card ol{color:var(--ink-soft);margin-top:.75em;padding-left:1.4em;max-width:66ch}
 .card li{margin-top:.5em}
@@ -170,6 +173,42 @@ code{
   font-size:.9em;font-weight:700;
   font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
   white-space:nowrap;
+}
+
+/* ---------- the help page ----------
+   Three languages on one URL. English comes first, under the page's own head;
+   German and French follow, each opened by a head of its own on the ground,
+   and the pills in the band jump to each. The app can link straight to one
+   (support.html#de). */
+.langs{display:flex;flex-wrap:wrap;gap:8px;margin-top:1.3em}
+.langs a{
+  text-decoration:none;font-weight:700;font-size:.875rem;letter-spacing:.02em;
+  border:1.5px solid rgba(255,247,230,.34);
+  background:rgba(255,255,255,.10);
+  border-radius:999px;padding:.45em 1.15em;white-space:nowrap;
+}
+.langs a:hover{background:rgba(255,255,255,.20);border-color:rgba(255,247,230,.6)}
+
+/* A jump lands with a little air above the head rather than flush with the
+   top of the window. */
+#en,#de,#fr,#contact{scroll-margin-top:16px}
+.part{margin:clamp(44px,7vw,72px) 0 clamp(16px,2.4vw,22px)}
+/* the band's kicker turned round: cream on the plate's mid violet, since
+   this one stands on the ground */
+.part .kicker{color:var(--cream);background:var(--violet-mid)}
+.part h2{
+  margin-top:.5em;
+  font-size:clamp(1.6rem,4.4vw,2.2rem);font-weight:800;line-height:1.12;
+  letter-spacing:-.02em;color:var(--ink);
+}
+
+address{font-style:normal;color:var(--ink-soft);margin-top:.75em;line-height:1.8}
+/* What the owner still has to fill in, made impossible to miss: a page that
+   goes live with one of these showing is not finished. */
+.todo{
+  color:#9F1239;background:#FFE4E8;
+  border:1.5px dashed var(--coral);border-radius:6px;
+  padding:0 .45em;font-weight:700;
 }
 
 /* ---------- footer ---------- */
