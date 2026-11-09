@@ -407,8 +407,8 @@ Two rules from that spec shape this repo more than the rest:
 - **The mark and the name never appear together.** The name already contains
   the funnel. So a page shows one or the other, **counting the whole page and
   not just the header**: the game panel, the legal pages, the help page and
-  the link preview show the wordmark and nothing else; `404.html` shows the mark and
-  does not set the name in type at all. The favicon is chrome rather than
+  the link preview show the wordmark and nothing else; `404.html` shows the
+  mark and does not set the name in type at all. The favicon is chrome rather than
   part of any lockup, which is why the mark on its plate could sit in the tab
   of a page that sets the name (at the moment the tab shows the mascot
   instead; see below). The legal footers used to
