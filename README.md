@@ -598,15 +598,42 @@ the same name and address. Until the owner writes them in they are
 placeholders, marked in coral so that they cannot be missed, and the page is
 not finished while one shows.
 
-Keep the three pages true to what the app actually does, and in step with
-the app's `store/play/data-safety.md`, which Play compares with them. The claims
-that matter, and that would need editing if the app changed: no ads, no
-analytics, no crash reporting, no third-party trackers; the account is
-optional, signs in with an email address or a Google account, and holds only
-nicknames, avatars, scores and settings; a signed-in purchase is checked with
-Google Play and recorded against the account; the spoken words come from
-`audio.syvt.me` on Cloudflare, with no account or device id in the request;
-Firestore is in the European multi-region and the callable functions in
-Zurich; and the app's own danger zone (Settings for parents, held open at the
-bottom) deletes the account, its backup and every player's statistics, with
-the email request kept only for someone who cannot open the app.
+### Keeping them true
+
+Keep the three pages true to what the app actually does, on both kinds of
+device, and in step with the documents the stores compare them with. These
+have to agree, and a change to one is a change to all of them:
+
+- `privacy.html`, `data_deletion.html` and `support.html` here;
+- `store/play/data-safety.md` in the app repo, Play's Data safety answers;
+- `store/appstore/app-privacy.md`, the App Store's App Privacy answers, and
+  `ios/Runner/PrivacyInfo.xcprivacy`, which declares the same data;
+- the "FOR PARENTS" blocks of both listings, `store/play/listing.md` and
+  `store/appstore/listing.md`.
+
+The claims that matter, and that would need editing if the app changed: no
+ads, no analytics, no crash reporting, no third-party trackers, and no asking
+to track on an iPhone; the account is optional, signs in with an email
+address, a Google account or, on an iPhone or iPad, Sign in with Apple (asked
+for the address only, which may be a private relay), and holds only
+nicknames, avatars, scores and settings; App Check vouches for the app through
+Play Integrity on Android and App Attest or DeviceCheck on Apple devices; a
+signed-in Play purchase is checked with Google Play and recorded against the
+account, and a signed-in App Store purchase is checked by Apple's signature,
+with Apple's notifications for what becomes of it and no key to ask Apple
+anything; an App Store purchase made without an account stays on the device,
+and a family member's shared copy is never kept with an account; the reminder
+and the star-chain widget send nothing anywhere; the voice's recordings are
+kept out of an iPhone's backups; the spoken words come from `audio.syvt.me`
+on Cloudflare, with no account or device id in the request; Firestore is in
+the European multi-region and the functions in Zurich; and the app's own
+danger zone (Settings for parents, held open at the bottom) deletes the
+account and all of its server data, with the email request kept only for
+someone who cannot open the app.
+
+That last claim rests on the app's `accountDeleted` trigger, which takes the
+grant, the purchase records and the codes with the account
+(`functions/account-deletion.js` in the app repo). It is true from the deploy
+of the functions that carry it, which is why pages saying so go live after
+that deploy and never before; were the trigger ever taken away, the deletion
+texts would have to say again what outlasts an account.
