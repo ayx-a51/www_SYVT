@@ -1,10 +1,10 @@
-/* The three worlds the free game plays in, drawn the way the Android game
-   draws them, plus a thumbnail for all eight.
+/* The three worlds the free game plays in, drawn the way the app draws
+   them, plus a thumbnail for all eight.
 
    The game has two sides, and each side's free worlds are here: Light for
    the grown-ups, Space and Day for the children, which is the app's own
    `Limits.freeThemes`. The other five - Dark, Night, Aquarium, Princess
-   Castle and Dinosaurs - are SYVT+ on Android and appear in the picker as a
+   Castle and Dinosaurs - are SYVT+ in the app and appear in the picker as a
    thumbnail behind a padlock, so nothing below draws them moving.
 
    Everything is in the app's design space, 420 x 746.67. The canvases are
@@ -301,7 +301,7 @@
   };
 
   // ============================================================== AQUARIUM
-  /* Aquarium is SYVT+ on Android, so the page shows its thumbnail and
+  /* Aquarium is SYVT+ in the app, so the page shows its thumbnail and
      nothing else. Its water is kept here because the thumbnail is painted
      from it; the world itself lived here until the app made Space and Day
      the children's free pair, and it is in this file's history. */

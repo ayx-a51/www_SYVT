@@ -1,10 +1,11 @@
-/* SYVT on the web: the Android game's free tier, rule for rule.
+/* SYVT on the web: the app's free tier, rule for rule.
 
    Everything the app's free player gets is here — both sides of the game
    and the three worlds open across them, all three languages, levels 1 to 4,
    the same words, the same sums, the same fall speeds. Where the app would
-   sell SYVT+, this points at the Play Store instead: a locked world, the end
-   of level 4, or the voice going quiet.
+   sell SYVT+, this points at the visitor's own store instead — the App Store
+   on an iPhone or an iPad, Google Play on Android, both anywhere else — at a
+   locked world, the end of level 4, or the voice going quiet.
 
    Which side is being played is the page's own answer to a setting the app
    keeps per player: there are no players here, so it is a switch on the
@@ -44,9 +45,12 @@
     : { frame: function () {}, arrive: function () {}, leave: function () {},
         pokeAtPoint: function () { return false; }, pointOf: function () { return null; } };
   var startBtn = $("startBtn"), legendText = $("legendText");
-  var storeLinkLabel = $("storeLinkLabel");
+  var storeRow = $("storeRow"), storeLink = $("storeLink");
+  var storeLinkLabel = $("storeLinkLabel"), storeLinkMore = $("storeLinkMore");
   var modal = $("modal"), modalTitle = $("modalTitle"), modalBody = $("modalBody");
-  var modalBuy = $("modalBuy"), modalKeep = $("modalKeep");
+  var modalBadge = $("modalBadge");
+  var modalBadgeImg = modalBadge.appendChild(document.createElement("img"));
+  var modalApple = $("modalApple"), modalBuy = $("modalBuy"), modalKeep = $("modalKeep");
   var scoreInfo = $("scoreInfo");
   var voiceBtn = $("voiceBtn");
 
@@ -68,22 +72,24 @@
       level: "Level", start: "Start", again: "Play again",
       over: "Stack Overflow", scoreLbl: "Score", bestLbl: "Best",
       paused: "Paused", resume: "Continue", quit: "End round", pauseAction: "Pause",
-      store: "SYVT+ on Google Play",
+      // App Store is Apple's mark and stays in English in every language
+      storeApple: "SYVT+ on the App Store", storePlay: "SYVT+ on Google Play",
+      storePlayToo: "on Google Play", badge: "Download on the App Store",
       buy: "Get SYVT+", notNow: "Not now", keepPlaying: "Keep playing",
       capTitle: "Level {level} reached!",
-      capBody: "That is the last level of the free game. With SYVT+ on Android the words go on to level 10 — or keep playing here for as long as you like, with anything past {score} is counted beside your score.",
+      capBody: "That is the last level of the free game. With SYVT+ in the app the words go on to level 10 — or keep playing here for as long as you like, with anything past {score} counted beside your score.",
       counterTitle: "Why {score}?",
       counterBody: "{score} is the whole free game: four levels of thirty points. Past that the words stay at level {level}, so those points come easier — they are counted beside your score rather than in it, so that every {score} means the same thing.",
       gotIt: "Got it",
       audienceKids: "Kids", audienceGrown: "Grown-ups",
-      lockBodyGrown: "This world is part of SYVT+: both of the grown-ups’ worlds and ten levels, in the Android app.",
+      lockBodyGrown: "This world is part of SYVT+: both of the grown-ups’ worlds and ten levels, in the app.",
       lockTitle: "A SYVT+ world",
-      lockBody: "This world is part of SYVT+: six worlds and ten levels, in the Android app.",
+      lockBody: "This world is part of SYVT+: six worlds and ten levels, in the app.",
       voiceSetting: "Read words aloud",
       voiceOffline: "Needs a connection",
       voiceNeedsPlus: "SYVT+ reads the higher levels",
       voiceTitle: "A SYVT+ voice",
-      voiceBody: "The free game reads the words out on levels 1 and 2. SYVT+ goes on reading them all the way up — in the Android app."
+      voiceBody: "The free game reads the words out on levels 1 and 2. SYVT+ goes on reading them all the way up — in the app."
     },
     de: {
       tagline: "Wörter fallen vom Himmel. Wische nach rechts, wenn ein Wort richtig geschrieben ist — nach links, wenn es falsch ist.",
@@ -92,22 +98,23 @@
       level: "Stufe", start: "Los", again: "Nochmal",
       over: "Stack Overflow", scoreLbl: "Punkte", bestLbl: "Rekord",
       paused: "Pausiert", resume: "Weiter", quit: "Runde beenden", pauseAction: "Pause",
-      store: "SYVT+ bei Google Play",
+      storeApple: "SYVT+ im App Store", storePlay: "SYVT+ bei Google Play",
+      storePlayToo: "bei Google Play", badge: "Laden im App Store",
       buy: "SYVT+ holen", notNow: "Nicht jetzt", keepPlaying: "Weiterspielen",
       capTitle: "Level {level} geschafft!",
-      capBody: "Das ist das letzte Level der Gratis-Version. Mit SYVT+ für Android geht es weiter bis Level 10 — oder du spielst hier weiter, so lange du magst; alles über {score} wird neben deinem Punktestand gezählt.",
+      capBody: "Das ist das letzte Level der Gratis-Version. Mit SYVT+ in der App geht es weiter bis Level 10 — oder du spielst hier weiter, so lange du magst; alles über {score} wird neben deinem Punktestand gezählt.",
       counterTitle: "Warum {score}?",
       counterBody: "{score} ist die ganze Gratis-Version: vier Level à dreissig Punkte. Danach bleiben die Wörter auf Level {level}, diese Punkte sind also leichter — sie werden neben deinem Punktestand gezählt und nicht darin, damit {score} überall dasselbe bedeutet.",
       gotIt: "Alles klar",
       audienceKids: "Kinder", audienceGrown: "Erwachsene",
-      lockBodyGrown: "Diese Welt gehört zu SYVT+: beide Welten für Erwachsene und zehn Level, in der Android-App.",
+      lockBodyGrown: "Diese Welt gehört zu SYVT+: beide Welten für Erwachsene und zehn Level, in der App.",
       lockTitle: "Eine SYVT+ Welt",
-      lockBody: "Diese Welt gehört zu SYVT+: sechs Welten und zehn Level, in der Android-App.",
+      lockBody: "Diese Welt gehört zu SYVT+: sechs Welten und zehn Level, in der App.",
       voiceSetting: "Wörter vorlesen",
       voiceOffline: "Braucht eine Verbindung",
       voiceNeedsPlus: "SYVT+ liest auch die höheren Level vor",
       voiceTitle: "Eine SYVT+ Stimme",
-      voiceBody: "Gratis werden die Wörter auf Level 1 und 2 vorgelesen. Mit SYVT+ geht es bis nach oben weiter — in der Android-App."
+      voiceBody: "Gratis werden die Wörter auf Level 1 und 2 vorgelesen. Mit SYVT+ geht es bis nach oben weiter — in der App."
     },
     fr: {
       tagline: "Des mots tombent du ciel. Glisse à droite si un mot est bien orthographié — à gauche s’il est mal écrit.",
@@ -116,22 +123,23 @@
       level: "Niveau", start: "Démarrer", again: "Rejouer",
       over: "Stack Overflow", scoreLbl: "Score", bestLbl: "Record",
       paused: "En pause", resume: "Continuer", quit: "Terminer la partie", pauseAction: "Pause",
-      store: "SYVT+ sur Google Play",
+      storeApple: "SYVT+ dans l’App Store", storePlay: "SYVT+ sur Google Play",
+      storePlayToo: "sur Google Play", badge: "Télécharger dans l’App Store",
       buy: "Passer à SYVT+", notNow: "Pas maintenant", keepPlaying: "Continuer à jouer",
       capTitle: "Niveau {level} atteint !",
-      capBody: "C’est le dernier niveau de la version gratuite. Avec SYVT+ sur Android les mots continuent jusqu’au niveau 10 — ou reste ici aussi longtemps que tu veux ; tout ce qui dépasse {score} est compté à côté de ton score.",
+      capBody: "C’est le dernier niveau de la version gratuite. Avec SYVT+ dans l’app les mots continuent jusqu’au niveau 10 — ou reste ici aussi longtemps que tu veux ; tout ce qui dépasse {score} est compté à côté de ton score.",
       counterTitle: "Pourquoi {score} ?",
       counterBody: "{score}, c’est tout le jeu gratuit : quatre niveaux de trente points. Ensuite les mots restent au niveau {level}, donc ces points-là sont plus faciles — ils sont comptés à côté de ton score et non dedans, pour que {score} veuille toujours dire la même chose.",
       gotIt: "Compris",
       audienceKids: "Enfants", audienceGrown: "Adultes",
-      lockBodyGrown: "Ce monde fait partie de SYVT+ : les deux mondes pour adultes et dix niveaux, dans l’app Android.",
+      lockBodyGrown: "Ce monde fait partie de SYVT+ : les deux mondes pour adultes et dix niveaux, dans l’app.",
       lockTitle: "Un monde SYVT+",
-      lockBody: "Ce monde fait partie de SYVT+ : six mondes et dix niveaux, dans l’app Android.",
+      lockBody: "Ce monde fait partie de SYVT+ : six mondes et dix niveaux, dans l’app.",
       voiceSetting: "Lire les mots à voix haute",
       voiceOffline: "Nécessite une connexion",
       voiceNeedsPlus: "SYVT+ lit aussi les niveaux supérieurs",
       voiceTitle: "Une voix SYVT+",
-      voiceBody: "La version gratuite lit les mots aux niveaux 1 et 2. SYVT+ continue jusqu’en haut — dans l’app Android."
+      voiceBody: "La version gratuite lit les mots aux niveaux 1 et 2. SYVT+ continue jusqu’en haut — dans l’app."
     }
   };
 
@@ -1220,13 +1228,110 @@
     voice.warm(inAirWords(), lang);
   }
 
+  // -------------------------------------------------------------- stores
+
+  /* Where SYVT+ is bought: the App Store on an iPhone or an iPad, Google
+     Play on Android, and both, the App Store first, anywhere else.
+
+     The App Store's numeric id for SYVT lives in one place, the Smart App
+     Banner tag in index.html, and is read from there. While that tag is
+     commented out, as it is until the iPhone app is released, there is no
+     App Store to send anybody to, and every visitor gets Google Play, as
+     before; a tag still holding its placeholder counts as no tag. */
+  var PLAY_URL = "https://play.google.com/store/apps/details?id=io.a51.syvt";
+  var APP_STORE_URL = (function () {
+    var tag = document.querySelector('meta[name="apple-itunes-app"]');
+    var id = tag && /(?:^|[\s,])app-id=(\d+)(?:$|[\s,])/.exec(tag.getAttribute("content") || "");
+    return id ? "https://apps.apple.com/app/id" + id[1] : "";
+  })();
+
+  /* Decided once, as the page starts, from the user agent alone. iPadOS's
+     Safari calls itself a Mac, so a Mac that takes more than one touch
+     point is taken for the iPad it is: no Mac has a touch screen. */
+  function storesFor(ua, touchPoints, appStore) {
+    if (!appStore) return ["play"];
+    if (/iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && touchPoints > 1)) {
+      return ["appStore"];
+    }
+    if (/Android/.test(ua)) return ["play"];
+    return ["appStore", "play"];
+  }
+  var stores = storesFor(navigator.userAgent || "", navigator.maxTouchPoints || 0,
+                         APP_STORE_URL !== "");
+  var sellsApple = stores.indexOf("appStore") !== -1;
+  var sellsPlay = stores.indexOf("play") !== -1;
+  var bothStores = sellsApple && sellsPlay;
+  if (sellsApple) {
+    modalBadge.href = APP_STORE_URL;
+    modalApple.href = APP_STORE_URL;
+  }
+
+  /* The line under START: the visitor's store by name, and where there are
+     two, the second link carrying on the first one's sentence. */
+  function applyStores() {
+    var s = t();
+    storeLink.href = sellsApple ? APP_STORE_URL : PLAY_URL;
+    storeLinkLabel.textContent = sellsApple ? s.storeApple : s.storePlay;
+    storeRow.classList.toggle("both", bothStores);
+    storeLinkMore.hidden = !bothStores;
+    storeLinkMore.href = PLAY_URL;
+    storeLinkMore.textContent = s.storePlayToo;
+    // heard on its own, "on Google Play" would not say what is there
+    storeLinkMore.setAttribute("aria-label", s.storePlay);
+    loadBadge();
+  }
+
+  /* The App Store's way in on the offer card is Apple's badge: Apple's own
+     artwork in the page's language, from Apple's marketing tools and never
+     drawn here (README, "Which store"). Until it has loaded, and wherever it
+     cannot, a plain pill stands in for it, so a missing file costs a
+     picture, never the way to the store. */
+  var badgeLoaded = false;
+
+  function loadBadge() {
+    if (!sellsApple) return;
+    var src = "img/badges/app-store-" + lang + ".svg";
+    modalBadgeImg.alt = t().badge;
+    if (modalBadgeImg.getAttribute("src") === src) return;
+    badgeLoaded = false;
+    modalBadgeImg.src = src;
+  }
+
+  modalBadgeImg.addEventListener("load", function () {
+    badgeLoaded = true;
+    if (!modal.hidden) storeButtons();
+  });
+  modalBadgeImg.addEventListener("error", function () {
+    badgeLoaded = false;
+    if (!modal.hidden) storeButtons();
+  });
+
   // --------------------------------------------------------- the offer
+
+  // whether the card that is up offers SYVT+ at all; the "Why 120?" one
+  // explains and sells nothing
+  var buyOffered = false;
+
+  /* The card's ways to the store. With one store, its badge or its pill
+     leads the card. With two, Apple's badge comes first, as Apple asks of a
+     row of stores, and Google Play's pill stands beside it, quiet and named,
+     so that neither reads as the card's one answer. */
+  function storeButtons() {
+    var s = t();
+    modalBadge.hidden = !(buyOffered && sellsApple && badgeLoaded);
+    modalApple.hidden = !(buyOffered && sellsApple && !badgeLoaded);
+    modalApple.className = "pill " + (bothStores ? "secondary" : "primary");
+    modalApple.textContent = bothStores ? s.storeApple : s.buy.toUpperCase();
+    modalBuy.hidden = !(buyOffered && sellsPlay);
+    modalBuy.className = "pill " + (bothStores ? "secondary" : "primary");
+    modalBuy.textContent = bothStores ? s.storePlay : s.buy.toUpperCase();
+  }
 
   function openModal(title, body, keepLabel, showBuy) {
     modalTitle.textContent = title;
     modalBody.textContent = body;
-    modalBuy.textContent = t().buy.toUpperCase();
-    modalBuy.hidden = showBuy === false;
+    buyOffered = showBuy !== false;
+    storeButtons();
     // with nothing to buy, the way out leads the panel instead of sitting
     // under an offer
     modalKeep.className = "pill " + (showBuy === false ? "primary" : "secondary");
@@ -1416,7 +1521,7 @@
     $("hintRight").textContent = s.hintRight;
     scoreKicker.textContent = s.scoreLbl.toUpperCase();
     legendText.textContent = s.legend;
-    storeLinkLabel.textContent = s.store;
+    applyStores();
     pauseBtn.setAttribute("aria-label", s.pauseAction);
     scoreInfo.setAttribute("aria-label", cap(s.counterTitle));
     resumeBtn.textContent = s.resume.toUpperCase();

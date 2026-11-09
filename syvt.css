@@ -1,8 +1,8 @@
-/* SYVT for the web — the free version of the Android game, skinned to match
+/* SYVT for the web — the free version of the app's game, skinned to match
    it. The game has two sides, and both are here: the grown-ups' Light and
    the children's Space and Day are playable, which is the app's own free
-   set; Dark, Night, Aquarium, Princess Castle and Dinosaurs, and levels 6 to
-   10, are SYVT+ on Android.
+   set; Dark, Night, Aquarium, Princess Castle and Dinosaurs, and levels 5 to
+   10, are SYVT+ in the app.
 
    Everything is drawn in the app's design space, 420 x 746.67 design px,
    scaled to fit the viewport. --s is design px per CSS px and is written by
@@ -1425,9 +1425,17 @@ body {
   white-space: pre-line;
 }
 
-/* The link to the Play page, flush under the legend; the 44 px row is its
-   tap target. */
-#storeLink {
+/* The link to the visitor's store, flush under the legend; the 44 px row is
+   its tap target. Where there are two stores the second link carries on the
+   first one's sentence after a middle dot, and the two close up so that they
+   read as one line. */
+#storeRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+.store {
   margin: 0;
   min-height: calc(44 * var(--s));
   padding: 0 calc(16 * var(--s));
@@ -1441,6 +1449,13 @@ body {
   color: var(--legend-text);
   text-decoration: none;
 }
+/* .store carries its own display, which outranks the user agent's [hidden] */
+.store[hidden] { display: none; }
+/* the dot gets the same air either side: the second link's padding before
+   it, and the link's own gap after it */
+#storeRow.both #storeLink { padding-right: 0; }
+#storeRow.both #storeLinkMore { padding-left: calc(7 * var(--s)); }
+#storeLinkMore::before { content: "\00B7"; }
 #storeLink svg { width: calc(14 * var(--s)); height: calc(14 * var(--s)); flex: none; }
 #storeLink path { fill: var(--ring); }
 
@@ -1493,6 +1508,23 @@ body {
 #modalCard .pill { width: 100%; }
 /* .pill carries its own display, which outranks the user agent's [hidden] */
 #modalCard .pill[hidden] { display: none; }
+
+/* Apple's badge, kept the way the App Store's marketing guidelines ask: its
+   own artwork at its own proportions, never under 40 px tall on any screen,
+   a quarter of its height clear all round, and one to a card. It sits in the
+   column centred, where the pills stretch. */
+#modalBadge {
+  align-self: center;
+  display: flex;
+  padding: max(10px, calc(11 * var(--s)));
+  border-radius: calc(12 * var(--s));
+}
+#modalBadge[hidden] { display: none; }
+#modalBadge img {
+  display: block;
+  height: max(40px, calc(44 * var(--s)));
+  width: auto;
+}
 
 /* -------------------------------------------------------------- motion */
 

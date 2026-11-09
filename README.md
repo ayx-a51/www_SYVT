@@ -14,10 +14,10 @@ domain.
 
 ## The page is the app's free tier
 
-The web game started as the original; the Android app grew out of it and then
-past it. It has since been rebuilt the other way round — the page is now a
-teaser for the app, and looks and plays like its free tier, so what a visitor
-tries here is what they would install.
+The web game started as the original; the app grew out of it, on Android
+first, and then past it. It has since been rebuilt the other way round — the
+page is now a teaser for the app, and looks and plays like its free tier, so
+what a visitor tries here is what they would install.
 
 Same numbers, taken from the Flutter source and not re-tuned: the 420 × 746.67
 design space, `kPerLevel = 30`, `fallSpeed(t) = 55 + 14t`,
@@ -28,12 +28,13 @@ line before the round ends. `--s` is the one factor that turns a design px
 into a screen px; the stylesheet and the physics both read it, so what is
 drawn and what is simulated cannot drift apart.
 
-Where the app would sell SYVT+, the page points at the Play Store instead:
-the line under START links to the app's Play page, and the three gates below
-open a card that says what SYVT+ is, with a button to the same page beside
-the way out.
+Where the app would sell SYVT+, the page points at the visitor's own store
+instead: the line under START names it and links to it, and the three gates
+below open a card that says what SYVT+ is, with the way to the store beside
+the way out. Which store that is, is decided once, as the page starts; see
+**Which store** below.
 
-- **Level 4** is the last free level, as on Android. At score 120 the round
+- **Level 4** is the last free level, as in the app. At score 120 the round
   pauses and the offer comes up once; dismissing it carries on at level 4 for
   as long as the player likes. Level 5's words are still in `words.js`, out of
   reach, so moving the ceiling is `FREE_MAX_TIER` in `syvt.js` alone.
@@ -43,7 +44,7 @@ the way out.
   tapping one opens the same offer, counted for the side it was tapped on:
   six worlds and four to open on the children's side, two and one on the
   grown-ups'.
-- **Levels 1 and 2** are read out loud, as on Android. The chip beside the
+- **Levels 1 and 2** are read out loud, as in the app. The chip beside the
   pause button switches the voice; on the way into level 3 it goes quiet and
   the chip dims, and a tap on it then pauses the round and opens the offer.
 
@@ -81,7 +82,7 @@ way the browser's country writes it. Switzerland and Liechtenstein have no
 eszett, so the words fall as *Strasse* only where the browser's German, or
 failing any German the browser itself, is in one of those two; everywhere
 else they fall as *Straße*, and a browser that names no country keeps the
-list's own Swiss spelling. In the app a parent can change it per player; the
+list's own Swiss spelling. In the app a parent sets it for the family; the
 page has no switch, so the browser alone decides. The voice says Germany's
 form either way, as the app's does.
 
@@ -89,6 +90,58 @@ A word or sum joins the anti-repeat memory only once its tile is placed, as
 in the app. A crowded field refuses a spawn every frame until a column
 clears, and while the memory took words at the draw, each refusal pushed out
 a word that had really fallen.
+
+## Which store
+
+SYVT+ is sold in the app, through the App Store on an iPhone or an iPad and
+through Google Play on Android, and the page sends each visitor to their own:
+an iPhone, an iPad or an iPod touch to the App Store, Android to Google Play,
+and anything else, a computer, to both, the App Store first. An iPad's Safari
+says it is a Mac, so a Mac that takes more than one touch point is taken for
+the iPad it is; no Mac has a touch screen. It is decided once, as the page
+starts, from the user agent alone (`storesFor` in `syvt.js`).
+
+The line under START names the store: "SYVT+ on the App Store", "SYVT+ on
+Google Play", or on a computer "SYVT+ on the App Store · on Google Play", two
+links that read as one sentence. On the offer card the App Store's way in is
+**Apple's own badge**, and Google Play's is the GET SYVT+ pill; on a computer
+the badge comes first and Google Play's pill steps back to a quiet one beside
+it, named, so that neither reads as the card's one answer. The texts around
+them say "in the app" and never which one, in all three languages, and App
+Store is never translated: "im App Store", "dans l’App Store".
+
+The badge is Apple's artwork and is never drawn here. Its files are
+`img/badges/app-store-en.svg`, `app-store-de.svg` and `app-store-fr.svg`:
+Apple's black "Download on the App Store" badge in the three languages,
+unmodified, exactly as
+[Apple's marketing tools](https://toolbox.marketingtools.apple.com/app-store/)
+hand it out, and from nowhere else. The black one, because another store's way
+in can stand beside it. What Apple's guidelines ask of it is kept in
+`syvt.css`: never under 40 px tall on any screen, a quarter of its height
+clear all round, one to a card, and first in a row of stores. Apple also asks
+for a credit line once, wherever a site gives its legal notice, which here is
+the foot of the help page. A badge that cannot load, not there yet or not in
+that language, leaves a plain pill in its place, so a missing file costs a
+picture and never the way to the store.
+
+The App Store's id for SYVT lives in one place, the Smart App Banner tag in
+`index.html`, and `syvt.js` reads it from there. While that tag is commented
+out there is no App Store to send anybody to, and every visitor gets Google
+Play, as before the iPhone app. On release day the tag goes live with the
+app's Apple ID (App Store Connect, App Information) in place of `APPLE_ID`,
+which switches on the banner and the links together; a tag still holding
+`APPLE_ID` switches on neither. The iPhone app is released by hand for that
+reason (the app repo's README, "Releasing on the App Store"), so the page
+never sends an iPhone to an app that is not there yet. Safari would hide the
+banner until then anyway: it shows it only on a device the app runs on, in a
+country where it can be had, never in the Simulator, and never again once
+closed.
+
+The banner is on the game page only. Whoever reads the legal pages, the help
+page or a 404 came from the store or the app, and is not sold the app a
+second time. Safari shows it above the page, and closing it makes the page
+taller; the field re-measures on that resize as on any other, mid-round
+included.
 
 ## The two sides
 
