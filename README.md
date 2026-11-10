@@ -408,12 +408,12 @@ Two rules from that spec shape this repo more than the rest:
   the funnel. So a page shows one or the other, **counting the whole page and
   not just the header**: the game panel, the legal pages, the help page and
   the link preview show the wordmark and nothing else; `404.html` shows the
-  mark and does not set the name in type at all. The favicon is chrome rather than
-  part of any lockup, which is why the mark on its plate could sit in the tab
-  of a page that sets the name (at the moment the tab shows the mascot
-  instead; see below). The legal footers used to
-  carry the mark as a small tile while their headers carried the name, which
-  is exactly the shape this rule forbids — do not put it back.
+  mark and does not set the name in type at all. The favicon is chrome
+  rather than part of any lockup, which is why the mark on its plate could
+  sit in the tab of a page that sets the name (at the moment the tab shows
+  the mascot instead; see below). The legal footers used to carry the mark
+  as a small tile while their headers carried the name, which is exactly the
+  shape this rule forbids — do not put it back.
 - **The Y is exactly the colour of the letters around it** — never coral,
   never mint, never a second tone. On the game panel the letters take the
   theme's gradient through `background-clip: text`, which cannot reach an
