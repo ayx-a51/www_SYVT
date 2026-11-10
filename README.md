@@ -620,20 +620,28 @@ nicknames, avatars, scores and settings; App Check vouches for the app through
 Play Integrity on Android and App Attest or DeviceCheck on Apple devices; a
 signed-in Play purchase is checked with Google Play and recorded against the
 account, and a signed-in App Store purchase is checked by Apple's signature,
-with Apple's notifications for what becomes of it and no key to ask Apple
-anything; an App Store purchase made without an account stays on the device,
-and a family member's shared copy is never kept with an account; the reminder
-and the star-chain widget send nothing anywhere; the voice's recordings are
-kept out of an iPhone's backups; the spoken words come from `audio.syvt.me`
-on Cloudflare, with no account or device id in the request; Firestore is in
-the European multi-region and the functions in Zurich; and the app's own
-danger zone (Settings for parents, held open at the bottom) deletes the
-account and all of its server data, with the email request kept only for
-someone who cannot open the app.
+with no key to ask Apple anything; Apple's notifications tell the server about
+every App Store purchase, account or none, and one that no account holds is
+kept on a record that names nobody, with no end date, so that a refund heard
+first still counts when the purchase is brought into an account; a family
+member's shared copy is never kept at all; the reminder and the star-chain
+widget send nothing anywhere; the voice's recordings are kept out of an
+iPhone's backups; the spoken words come from `audio.syvt.me` on Cloudflare,
+with no account or device id in the request; Firestore is in the European
+multi-region and the functions in Zurich; and the app's own danger zone
+(Settings for parents, held open at the bottom) deletes the account and all
+of its server data, with the email request kept only for someone who cannot
+open the app.
 
 That last claim rests on the app's `accountDeleted` trigger, which takes the
 grant, the purchase records and the codes with the account
 (`functions/account-deletion.js` in the app repo). It is true from the deploy
 of the functions that carry it, which is why pages saying so go live after
 that deploy and never before; were the trigger ever taken away, the deletion
-texts would have to say again what outlasts an account.
+texts would have to say again what outlasts an account. What does outlast it
+is listed in the same file, and both pages say the same: a code's count of
+uses, the record of a purchase Apple refunded, and the records of App Store
+purchases no account holds, which a purchase the account held becomes again
+at Apple's next notice about it (`functions/app-store-decision.js`, "THE
+RECORD"). Were the server ever to stop keeping those, or to give them an end
+date, both pages would have to say so.
