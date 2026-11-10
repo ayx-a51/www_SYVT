@@ -1236,8 +1236,12 @@
      The App Store's numeric id for SYVT lives in one place, the Smart App
      Banner tag in index.html, and is read from there. While that tag is
      commented out, as it is until the iPhone app is released, there is no
-     App Store to send anybody to, and every visitor gets Google Play, as
-     before; a tag still holding its placeholder counts as no tag. */
+     App Store to send anybody to. An iPhone or an iPad is then offered no
+     store at all: App Review opens the help page from the app, the help
+     page's wordmark leads here, and nothing it reaches that way should show
+     SYVT+ sold in another store (App Review guidelines 2.3.10 and 3.1.1).
+     Everybody else gets Google Play, as before. A tag still holding its
+     placeholder counts as no tag. */
   var PLAY_URL = "https://play.google.com/store/apps/details?id=io.a51.syvt";
   var APP_STORE_URL = (function () {
     var tag = document.querySelector('meta[name="apple-itunes-app"]');
@@ -1249,11 +1253,10 @@
      Safari calls itself a Mac, so a Mac that takes more than one touch
      point is taken for the iPad it is: no Mac has a touch screen. */
   function storesFor(ua, touchPoints, appStore) {
-    if (!appStore) return ["play"];
-    if (/iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && touchPoints > 1)) {
-      return ["appStore"];
-    }
-    if (/Android/.test(ua)) return ["play"];
+    var apple = /iPhone|iPad|iPod/.test(ua) ||
+        (/Macintosh/.test(ua) && touchPoints > 1);
+    if (apple) return appStore ? ["appStore"] : [];
+    if (!appStore || /Android/.test(ua)) return ["play"];
     return ["appStore", "play"];
   }
   var stores = storesFor(navigator.userAgent || "", navigator.maxTouchPoints || 0,
@@ -1267,9 +1270,11 @@
   }
 
   /* The line under START: the visitor's store by name, and where there are
-     two, the second link carrying on the first one's sentence. */
+     two, the second link carrying on the first one's sentence. With no
+     store to name there is no line. */
   function applyStores() {
     var s = t();
+    storeRow.hidden = stores.length === 0;
     storeLink.href = sellsApple ? APP_STORE_URL : PLAY_URL;
     storeLinkLabel.textContent = sellsApple ? s.storeApple : s.storePlay;
     storeRow.classList.toggle("both", bothStores);
@@ -1309,7 +1314,7 @@
   // --------------------------------------------------------- the offer
 
   // whether the card that is up offers SYVT+ at all; the "Why 120?" one
-  // explains and sells nothing
+  // explains and sells nothing, and none does where there is no store
   var buyOffered = false;
 
   /* The card's ways to the store. With one store, its badge or its pill
@@ -1330,12 +1335,12 @@
   function openModal(title, body, keepLabel, showBuy) {
     modalTitle.textContent = title;
     modalBody.textContent = body;
-    buyOffered = showBuy !== false;
+    buyOffered = showBuy !== false && stores.length > 0;
     storeButtons();
     // with nothing to buy, the way out leads the panel instead of sitting
     // under an offer
-    modalKeep.className = "pill " + (showBuy === false ? "primary" : "secondary");
-    modalKeep.textContent = showBuy === false ? keepLabel.toUpperCase() : keepLabel;
+    modalKeep.className = "pill " + (buyOffered ? "secondary" : "primary");
+    modalKeep.textContent = buyOffered ? keepLabel : keepLabel.toUpperCase();
     modal.hidden = false;
   }
 

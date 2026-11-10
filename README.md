@@ -126,16 +126,28 @@ picture and never the way to the store.
 
 The App Store's id for SYVT lives in one place, the Smart App Banner tag in
 `index.html`, and `syvt.js` reads it from there. While that tag is commented
-out there is no App Store to send anybody to, and every visitor gets Google
-Play, as before the iPhone app. On release day the tag goes live with the
-app's Apple ID (App Store Connect, App Information) in place of `APPLE_ID`,
-which switches on the banner and the links together; a tag still holding
-`APPLE_ID` switches on neither. The iPhone app is released by hand for that
-reason (the app repo's README, "Releasing on the App Store"), so the page
-never sends an iPhone to an app that is not there yet. Safari would hide the
-banner until then anyway: it shows it only on a device the app runs on, in a
-country where it can be had, never in the Simulator, and never again once
-closed.
+out there is no App Store to send anybody to, and an iPhone or an iPad is
+offered no store at all: no line under START, and on the offer card the way
+out alone, leading as it does on "Why 120?". Everybody else gets Google Play,
+as before the iPhone app. That is for App Review, which comes before the App
+Store has SYVT: it opens the help page from the app on an iPhone or an iPad,
+the help page's wordmark leads here, and nothing it can reach that way may
+show SYVT+ sold in another store (App Review guidelines 2.3.10 and 3.1.1).
+So this page goes live with the legal pages, before the iPhone app's first
+submission, and not on release day. A computer still sees Google Play, which
+is why the first version goes to review without a Marketing URL (App Store
+Connect leaves it optional): `https://syvt.me/` becomes it with the next
+version, once a computer is offered the App Store first. The page's
+description names no store, so it is true on either side of release day.
+
+On release day the tag goes live with the app's Apple ID (App Store Connect,
+App Information) in place of `APPLE_ID`, which switches on the banner and the
+links together; a tag still holding `APPLE_ID` switches on neither. The
+iPhone app is released by hand for that reason (the app repo's README,
+"Releasing on the App Store"), so the page never sends an iPhone to an app
+that is not there yet. Safari would hide the banner until then anyway: it
+shows it only on a device the app runs on, in a country where it can be had,
+never in the Simulator, and never again once closed.
 
 The banner is on the game page only. Whoever reads the legal pages, the help
 page or a 404 came from the store or the app, and is not sold the app a
@@ -641,7 +653,9 @@ renames a button, the page follows.
 It never tells an iPhone reader to buy anywhere but in the app (App Review
 guidelines 3.1.1 and 3.1.3). Each store's way to buy, restore and cancel is a
 section of its own, and SYVT+ crosses from one kind of device to the other
-only as the account's, which is what 3.1.3(b) allows.
+only as the account's, which is what 3.1.3(b) allows. Its wordmark leads to
+the game page, which offers an iPhone or an iPad no other store either (see
+**Which store**).
 
 Its foot is the one place the site says who makes SYVT: a legal name and a
 postal address beside `hi@SYVT.me`. App Store Connect asks for contact details

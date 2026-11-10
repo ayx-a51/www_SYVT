@@ -6,13 +6,14 @@
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>SYVT</title>
-<meta name="description" content="SYVT &mdash; words fall, you sort them. Swipe right if it is spelled correctly, left if it is not. Two sides, one game: a meadow and a galaxy for the children, a quiet page for the grown-ups. Play the free levels here; SYVT+ is in the app, for iPhone and iPad and for Android.">
+<meta name="description" content="SYVT &mdash; words fall, you sort them. Swipe right if it is spelled correctly, left if it is not. Two sides, one game: a meadow and a galaxy for the children, a quiet page for the grown-ups. Play the free levels here; SYVT+ is in the app.">
 <!-- Safari's Smart App Banner, and the one place the App Store's id for SYVT
      lives: syvt.js reads it from this tag to send an iPhone or an iPad to the
-     App Store. Commented out until the iPhone app is released; on release
-     day it goes live with the app's Apple ID in place of APPLE_ID, which
-     switches on the banner and the links together (README, "Which store").
-     A tag left with APPLE_ID in it switches on neither. Only on this page:
+     App Store. Commented out until the iPhone app is released, and until
+     then an iPhone or an iPad is offered no store at all; on release day it
+     goes live with the app's Apple ID in place of APPLE_ID, which switches
+     on the banner and the links together (README, "Which store"). A tag
+     left with APPLE_ID in it switches on neither. Only on this page:
      whoever reads the legal pages, the help page or the 404 came from the
      store or the app already.
 <meta name="apple-itunes-app" content="app-id=APPLE_ID">
@@ -216,7 +217,8 @@
 
       <!-- SYVT+ in the visitor's own store, by name: the App Store on an
            iPhone or an iPad, Google Play on Android, and on anything else
-           both, the second link carrying on the first one's sentence.
+           both, the second link carrying on the first one's sentence; an
+           iPhone or an iPad gets no row until the App Store has SYVT.
            syvt.js decides which, once, and fills in the hrefs. -->
       <div id="storeRow">
         <a id="storeLink" class="store" href="https://play.google.com/store/apps/details?id=io.a51.syvt" target="_blank" rel="noopener noreferrer">
@@ -238,7 +240,8 @@
       <!-- The App Store's way in is Apple's own badge, in the page's
            language, and a plain pill only where the artwork cannot load;
            Google Play's is the pill. Which of them show is the visitor's
-           store (syvt.js, storeButtons). -->
+           store (syvt.js, storeButtons); with no store, the way out leads
+           the card alone. -->
       <a id="modalBadge" target="_blank" rel="noopener noreferrer" hidden></a>
       <a id="modalApple" class="pill primary" target="_blank" rel="noopener noreferrer" hidden></a>
       <a id="modalBuy" class="pill primary" href="https://play.google.com/store/apps/details?id=io.a51.syvt" target="_blank" rel="noopener noreferrer"></a>

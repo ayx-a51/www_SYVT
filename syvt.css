@@ -1435,6 +1435,13 @@ body {
   align-items: center;
   justify-content: center;
 }
+/* An iPhone or an iPad has no store to be sent to until the App Store has
+   SYVT, and the row goes (its own display outranks the user agent's
+   [hidden]). What stays is 12 px of the air its link kept below the legend,
+   so that the panel's last line, now the legend's, still ends 20 px above
+   its edge, as the link's did: measured, not derived. */
+#storeRow[hidden] { display: block; height: calc(12 * var(--s)); }
+#storeRow[hidden] > * { display: none; }
 .store {
   margin: 0;
   min-height: calc(44 * var(--s));
