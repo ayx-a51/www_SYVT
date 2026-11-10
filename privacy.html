@@ -65,7 +65,9 @@
     device restored from a backup fetches them again.</p>
     <p>Four things can still reach the internet without an account: the
     spoken words, the date check and App Check, all described below, and a
-    purchase, which Google Play or the App Store handles.</p>
+    purchase, which Google Play or the App Store handles. Apple tells our
+    server about an App Store purchase as well, as described under SYVT+
+    below.</p>
 
     <h2>What an account stores</h2>
     <p>An account exists so that the same players can be carried to another
@@ -241,26 +243,36 @@
     account. A purchase the server already knows about is reported again at
     most once a day.</p>
     <p>On an iPhone or iPad, SYVT+ needs no account. The purchase belongs to
-    your Apple Account and the app checks it on the device; without a SYVT
-    account, nothing about it reaches us. While an account is signed in, the
-    app also sends our server the purchase exactly as Apple signed it, so that
-    SYVT+ follows the account to the family's other devices, Android ones
-    included. The server checks Apple's signature against Apple's own root
-    certificate and then records, against the account, Apple's identifier for
-    the purchase, the product, when it was recorded, when it ends and whether
-    it will renew, whether it was refunded, and when Apple signed what it last
-    said about it. One purchase serves one account here too, shown and moved
-    as above. A purchase made while somebody is signed in also carries a code
-    worked out from the account's identifier, which lets the server match a
-    purchase whose report never arrived, made on another of your devices, to
-    the account. From then on Apple tells our server itself when a
-    subscription renews or lapses, or a purchase is refunded, and the server
-    keeps a note of each notice for 30 days, so that none is counted twice.
-    We hold no key to ask Apple about anyone's purchases, and never ask.</p>
+    your Apple Account, and the app checks it on the device. Apple also tells
+    our server about every SYVT+ purchase made in the App Store, with a SYVT
+    account or without one: when a subscription starts, renews or runs out,
+    whether it is set to renew, when the single payment is made, and when a
+    purchase is refunded. For a purchase that no SYVT account holds, the
+    server records Apple's identifier for it, the product, when it ends,
+    whether it will renew, whether and when it was refunded, and what Apple's
+    latest notice about it was and when Apple signed it. Nothing in that
+    record names the buyer, and Apple does not tell us who that is. The
+    record has no end date, because a purchase can be brought into an
+    account at any time, the single payment years later, and a refund Apple
+    reported first must still count then. The server also keeps a note of
+    each notice for 30 days, so that none is counted twice.</p>
+    <p>While an account is signed in, the app also sends our server the
+    purchase exactly as Apple signed it, so that SYVT+ follows the account to
+    the family's other devices, Android ones included. The server checks
+    Apple's signature against Apple's own root certificate and then records
+    the purchase against the account: the same as above, and when it joined
+    the account. One purchase serves one account here too, shown and moved as
+    above. A purchase made while somebody is signed in also carries a code
+    worked out from the account's identifier, and once the account has
+    reported a purchase, the server keeps which account its code belongs to,
+    so that a purchase whose own report never arrived, made on another of
+    your devices, still finds the account when Apple tells the server about
+    it. We hold no key to ask Apple about anyone's purchases, and never
+    ask.</p>
     <p>On Apple devices SYVT+ can be shared through Family Sharing. A family
     member's copy opens SYVT+ on their own Apple devices and goes no further:
-    the server answers it without writing anything, and only the buyer's own
-    purchase is ever kept with a SYVT account.</p>
+    the server answers it without writing anything and passes over Apple's
+    notices about it, so only the buyer's own purchase is ever recorded.</p>
 
     <h2>Friends-and-family codes</h2>
     <p>Redeeming a code needs an account. It sends the code, your account
@@ -298,19 +310,21 @@
     &rarr; Delete account</strong> deletes the sign-in and all of the
     account's data on our servers, straight away: the players' backup, the
     SYVT+ it holds, its purchase records and the codes it redeemed or tried.
-    Two things
-    outlast it, and neither says whose it was: a code keeps its count of uses,
-    and an App Store purchase that Apple refunded keeps the record that it was
-    refunded, so that the same purchase cannot be brought into a new account.
-    With Sign in with Apple, the app also asks Apple to withdraw SYVT from
-    your Apple Account. The players themselves stay on the device. The same
-    danger zone wipes every player's
+    What outlasts it says nothing about whose it was: a code keeps its count
+    of uses; an App Store purchase that Apple refunded keeps the record that
+    it was refunded, so that the same purchase cannot be brought into a new
+    account; and an App Store purchase that never joined the account keeps
+    its record, described above. Apple's notices do not stop with the
+    account either: the next one about an App Store purchase it held &mdash;
+    a renewal, a subscription running out, a refund &mdash; starts that
+    purchase's record again, without an account. With Sign in with Apple, the
+    app also asks Apple to withdraw SYVT from your Apple Account. The players
+    themselves stay on the device. The same danger zone wipes every player's
     games, points, best scores and the days their star chains are counted
     from, and deleting a player removes them from the device and from the
-    account on every device signed in to it. Data held
-    only on a device goes when the app is uninstalled. The
-    <a href="data_deletion.html">Data Deletion Policy</a> sets all of this out
-    step by step.</p>
+    account on every device signed in to it. Data held only on a device goes
+    when the app is uninstalled. The <a href="data_deletion.html">Data
+    Deletion Policy</a> sets all of this out step by step.</p>
 
     <h2>Children</h2>
     <p>SYVT is built to be safe to hand to a child of about eight and up, and
@@ -330,9 +344,10 @@
     <p>You may ask for a copy of the data held under your account, ask us to
     correct it, or ask us to delete it &mdash; see the
     <a href="data_deletion.html">Data Deletion Policy</a>. You may also simply
-    play without an account, in which case there is nothing on our servers to
-    ask about. Write to <a href="mailto:hi@SYVT.me">hi@SYVT.me</a> for any of
-    these.</p>
+    play without an account, in which case our servers hold nothing about you
+    beyond the record of an App Store purchase described above, which does
+    not say whose it is. Write to <a href="mailto:hi@SYVT.me">hi@SYVT.me</a>
+    for any of these.</p>
 
     <h2>Changes to this policy</h2>
     <p>If we change what SYVT collects, we will update this page and the date
