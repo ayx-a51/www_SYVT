@@ -657,13 +657,10 @@ only as the account's, which is what 3.1.3(b) allows. Its wordmark leads to
 the game page, which offers an iPhone or an iPad no other store either (see
 **Which store**).
 
-Its foot is the one place the site says who makes SYVT: a legal name and a
-postal address beside `hi@SYVT.me`. App Store Connect asks for contact details
-where local law requires them, and shows a trader's address, phone number and
-email on the EU product pages under the Digital Services Act; the page gives
-the same name and address. Until the owner writes them in they are
-placeholders, marked in coral so that they cannot be missed, and the page is
-not finished while one shows.
+Its foot is the one place the site says who makes SYVT: A51, beside
+`hi@SYVT.me`. It names no person and gives no postal address, by the owner's
+decision of 19 November 2026; whatever App Store Connect shows of a trader's
+contact details on the EU product pages is App Store Connect's.
 
 ### Keeping them true
 
