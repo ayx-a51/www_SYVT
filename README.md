@@ -471,7 +471,7 @@ Two rules from that spec shape this repo more than the rest:
 
 - **The mark and the name never appear together.** The name already contains
   the funnel. So a page shows one or the other, **counting the whole page and
-  not just the header**: the game panel, the legal pages, the help page and
+  not just the header**: the game panel, the legal pages, the help pages and
   the link preview show the wordmark and nothing else; `404.html` shows the
   mark and does not set the name in type at all. The favicon is chrome
   rather than part of any lockup, which is why the mark on its plate could
@@ -607,7 +607,8 @@ are the licences that requires be shipped with them.
 
 ## Legal pages and help
 
-`privacy.html`, `data_deletion.html` and `support.html`, sharing `legal.css`.
+`privacy.html`, `data_deletion.html`, `support.html` and `support-ios.html`,
+sharing `legal.css`.
 Google Play needs a privacy-policy URL before the Android app can be listed,
 and a deletion URL alongside it. The App Store needs two of its own in App
 Store Connect: the privacy policy (under App Information) and a support URL
@@ -615,8 +616,8 @@ Store Connect: the privacy policy (under App Information) and a support URL
 privacy-choices URL is optional there, and SYVT has none, since there is
 nothing to opt out of. App Review opens all of them, and a changed URL reaches
 the App Store only with the next app version, so each must be right before a
-submission rather than after. The contact address on all three is
-`hi@SYVT.me`. All three carry `default-src 'none'` and load nothing from a
+submission rather than after. The contact address on all of them is
+`hi@SYVT.me`. All of them carry `default-src 'none'` and load nothing from a
 third party — not even a font, which on a privacy page would hand the reader's
 IP address to whoever served it. The game's own policy is one line wider than
 theirs; see **The voice** above.
@@ -625,7 +626,7 @@ They are skinned in the **app's** palette, not this page's: the plate's own
 three violets and cream, from `lib/ui/marks.dart` in the Flutter repo, because
 these are the pages the store listings and the app link to and the app icon is
 what a reader arrives from. The band at the top is the plate itself — one
-centred radial, no highlight laid over it, which is why all three set
+centred radial, no highlight laid over it, which is why all of them set
 `theme-color: #2A1B84`, the plate's own mid tone.
 
 The wordmark in the header is built in HTML rather than drawn: Manrope
@@ -636,39 +637,49 @@ letter, and 34 px because the wordmark's floor is a 24 px cap height and
 which the brand does not allow. Its two margins are measured, not derived; see
 **One number the spec gets wrong** above and the comment in `legal.css`.
 
-### The help page
+### The help pages
 
-`support.html` is the App Store's support URL and what the app's "Help and
-contact" link opens, from an iPhone and from Android alike (behind the
-parents' gate, as every link out of the app is). It is the one page in three
-languages: English first, under the page's own head, then German and French,
-each under a head of its own, with pills in the band that jump to `#en`, `#de`
-and `#fr` — so the app can open it straight at the reader's language. Help is
-what a German- or French-speaking parent acts on; the legal texts stay in
-English, because three versions of each would be three documents that must
-agree. German is spelled the Swiss way, as everywhere on this site, and every
-label in bold is the app's own word for it in that language: when the app
-renames a button, the page follows.
+`support.html` is the website's shared help page, for every kind of device,
+and what the Android app's "Help and contact" link opens. `support-ios.html`
+is its iPhone and iPad counterpart: the App Store's support URL, and what the
+iPhone and iPad app's "Help and contact" link opens. Either link is behind the
+parents' gate, as every link out of the app is. The iPhone page keeps every
+section and sentence of the shared one that holds on an iPhone or iPad, and
+names no other platform or store: App Review guideline 2.3.10 allows no other
+mobile platform or marketplace in an app or its metadata, and the support URL
+is metadata. A page of its own is the owner's decision of 19 November 2026. A
+change to `support.html` that holds on an iPhone or iPad is a change to
+`support-ios.html` too.
 
-It never tells an iPhone reader to buy anywhere but in the app (App Review
-guidelines 3.1.1 and 3.1.3). Each store's way to buy, restore and cancel is a
-section of its own, and SYVT+ crosses from one kind of device to the other
-only as the account's, which is what 3.1.3(b) allows. Its wordmark leads to
-the game page, which offers an iPhone or an iPad no other store either (see
-**Which store**).
+Each is one page in three languages: English first, under the page's own
+head, then German and French, each under a head of its own, with pills in the
+band that jump to `#en`, `#de` and `#fr` — so the app can open it straight at
+the reader's language. Help is what a German- or French-speaking parent acts
+on; the legal texts stay in English, because three versions of each would be
+three documents that must agree. German is spelled the Swiss way, as
+everywhere on this site, and every label in bold is the app's own word for it
+in that language: when the app renames a button, the pages follow.
 
-Its foot is the one place the site says who makes SYVT: A51, beside
+Neither tells an iPhone reader to buy anywhere but in the app (App Review
+guidelines 3.1.1 and 3.1.3). On the shared page each store's way to buy,
+restore and cancel is a section of its own, and on both SYVT+ crosses from
+one kind of device to another only as the account's, which is what 3.1.3(b)
+allows. Their wordmark leads to the game page, which offers an iPhone or an
+iPad no other store either (see **Which store**).
+
+The foot of each is the one place the site says who makes SYVT: A51, beside
 `hi@SYVT.me`. It names no person and gives no postal address, by the owner's
 decision of 19 November 2026; whatever App Store Connect shows of a trader's
 contact details on the EU product pages is App Store Connect's.
 
 ### Keeping them true
 
-Keep the three pages true to what the app actually does, on both kinds of
+Keep the four pages true to what the app actually does, on both kinds of
 device, and in step with the documents the stores compare them with. These
 have to agree, and a change to one is a change to all of them:
 
-- `privacy.html`, `data_deletion.html` and `support.html` here;
+- `privacy.html`, `data_deletion.html`, `support.html` and `support-ios.html`
+  here;
 - `store/play/data-safety.md` in the app repo, Play's Data safety answers;
 - `store/appstore/app-privacy.md`, the App Store's App Privacy answers, and
   `ios/Runner/PrivacyInfo.xcprivacy`, which declares the same data;
