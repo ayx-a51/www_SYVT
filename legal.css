@@ -203,6 +203,7 @@ code{
 }
 
 address{font-style:normal;color:var(--ink-soft);margin-top:.75em;line-height:1.8}
+.card p.credit{margin-top:1.4em;font-size:.8125rem;line-height:1.55}
 /* What the owner still has to fill in, made impossible to miss: a page that
    goes live with one of these showing is not finished. */
 .todo{
